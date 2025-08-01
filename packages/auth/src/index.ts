@@ -10,7 +10,7 @@ export function initAuth(options: {
   baseUrl: string;
   productionUrl: string;
   secret: string | undefined;
-
+  trustedOrigins: string[];
   discordClientId: string;
   discordClientSecret: string;
 }) {
@@ -37,7 +37,7 @@ export function initAuth(options: {
         redirectURI: `${options.productionUrl}/api/auth/callback/discord`,
       },
     },
-    trustedOrigins: ["expo://"],
+    trustedOrigins: options.trustedOrigins,
   } satisfies BetterAuthOptions;
 
   return betterAuth(config);

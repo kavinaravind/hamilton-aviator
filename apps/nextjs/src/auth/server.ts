@@ -7,16 +7,23 @@ import { initAuth } from "@hamilton/auth";
 
 import { env } from "~/env";
 
-const baseUrl =
-  env.VERCEL_ENV === "production"
-    ? `https://${env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : env.VERCEL_ENV === "preview"
-      ? `https://${env.VERCEL_URL}`
-      : "http://localhost:3000";
+let baseUrl: string;
+switch (env.VERCEL_ENV) {
+  case "production":
+    baseUrl = `https://${env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    break;
+  case "preview":
+    baseUrl = `https://${env.VERCEL_URL}`;
+    break;
+  default:
+    baseUrl = "http://localhost:3000";
+    break;
+}
 
 export const auth = initAuth({
   baseUrl,
-  productionUrl: `https://${env.VERCEL_PROJECT_PRODUCTION_URL ?? "turbo.t3.gg"}`,
+  productionUrl: baseUrl,
+  trustedOrigins: [baseUrl, `${env.AUTH_EXPO_ORIGIN}`],
   secret: env.AUTH_SECRET,
   discordClientId: env.AUTH_DISCORD_ID,
   discordClientSecret: env.AUTH_DISCORD_SECRET,
