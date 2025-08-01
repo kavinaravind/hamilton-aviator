@@ -17,6 +17,8 @@
   "dependencies": {
     "@better-auth/expo": "1.2.12",
     "@expo/metro-config": "^0.20.14",
+    "@hamilton/api": "workspace:*",
+    "@hamilton/ui": "workspace:*",
     "@legendapp/list": "^1.0.15",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",
@@ -47,7 +49,6 @@
     "@babel/core": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
     "@babel/runtime": "^7.27.4",
-    "@hamilton/api": "workspace:*",
     "@hamilton/eslint-config": "workspace:*",
     "@hamilton/prettier-config": "workspace:*",
     "@hamilton/tailwind-config": "workspace:*",

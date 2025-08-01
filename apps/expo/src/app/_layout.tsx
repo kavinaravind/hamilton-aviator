@@ -14,10 +14,6 @@ export default function RootLayout() {
   const { colorScheme } = useColorScheme();
   return (
     <QueryClientProvider client={queryClient}>
-      {/*
-          The Stack component displays the current page.
-          It also allows you to configure your screens 
-        */}
       <Stack
         screenOptions={{
           headerStyle: {
@@ -27,7 +23,9 @@ export default function RootLayout() {
             backgroundColor: colorScheme == "dark" ? "#09090B" : "#FFFFFF",
           },
         }}
-      />
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
       <StatusBar />
     </QueryClientProvider>
   );

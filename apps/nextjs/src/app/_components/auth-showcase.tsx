@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { Button } from "@hamilton/ui/button";
+import { Button } from "@hamilton/ui";
 
 import { auth, getSession } from "~/auth/server";
 

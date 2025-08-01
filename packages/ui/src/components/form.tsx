@@ -8,7 +8,6 @@ import type {
 } from "react-hook-form";
 import type { ZodType } from "zod/v4";
 import * as React from "react";
-import { cn } from "@hamilton/ui";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Slot } from "radix-ui";
 import {
@@ -16,6 +15,8 @@ import {
   Controller,
   useFormContext,
 } from "react-hook-form";
+
+import { cn } from "@hamilton/ui";
 
 import { Label } from "./label";
 
