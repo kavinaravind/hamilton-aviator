@@ -1,6 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+// import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
@@ -10,6 +10,8 @@ import {
   cn,
   Input,
   Separator,
+  Sheet,
+  SheetContent,
   Skeleton,
   Tooltip,
   TooltipContent,
