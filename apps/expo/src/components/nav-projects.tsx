@@ -2,13 +2,6 @@
 
 import type { LucideIcon } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
@@ -18,6 +11,14 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Folder, Forward, MoreHorizontal, Trash2 } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@hamilton/ui";
 
 export function NavProjects({
   projects,

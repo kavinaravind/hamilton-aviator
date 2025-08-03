@@ -112,7 +112,15 @@ export { Skeleton } from "./components/skeleton";
 export { ThemeProvider, ThemeToggle } from "./components/theme";
 export { Textarea } from "./components/textarea";
 export { toast, Toaster } from "./components/toast";
-export { TooltipProvider } from "./components/tooltip";
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "./components/tooltip";
+
+// Export hooks
+export { useIsMobile } from "./hooks/use-mobile";
 
 // Export utilities
 export { cn } from "./lib/utils";

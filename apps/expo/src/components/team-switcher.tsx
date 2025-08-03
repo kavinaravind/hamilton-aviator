@@ -2,6 +2,14 @@
 
 import * as React from "react";
 import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { ChevronsUpDown, Plus } from "lucide-react";
+
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -9,14 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { ChevronsUpDown, Plus } from "lucide-react";
+} from "@hamilton/ui";
 
 export function TeamSwitcher({
   teams,

@@ -1,7 +1,8 @@
 import "@/global.css";
 
 import { IS_DOM } from "expo/dom";
-import { TooltipProvider } from "@/components/ui/tooltip";
+
+import { TooltipProvider } from "@hamilton/ui";
 
 export default function DOMProvider({
   children,
