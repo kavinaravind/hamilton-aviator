@@ -5,7 +5,6 @@
   "type": "module",
   "exports": {
     "./lib/utils/*": "./src/lib/utils/*.ts",
-    "./components/navigation/*": "./src/components/navigation/*.tsx",
     "./components/ui/*": "./src/components/ui/*.tsx"
   },
   "license": "MIT",

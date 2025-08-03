@@ -1,8 +1,8 @@
 "use dom";
 
 import DOMProvider from "@/components/dom-provider";
+import { AppSidebar } from "@/components/navigation/app-sidebar";
 
-import { AppSidebar } from "@hamilton/ui/components/navigation/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,

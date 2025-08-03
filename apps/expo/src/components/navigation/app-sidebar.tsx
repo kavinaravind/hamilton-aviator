@@ -1,6 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { NavProjects } from "@/components/navigation//nav-projects";
+import { NavUser } from "@/components/navigation//nav-user";
+import { TeamSwitcher } from "@/components/navigation//team-switcher";
+import { NavMain } from "@/components/navigation/nav-main";
 import {
   AudioWaveform,
   BookOpen,
@@ -20,11 +24,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "../ui/sidebar";
-import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
-import { NavUser } from "./nav-user";
-import { TeamSwitcher } from "./team-switcher";
+} from "@hamilton/ui/components/ui/sidebar";
 
 // This is sample data.
 const data = {

@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@hamilton/ui/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -18,7 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "../ui/sidebar";
+} from "@hamilton/ui/components/ui/sidebar";
 
 export function NavProjects({
   projects,
