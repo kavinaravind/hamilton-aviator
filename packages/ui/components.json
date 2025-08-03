@@ -10,8 +10,8 @@
     "cssVariables": true
   },
   "aliases": {
-    "utils": "@hamilton/ui",
-    "components": "src/",
-    "ui": "src/"
+    "utils": "src/lib/utils",
+    "components": "src/components/ui",
+    "ui": "src/components/ui"
   }
 }
