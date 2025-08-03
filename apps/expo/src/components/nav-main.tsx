@@ -1,7 +1,12 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
@@ -10,13 +15,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar";
-import { ChevronRight } from "lucide-react";
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
 } from "@hamilton/ui";
 
 export function NavMain({

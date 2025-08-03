@@ -2,11 +2,6 @@
 
 import { AppSidebar } from "@/components/app-sidebar";
 import DOMProvider from "@/components/dom-provider";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
 
 import {
   Breadcrumb,
@@ -16,6 +11,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
   Separator,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
 } from "@hamilton/ui";
 
 export default function Page() {

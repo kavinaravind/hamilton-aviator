@@ -1,15 +1,6 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
 import { Folder, Forward, MoreHorizontal, Trash2 } from "lucide-react";
 
 import {
@@ -18,6 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
 } from "@hamilton/ui";
 
 export function NavProjects({

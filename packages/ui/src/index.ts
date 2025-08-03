@@ -8,8 +8,8 @@ export { StyledTabBarIcon } from "./icons";
 export { StyledPageLayout } from "./layouts";
 
 // Export components
-export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar";
-export { Badge, badgeVariants } from "./components/badge";
+export { Avatar, AvatarImage, AvatarFallback } from "./components/ui/avatar";
+export { Badge, badgeVariants } from "./components/ui/badge";
 export {
   Breadcrumb,
   BreadcrumbList,
@@ -18,13 +18,13 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
-} from "./components/breadcrumb";
-export { Button, buttonVariants } from "./components/button";
+} from "./components/ui/breadcrumb";
+export { Button, buttonVariants } from "./components/ui/button";
 export {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
-} from "./components/collapsible";
+} from "./components/ui/collapsible";
 export {
   Drawer,
   DrawerPortal,
@@ -36,7 +36,7 @@ export {
   DrawerFooter,
   DrawerTitle,
   DrawerDescription,
-} from "./components/drawer";
+} from "./components/ui/drawer";
 export {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,7 +46,7 @@ export {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "./components/dropdown-menu";
+} from "./components/ui/dropdown-menu";
 export {
   Form,
   FormControl,
@@ -54,9 +54,9 @@ export {
   FormItem,
   FormMessage,
   useForm,
-} from "./components/form";
-export { Input } from "./components/input";
-export { Label } from "./components/label";
+} from "./components/ui/form";
+export { Input } from "./components/ui/input";
+export { Label } from "./components/ui/label";
 export {
   Select,
   SelectGroup,
@@ -68,8 +68,8 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
-} from "./components/select";
-export { Separator } from "./components/separator";
+} from "./components/ui/select";
+export { Separator } from "./components/ui/separator";
 export {
   Sheet,
   SheetPortal,
@@ -81,7 +81,7 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-} from "./components/sheet";
+} from "./components/ui/sheet";
 export {
   Sidebar,
   SidebarContent,
@@ -107,17 +107,17 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar,
-} from "./components/sidebar";
-export { Skeleton } from "./components/skeleton";
-export { ThemeProvider, ThemeToggle } from "./components/theme";
-export { Textarea } from "./components/textarea";
-export { toast, Toaster } from "./components/toast";
+} from "./components/ui/sidebar";
+export { Skeleton } from "./components/ui/skeleton";
+export { ThemeProvider, ThemeToggle } from "./components/ui/theme";
+export { Textarea } from "./components/ui/textarea";
+export { toast, Toaster } from "./components/ui/toast";
 export {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from "./components/tooltip";
+} from "./components/ui/tooltip";
 
 // Export hooks
 export { useIsMobile } from "./hooks/use-mobile";

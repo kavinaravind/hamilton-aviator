@@ -1,12 +1,6 @@
 "use client";
 
 import * as React from "react";
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
 import { ChevronsUpDown, Plus } from "lucide-react";
 
 import {
@@ -17,6 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
 } from "@hamilton/ui";
 
 export function TeamSwitcher({

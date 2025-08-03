@@ -16,7 +16,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 import { Label } from "./label";
 
 export { FormProvider as Form, useFieldArray } from "react-hook-form";

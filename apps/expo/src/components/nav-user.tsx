@@ -1,12 +1,6 @@
 "use client";
 
 import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
@@ -26,6 +20,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
 } from "@hamilton/ui";
 
 export function NavUser({
