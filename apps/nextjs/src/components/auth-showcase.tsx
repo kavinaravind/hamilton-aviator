@@ -1,9 +1,8 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { auth, getSession } from "@/lib/auth/server";
 
 import { Button } from "@hamilton/ui/components/ui/button";
-
-import { auth, getSession } from "~/auth/server";
 
 export async function AuthShowcase() {
   const session = await getSession();

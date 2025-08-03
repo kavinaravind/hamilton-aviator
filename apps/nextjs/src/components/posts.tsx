@@ -1,5 +1,6 @@
 "use client";
 
+import { useTRPC } from "@/lib/trpc/react";
 import {
   useMutation,
   useQueryClient,
@@ -20,8 +21,6 @@ import {
 import { Input } from "@hamilton/ui/components/ui/input";
 import { toast } from "@hamilton/ui/components/ui/toast";
 import { cn } from "@hamilton/ui/lib/utils/index";
-
-import { useTRPC } from "~/trpc/react";
 
 export function CreatePostForm() {
   const trpc = useTRPC();

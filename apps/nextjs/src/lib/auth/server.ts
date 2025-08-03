@@ -2,10 +2,9 @@ import "server-only";
 
 import { cache } from "react";
 import { headers } from "next/headers";
+import { env } from "@/env";
 
 import { initAuth } from "@hamilton/auth";
-
-import { env } from "~/env";
 
 let baseUrl: string;
 switch (env.VERCEL_ENV) {

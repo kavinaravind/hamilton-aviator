@@ -1,9 +1,8 @@
 import type { NextRequest } from "next/server";
+import { auth } from "@/lib/auth/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter, createTRPCContext } from "@hamilton/api";
-
-import { auth } from "~/auth/server";
 
 /**
  * Configure basic CORS headers
