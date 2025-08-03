@@ -1,6 +1,6 @@
 import { SafeAreaView, Text, View } from "react-native";
 import { Stack, useGlobalSearchParams } from "expo-router";
-import { trpc } from "@/utils/api";
+import { trpc } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Post() {

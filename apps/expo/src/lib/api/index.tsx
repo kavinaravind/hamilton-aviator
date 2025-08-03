@@ -1,5 +1,5 @@
-import { authClient } from "@/utils/auth";
-import { getBaseUrl } from "@/utils/base-url";
+import { authClient } from "@/lib/auth";
+import { getBaseUrl } from "@/lib/auth/base-url";
 import { QueryClient } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";

@@ -1,10 +1,10 @@
-import type { RouterOutputs } from "@/utils/api";
+import type { RouterOutputs } from "@/lib/api";
 import React, { useState } from "react";
 import { Button, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import { trpc } from "@/utils/api";
-import { authClient } from "@/utils/auth";
+import { trpc } from "@/lib/api";
+import { authClient } from "@/lib/auth";
 import { LegendList } from "@legendapp/list";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
