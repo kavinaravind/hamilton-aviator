@@ -4,14 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./button": "./src/button.tsx",
-    "./dropdown-menu": "./src/dropdown-menu.tsx",
-    "./form": "./src/form.tsx",
-    "./input": "./src/input.tsx",
-    "./label": "./src/label.tsx",
-    "./theme": "./src/theme.tsx",
-    "./toast": "./src/toast.tsx"
+    "./lib/utils/*": "./src/lib/utils/*.ts",
+    "./components/navigation/*": "./src/components/navigation/*.tsx",
+    "./components/ui/*": "./src/components/ui/*.tsx"
   },
   "license": "MIT",
   "scripts": {

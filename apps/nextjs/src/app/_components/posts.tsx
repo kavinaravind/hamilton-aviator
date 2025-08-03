@@ -8,18 +8,18 @@ import {
 
 import type { RouterOutputs } from "@hamilton/api";
 import { CreatePostSchema } from "@hamilton/db/schema";
+import { Button } from "@hamilton/ui/components/ui/button";
 import {
-  Button,
-  cn,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-  Input,
-  toast,
   useForm,
-} from "@hamilton/ui";
+} from "@hamilton/ui/components/ui/form";
+import { Input } from "@hamilton/ui/components/ui/input";
+import { toast } from "@hamilton/ui/components/ui/toast";
+import { cn } from "@hamilton/ui/lib/utils/index";
 
 import { useTRPC } from "~/trpc/react";
 

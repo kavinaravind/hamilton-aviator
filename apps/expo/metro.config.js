@@ -7,7 +7,7 @@ const path = require("node:path");
 
 const config = withTurborepoManagedCache(
   withNativeWind(getDefaultConfig(__dirname), {
-    input: "./src/global.css",
+    input: "./src/globals.css",
     configPath: "./tailwind.config.ts",
   }),
 );

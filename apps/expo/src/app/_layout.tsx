@@ -1,4 +1,4 @@
-import "@/global.css";
+import "@/globals.css";
 
 import { Slot } from "expo-router";
 import Head from "expo-router/head";
@@ -6,7 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import { queryClient } from "@/lib/api";
 import { QueryClientProvider } from "@tanstack/react-query";
 
-import { TooltipProvider } from "@hamilton/ui";
+import { TooltipProvider } from "@hamilton/ui/components/ui/tooltip";
 
 // This is the main layout of the app
 // It wraps your pages with the providers they need
