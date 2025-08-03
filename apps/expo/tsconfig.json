@@ -3,8 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "@/*": ["./src/*"]
     },
+    "lib": ["ES2022", "dom", "dom.iterable"],
     "jsx": "react-native",
     "checkJs": false,
     "moduleSuffixes": [".ios", ".android", ".native", ""]

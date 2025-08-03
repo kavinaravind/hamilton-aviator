@@ -1,12 +1,11 @@
+import { authClient } from "@/utils/auth";
+import { getBaseUrl } from "@/utils/base-url";
 import { QueryClient } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import superjson from "superjson";
 
 import type { AppRouter } from "@hamilton/api";
-
-import { authClient } from "./auth";
-import { getBaseUrl } from "./base-url";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
