@@ -6,14 +6,14 @@ import base from "./base";
 export default {
   content: base.content,
   presets: [base],
-  container: {
-    center: true,
-    padding: "2rem",
-    screens: {
-      "2xl": "1400px",
-    },
-  },
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       borderRadius: {
         lg: "var(--radius)",
@@ -46,6 +46,6 @@ export default {
     future: {
       hoverOnlyWhenSupported: true,
     },
-    plugins: [animate],
   },
+  plugins: [animate],
 } satisfies Config;
