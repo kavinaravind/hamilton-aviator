@@ -9,10 +9,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -20,11 +18,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@hamilton/ui";
+} from "../ui/sidebar";
 
 export function NavUser({
   user,

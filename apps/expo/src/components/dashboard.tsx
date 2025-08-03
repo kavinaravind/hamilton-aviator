@@ -1,9 +1,9 @@
 "use dom";
 
-import { AppSidebar } from "@/components/app-sidebar";
 import DOMProvider from "@/components/dom-provider";
 
 import {
+  AppSidebar,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,

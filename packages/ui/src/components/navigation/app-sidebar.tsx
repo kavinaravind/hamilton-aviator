@@ -1,10 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
 import {
   AudioWaveform,
   BookOpen,
@@ -24,7 +20,11 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@hamilton/ui";
+} from "../ui/sidebar";
+import { NavMain } from "./nav-main";
+import { NavProjects } from "./nav-projects";
+import { NavUser } from "./nav-user";
+import { TeamSwitcher } from "./team-switcher";
 
 // This is sample data.
 const data = {

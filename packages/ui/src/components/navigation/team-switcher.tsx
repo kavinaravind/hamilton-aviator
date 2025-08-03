@@ -11,11 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@hamilton/ui";
+} from "../ui/sidebar";
 
 export function TeamSwitcher({
   teams,

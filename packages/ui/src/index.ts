@@ -119,6 +119,9 @@ export {
   TooltipProvider,
 } from "./components/ui/tooltip";
 
+// Export app components
+export { AppSidebar } from "./components/navigation/app-sidebar";
+
 // Export hooks
 export { useIsMobile } from "./hooks/use-mobile";
 

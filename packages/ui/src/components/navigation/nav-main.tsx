@@ -7,6 +7,8 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+} from "../ui/collapsible";
+import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
@@ -15,7 +17,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@hamilton/ui";
+} from "../ui/sidebar";
 
 export function NavMain({
   items,
