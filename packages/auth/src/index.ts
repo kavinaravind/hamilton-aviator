@@ -19,10 +19,6 @@ export interface InitAuthOptions {
       clientId: string;
       clientSecret: string;
     };
-    discord: {
-      clientId: string;
-      clientSecret: string;
-    };
   };
   trustedOrigins: string[];
 }
@@ -54,11 +50,6 @@ export function initAuth(options: InitAuthOptions) {
         clientId: options.providers.google.clientId,
         clientSecret: options.providers.google.clientSecret,
         redirectURI: `${options.productionUrl}/api/auth/callback/github`,
-      },
-      discord: {
-        clientId: options.providers.discord.clientId,
-        clientSecret: options.providers.discord.clientSecret,
-        redirectURI: `${options.productionUrl}/api/auth/callback/discord`,
       },
     },
     trustedOrigins: options.trustedOrigins,

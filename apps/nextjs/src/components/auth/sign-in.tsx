@@ -53,14 +53,14 @@ export default function SignIn() {
       </div>
       <div className="flex h-full items-center justify-center p-4 lg:p-8">
         <div className="flex w-full max-w-md flex-col items-center justify-center space-y-6">
-          <form>
+          <form className="flex w-full flex-col gap-4">
             <Button
               size="lg"
               formAction={async () => {
                 "use server";
                 const res = await auth.api.signInSocial({
                   body: {
-                    provider: "discord",
+                    provider: "google",
                     callbackURL: "/",
                   },
                 });
@@ -69,8 +69,28 @@ export default function SignIn() {
                 }
                 redirect(res.url);
               }}
+              variant="outline"
             >
-              Sign in with Discord
+              Sign in with Google
+            </Button>
+            <Button
+              size="lg"
+              formAction={async () => {
+                "use server";
+                const res = await auth.api.signInSocial({
+                  body: {
+                    provider: "github",
+                    callbackURL: "/",
+                  },
+                });
+                if (!res.url) {
+                  throw new Error("No URL returned from signInSocial");
+                }
+                redirect(res.url);
+              }}
+              variant="outline"
+            >
+              Sign in with GitHub
             </Button>
           </form>
           <p className="px-8 text-center text-sm text-muted-foreground">
