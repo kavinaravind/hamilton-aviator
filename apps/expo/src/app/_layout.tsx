@@ -6,24 +6,18 @@ import { StatusBar } from "expo-status-bar";
 import { queryClient } from "@/lib/api";
 import { QueryClientProvider } from "@tanstack/react-query";
 
-import { TooltipProvider } from "@hamilton/ui/components/ui/tooltip";
-
-// This is the main layout of the app
-// It wraps your pages with the providers they need
 export default function RootLayout() {
   return (
     <>
       <Head>
-        <title>Dashboard | Expo App</title>
+        <title>Hamilton Path</title>
         <meta
           name="description"
-          content="High-performance dashboard built with Expo Router"
+          content="Log flights, track duty hours, manage maintenance records, and generate FAA-ready reports."
         />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Slot />
-        </TooltipProvider>
+        <Slot />
         <StatusBar style="dark" />
       </QueryClientProvider>
     </>
