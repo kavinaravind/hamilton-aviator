@@ -6,15 +6,29 @@ import { oAuthProxy } from "better-auth/plugins";
 
 import { db } from "@hamilton/db/client";
 
-export function initAuth(options: {
+export interface InitAuthOptions {
   baseUrl: string;
   productionUrl: string;
   secret: string | undefined;
+  providers: {
+    google: {
+      clientId: string;
+      clientSecret: string;
+    };
+    github: {
+      clientId: string;
+      clientSecret: string;
+    };
+    discord: {
+      clientId: string;
+      clientSecret: string;
+    };
+  };
   trustedOrigins: string[];
-  discordClientId: string;
-  discordClientSecret: string;
-}) {
-  const config = {
+}
+
+export function initAuth(options: InitAuthOptions) {
+  const config: BetterAuthOptions = {
     database: drizzleAdapter(db, {
       provider: "pg",
     }),
@@ -31,14 +45,24 @@ export function initAuth(options: {
       expo(),
     ],
     socialProviders: {
+      google: {
+        clientId: options.providers.google.clientId,
+        clientSecret: options.providers.google.clientSecret,
+        redirectURI: `${options.productionUrl}/api/auth/callback/google`,
+      },
+      github: {
+        clientId: options.providers.google.clientId,
+        clientSecret: options.providers.google.clientSecret,
+        redirectURI: `${options.productionUrl}/api/auth/callback/github`,
+      },
       discord: {
-        clientId: options.discordClientId,
-        clientSecret: options.discordClientSecret,
+        clientId: options.providers.discord.clientId,
+        clientSecret: options.providers.discord.clientSecret,
         redirectURI: `${options.productionUrl}/api/auth/callback/discord`,
       },
     },
     trustedOrigins: options.trustedOrigins,
-  } satisfies BetterAuthOptions;
+  };
 
   return betterAuth(config);
 }
