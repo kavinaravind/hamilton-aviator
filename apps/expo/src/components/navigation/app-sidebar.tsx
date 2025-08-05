@@ -3,17 +3,15 @@
 import * as React from "react";
 import { NavProjects } from "@/components/navigation//nav-projects";
 import { NavUser } from "@/components/navigation//nav-user";
-import { TeamSwitcher } from "@/components/navigation//team-switcher";
+import { NavHeader } from "@/components/navigation/nav-header";
 import { NavMain } from "@/components/navigation/nav-main";
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
   Map,
   PieChart,
+  Plane,
   Settings2,
   SquareTerminal,
 } from "lucide-react";
@@ -33,23 +31,11 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
+  header: {
+    name: "Hamilton AI",
+    logo: Plane,
+    description: "Your Digital Cockpit",
+  },
   navMain: [
     {
       title: "Playground",
@@ -160,7 +146,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <NavHeader header={data.header} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
