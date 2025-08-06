@@ -10,6 +10,7 @@ export default function DashboardLayout() {
   const [sidebarState, setSidebarState] = useState<{ isOpen: boolean } | null>(
     null,
   );
+  const [sidebarZIndex, setSidebarZIndex] = useState<number>(0);
   const [isWebViewReady, setIsWebViewReady] = useState<{
     isReady: boolean;
   } | null>(null);
@@ -32,6 +33,21 @@ export default function DashboardLayout() {
   useEffect(() => {
     setIsNativeReady({ isReady: true });
   }, []);
+
+  // Handle z-index with delay
+  useEffect(() => {
+    if (sidebarState?.isOpen) {
+      // Immediately bring to front when opening
+      setSidebarZIndex(100);
+    } else if (sidebarState?.isOpen === false) {
+      // Delay sending to back when closing to allow animation to complete
+      const timeout = setTimeout(() => {
+        setSidebarZIndex(0);
+      }, 120); // 120ms delay to match typical sidebar animation duration
+
+      return () => clearTimeout(timeout);
+    }
+  }, [sidebarState?.isOpen]);
 
   console.log("Dashboard ready states:", {
     isWebViewReady,
@@ -65,7 +81,7 @@ export default function DashboardLayout() {
           left: 0,
           right: 0,
           bottom: 0,
-          zIndex: sidebarState?.isOpen ? 1000 : 0,
+          zIndex: sidebarZIndex,
           pointerEvents: sidebarState?.isOpen ? "auto" : "box-none",
           opacity: isAppReady ? 1 : 0,
         }}

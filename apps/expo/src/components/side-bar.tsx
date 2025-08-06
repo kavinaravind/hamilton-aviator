@@ -4,14 +4,6 @@ import { useEffect } from "react";
 import DOMProvider from "@/components/dom-provider";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@hamilton/ui/components/ui/breadcrumb";
 import { Separator } from "@hamilton/ui/components/ui/separator";
 import {
   SidebarInset,
@@ -56,32 +48,34 @@ export default function SideBar({
   }, []);
 
   return (
-    <div className="fixed left-0 top-0 h-screen w-screen overflow-hidden">
-      <DOMProvider>
-        <SidebarProvider>
-          <SidebarController onStateChange={onStateChange} />
-          <AppSidebar user={user} onLogout={onLogout} />
-          <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-              <div className="flex items-center gap-2 px-4">
+    <DOMProvider>
+      <SidebarProvider>
+        <SidebarController onStateChange={onStateChange} />
+        <AppSidebar user={user} onLogout={onLogout} />
+        <SidebarInset>
+          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+            <div className="flex w-full items-center justify-between px-4">
+              <div className="flex items-center gap-3">
                 <SidebarTrigger className="-ml-1" />
-                <Separator orientation="vertical" className="mr-2 h-4" />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink href="#">Hamilton AI</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className="hidden md:block" />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>Hamilton Path</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
+                <Separator orientation="vertical" className="h-6" />
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-sm font-bold text-white">
+                    H
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold leading-none text-foreground">
+                      Hamilton Path
+                    </span>
+                    <span className="text-xs leading-none text-muted-foreground">
+                      Your Digital Cockpit
+                    </span>
+                  </div>
+                </div>
               </div>
-            </header>
-          </SidebarInset>
-        </SidebarProvider>
-      </DOMProvider>
-    </div>
+            </div>
+          </header>
+        </SidebarInset>
+      </SidebarProvider>
+    </DOMProvider>
   );
 }

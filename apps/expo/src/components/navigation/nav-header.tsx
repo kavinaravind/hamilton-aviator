@@ -26,8 +26,8 @@ export function NavHeader({
       <SidebarMenuItem>
         <SidebarMenuButton size="lg" asChild>
           <Link href="/dashboard" onPress={toggleSidebar}>
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <header.logo className="size-4" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-sm font-bold text-white">
+              H
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{header.name}</span>
