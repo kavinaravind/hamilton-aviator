@@ -83,7 +83,7 @@ export default function LogBookPage() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <Stack.Screen options={{ title: "Logbook" }} />
+      <Stack.Screen options={{ headerShown: false }} />
 
       {/* Search and Filter Bar */}
       <View className="border-b border-gray-200 bg-white px-4 py-3">

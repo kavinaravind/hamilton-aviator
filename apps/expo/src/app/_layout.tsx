@@ -1,6 +1,6 @@
 import "@/globals.css";
 
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import Head from "expo-router/head";
 import { StatusBar } from "expo-status-bar";
 import { queryClient } from "@/lib/api";
@@ -17,7 +17,13 @@ export default function RootLayout() {
         />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <Slot />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            gestureEnabled: true,
+            animation: "slide_from_right",
+          }}
+        />
         <StatusBar style="dark" />
       </QueryClientProvider>
     </>

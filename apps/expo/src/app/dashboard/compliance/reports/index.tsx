@@ -185,7 +185,7 @@ export default function ReportsPage() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <Stack.Screen options={{ title: "Reports & Documentation" }} />
+      <Stack.Screen options={{ headerShown: false }} />
 
       {/* Header */}
       <View className="border-b border-gray-200 bg-white px-4 py-4">

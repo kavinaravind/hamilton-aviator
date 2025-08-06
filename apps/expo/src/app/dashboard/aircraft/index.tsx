@@ -89,7 +89,7 @@ export default function AircraftListPage() {
 
   const renderAircraftItem = ({ item }: { item: (typeof mockAircraft)[0] }) => (
     <Link href={`/dashboard/aircraft/${item.id}`} asChild>
-      <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4">
         <View className="flex-row items-center justify-between">
           <View className="flex-1">
             <View className="mb-1 flex-row items-center">
@@ -126,7 +126,7 @@ export default function AircraftListPage() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <Stack.Screen options={{ title: "My Hangar" }} />
+      <Stack.Screen options={{ headerShown: false }} />
       <View className="bg-white px-4 py-4">
         <Text className="text-lg font-bold text-gray-900">My Aircraft</Text>
       </View>
