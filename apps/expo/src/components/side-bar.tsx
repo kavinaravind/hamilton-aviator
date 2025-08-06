@@ -64,7 +64,7 @@ export default function SideBar({
                   </div>
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold leading-none text-foreground">
-                      Hamilton Path
+                      Hamilton AI
                     </span>
                     <span className="text-xs leading-none text-muted-foreground">
                       Your Digital Cockpit

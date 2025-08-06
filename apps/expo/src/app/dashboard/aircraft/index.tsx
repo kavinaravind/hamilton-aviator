@@ -3,6 +3,7 @@ import {
   FlatList,
   SafeAreaView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -46,6 +47,8 @@ const mockAircraft = [
 ];
 
 export default function AircraftListPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "airworthy":
@@ -71,6 +74,18 @@ export default function AircraftListPage() {
         return "Unknown";
     }
   };
+
+  // Filter aircraft based on search query
+  const filteredAircraft = mockAircraft.filter((aircraft) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      aircraft.tailNumber.toLowerCase().includes(query) ||
+      aircraft.make.toLowerCase().includes(query) ||
+      aircraft.model.toLowerCase().includes(query) ||
+      getStatusText(aircraft.status).toLowerCase().includes(query) ||
+      aircraft.ownership.toLowerCase().includes(query)
+    );
+  });
 
   const renderAircraftItem = ({ item }: { item: (typeof mockAircraft)[0] }) => (
     <Link href={`/dashboard/aircraft/${item.id}`} asChild>
@@ -112,48 +127,55 @@ export default function AircraftListPage() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ title: "My Hangar" }} />
-
-      {/* Header */}
-      <View className="border-b border-gray-200 bg-white px-4 py-4">
-        <Text className="text-2xl font-bold text-gray-900">My Aircraft</Text>
-        <Text className="mt-1 text-sm text-gray-600">
-          {mockAircraft.length} aircraft in your hangar
-        </Text>
+      <View className="bg-white px-4 py-4">
+        <Text className="text-lg font-bold text-gray-900">My Aircraft</Text>
       </View>
-
-      {/* Aircraft List */}
+      <View className="border-b border-gray-200 bg-white px-4 pb-3">
+        <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
+          <Ionicons name="search" size={20} color="#6B7280" />
+          <TextInput
+            className="ml-2 flex-1 text-base text-gray-900"
+            placeholder="Search aircraft..."
+            placeholderTextColor="#9CA3AF"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity
+              onPress={() => setSearchQuery("")}
+              className="ml-2"
+            >
+              <Ionicons name="close-circle" size={20} color="#6B7280" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
       <View className="flex-1 px-4 pt-4">
         <FlatList
-          data={mockAircraft}
+          data={filteredAircraft}
           renderItem={renderAircraftItem}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View className="items-center justify-center py-12">
-              <Ionicons name="airplane-outline" size={48} color="#9CA3AF" />
+              <Ionicons
+                name={searchQuery ? "search" : "airplane-outline"}
+                size={48}
+                color="#9CA3AF"
+              />
               <Text className="mt-4 text-lg text-gray-500">
-                No aircraft found
+                {searchQuery ? "No aircraft found" : "No aircraft found"}
               </Text>
               <Text className="mt-1 text-sm text-gray-400">
-                Add your first aircraft to get started
+                {searchQuery
+                  ? `No aircraft match "${searchQuery}"`
+                  : "Add your first aircraft to get started"}
               </Text>
             </View>
           }
         />
-      </View>
-
-      {/* Add Aircraft Button */}
-      <View className="px-4 pb-6">
-        <Link href="/dashboard/aircraft/add" asChild>
-          <TouchableOpacity className="items-center rounded-lg bg-primary py-4 shadow-sm">
-            <View className="flex-row items-center">
-              <Ionicons name="add" size={24} color="white" />
-              <Text className="ml-2 text-lg font-semibold text-white">
-                Add Aircraft
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </Link>
       </View>
     </SafeAreaView>
   );
