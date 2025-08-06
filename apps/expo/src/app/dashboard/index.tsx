@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
+import { authClient } from "@/lib/auth";
 import { Ionicons } from "@expo/vector-icons";
 
 // Mock data - replace with actual data source
@@ -73,6 +74,14 @@ const recentFlights = [
 ];
 
 export default function DashboardPage() {
+  const { data: session, isPending } = authClient.useSession();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.replace("/auth/sign-in");
+  };
+
   const getCurrencyStatus = (item: typeof currencyData.passenger90Day) => {
     if (!item.current) return { color: "#EF4444", text: "Expired" };
     if (item.daysRemaining <= 7)
@@ -83,6 +92,25 @@ export default function DashboardPage() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ title: "Hamilton Dashboard" }} />
+      {/* Temporarily show logout button for testing */}
+      {session && (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text>Logged in as: {session.user.email}</Text>
+          <TouchableOpacity
+            onPress={handleLogout}
+            style={{
+              backgroundColor: "red",
+              padding: 10,
+              marginTop: 20,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ color: "white" }}>Logout & Reset</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <ScrollView className="flex-1 px-4 pt-4">
         <View className="mb-6">
           <Text className="mb-3 text-xl font-bold text-gray-900">
