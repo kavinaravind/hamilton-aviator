@@ -66,7 +66,28 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  user,
+  onLogout,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string | null;
+  };
+  onLogout?: () => void;
+}) {
+  // Transform user data to match NavUser interface
+  const userData = user
+    ? {
+        name: user.name,
+        email: user.email,
+        avatar: user.image || "/avatars/shadcn.jpg", // fallback to default avatar
+      }
+    : data.user;
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -76,7 +97,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} onLogout={onLogout} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

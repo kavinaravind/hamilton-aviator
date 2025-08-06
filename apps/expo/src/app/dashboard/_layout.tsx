@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { Slot } from "expo-router";
+import { Slot, useRouter } from "expo-router";
 import SideBar from "@/components/side-bar";
+import { authClient } from "@/lib/auth";
 
 export default function DashboardLayout() {
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
   const [sidebarState, setSidebarState] = useState<{ isOpen: boolean } | null>(
     null,
   );
@@ -16,6 +19,16 @@ export default function DashboardLayout() {
 
   const isAppReady = isWebViewReady && isNativeReady;
 
+  const handleLogout = async () => {
+    try {
+      console.log("Logout initiated from dashboard layout");
+      await authClient.signOut();
+      router.replace("/auth/sign-in");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   useEffect(() => {
     setIsNativeReady({ isReady: true });
   }, []);
@@ -24,7 +37,24 @@ export default function DashboardLayout() {
     isWebViewReady,
     isNativeReady,
     isAppReady,
+    session: session?.user,
+    isPending,
   });
+
+  // Don't render if we're still loading session
+  if (isPending) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  // Redirect if not authenticated
+  if (!session) {
+    router.replace("/auth/sign-in");
+    return null;
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -41,6 +71,7 @@ export default function DashboardLayout() {
         }}
       >
         <SideBar
+          user={session.user}
           onWebViewReady={async ({ isReady }) => {
             if (isWebViewReady?.isReady !== isReady) {
               setIsWebViewReady({ isReady });
@@ -51,6 +82,7 @@ export default function DashboardLayout() {
               setSidebarState({ isOpen });
             }
           }}
+          onLogout={handleLogout}
         />
       </View>
       {!isAppReady && (

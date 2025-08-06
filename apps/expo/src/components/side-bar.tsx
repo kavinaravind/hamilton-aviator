@@ -35,11 +35,20 @@ function SidebarController({
 }
 
 export default function SideBar({
+  user,
   onStateChange,
   onWebViewReady,
+  onLogout,
 }: {
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string | null;
+  };
   onStateChange: (sidebarState: { isOpen: boolean }) => void;
   onWebViewReady: (isWebViewReady: { isReady: boolean }) => void;
+  onLogout?: () => void;
 }) {
   // Simulate WebView readiness on mount
   useEffect(() => {
@@ -51,7 +60,7 @@ export default function SideBar({
       <DOMProvider>
         <SidebarProvider>
           <SidebarController onStateChange={onStateChange} />
-          <AppSidebar />
+          <AppSidebar user={user} onLogout={onLogout} />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
               <div className="flex items-center gap-2 px-4">
