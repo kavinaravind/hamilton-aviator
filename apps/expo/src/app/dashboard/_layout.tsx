@@ -20,6 +20,12 @@ export default function DashboardLayout() {
     setIsNativeReady({ isReady: true });
   }, []);
 
+  console.log("Dashboard ready states:", {
+    isWebViewReady,
+    isNativeReady,
+    isAppReady,
+  });
+
   return (
     <View style={{ flex: 1 }}>
       <View

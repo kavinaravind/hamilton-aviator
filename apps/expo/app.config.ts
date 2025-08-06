@@ -40,7 +40,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true,
   },
   plugins: [
-    "expo-router",
+    [
+      "expo-router",
+      {
+        origin: process.env.EXPO_PUBLIC_WEB_URL || "http://localhost:3000",
+      },
+    ],
     "expo-secure-store",
     "expo-web-browser",
     [

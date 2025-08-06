@@ -1,5 +1,6 @@
 {
   "name": "hamilton-path",
+  "version": "0.1.0",
   "private": true,
   "engines": {
     "node": ">=22.14.0",
@@ -23,8 +24,8 @@
     "postinstall": "pnpm lint:ws",
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "android": "pnpm -F @hamilton/expo android",
+    "ios": "pnpm -F @hamilton/expo ios"
   },
   "devDependencies": {
     "@hamilton/prettier-config": "workspace:*",

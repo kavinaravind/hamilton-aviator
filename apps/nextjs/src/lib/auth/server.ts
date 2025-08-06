@@ -34,7 +34,12 @@ const config: InitAuthOptions = {
       clientSecret: env.AUTH_GITHUB_SECRET,
     },
   },
-  trustedOrigins: [baseUrl, `${env.AUTH_EXPO_ORIGIN}`],
+  trustedOrigins: [
+    baseUrl,
+    env.AUTH_EXPO_ORIGIN,
+    "expo://", // Allow Expo deep links
+    "expo:///", // Temporary fix for malformed URL
+  ],
 };
 
 export const auth = initAuth(config);
