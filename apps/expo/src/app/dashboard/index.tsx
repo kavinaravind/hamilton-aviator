@@ -57,13 +57,6 @@ const recentFlights = [
 ];
 
 export default function DashboardPage() {
-  const getCurrencyStatus = (item: typeof currencyData.passenger90Day) => {
-    if (!item.current) return { color: "#EF4444", text: "Expired" };
-    if (item.daysRemaining <= 7)
-      return { color: "#F59E0B", text: "Expires Soon" };
-    return { color: "#10B981", text: "Current" };
-  };
-
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ title: "Hamilton Dashboard" }} />

@@ -53,8 +53,8 @@ export default function SideBar({
         <SidebarProvider>
           <SidebarController onStateChange={onStateChange} />
           <AppSidebar user={user} onLogout={onLogout} />
-          <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <SidebarInset className="!bg-gray-50">
+            <header className="flex h-16 shrink-0 items-center gap-2 bg-gray-100 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
               <div className="flex w-full items-center justify-between px-4">
                 <div className="flex items-center gap-3">
                   <SidebarTrigger className="-ml-1" />

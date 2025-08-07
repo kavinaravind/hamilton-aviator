@@ -7,10 +7,12 @@ import { authClient } from "@/lib/auth";
 export default function DashboardLayout() {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
+
   const [sidebarState, setSidebarState] = useState<{ isOpen: boolean } | null>(
     null,
   );
   const [sidebarZIndex, setSidebarZIndex] = useState<number>(0);
+
   const [isWebViewReady, setIsWebViewReady] = useState<{
     isReady: boolean;
   } | null>(null);
@@ -22,7 +24,6 @@ export default function DashboardLayout() {
 
   const handleLogout = async () => {
     try {
-      console.log("Logout initiated from dashboard layout");
       await authClient.signOut();
       router.replace("/auth/sign-in");
     } catch (error) {
@@ -34,16 +35,13 @@ export default function DashboardLayout() {
     setIsNativeReady({ isReady: true });
   }, []);
 
-  // Handle z-index with delay
   useEffect(() => {
     if (sidebarState?.isOpen) {
-      // Immediately bring to front when opening
       setSidebarZIndex(100);
     } else if (sidebarState?.isOpen === false) {
-      // Delay sending to back when closing to allow animation to complete
       const timeout = setTimeout(() => {
         setSidebarZIndex(0);
-      }, 120); // 120ms delay to match typical sidebar animation duration
+      }, 120);
 
       return () => clearTimeout(timeout);
     }
@@ -116,8 +114,7 @@ export default function DashboardLayout() {
         <View
           style={{
             flex: 1,
-            paddingTop: 108,
-            paddingLeft: 16,
+            paddingTop: 116,
           }}
         >
           <Slot />

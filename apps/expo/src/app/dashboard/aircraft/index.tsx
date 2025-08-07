@@ -10,14 +10,25 @@ import {
 import { Link, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-// Mock aircraft data - replace with actual data source
-const mockAircraft = [
+type AircraftStatus = "airworthy" | "maintenance-soon" | "maintenance-due";
+type AircraftOwnership = "owned" | "rented";
+
+interface Aircraft {
+  id: string;
+  tailNumber: string;
+  make: string;
+  model: string;
+  status: AircraftStatus;
+  ownership: AircraftOwnership;
+}
+
+const Aircraft: Aircraft[] = [
   {
     id: "1",
     tailNumber: "N123AB",
     make: "Cessna",
     model: "172",
-    status: "airworthy", // airworthy, maintenance-soon, maintenance-due
+    status: "airworthy",
     ownership: "owned",
   },
   {
@@ -46,37 +57,77 @@ const mockAircraft = [
   },
 ];
 
-export default function AircraftListPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+const getStatusColor = (status: AircraftStatus): string => {
+  switch (status) {
+    case "airworthy":
+      return "#10B981";
+    case "maintenance-soon":
+      return "#F59E0B";
+    case "maintenance-due":
+      return "#EF4444";
+    default:
+      return "#6B7280";
+  }
+};
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "airworthy":
-        return "#10B981"; // green
-      case "maintenance-soon":
-        return "#F59E0B"; // yellow
-      case "maintenance-due":
-        return "#EF4444"; // red
-      default:
-        return "#6B7280"; // gray
-    }
-  };
+const getStatusText = (status: AircraftStatus): string => {
+  switch (status) {
+    case "airworthy":
+      return "Airworthy";
+    case "maintenance-soon":
+      return "Maintenance Soon";
+    case "maintenance-due":
+      return "Maintenance Due";
+    default:
+      return "Unknown";
+  }
+};
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "airworthy":
-        return "Airworthy";
-      case "maintenance-soon":
-        return "Maintenance Soon";
-      case "maintenance-due":
-        return "Maintenance Due";
-      default:
-        return "Unknown";
-    }
-  };
+interface AircraftItemProps {
+  item: Aircraft;
+}
 
-  // Filter aircraft based on search query
-  const filteredAircraft = mockAircraft.filter((aircraft) => {
+const AircraftItem = ({ item }: AircraftItemProps) => (
+  <Link href={`/dashboard/aircraft/${item.id}`} asChild>
+    <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4">
+      <View className="flex-row items-center justify-between">
+        <View className="flex-1">
+          <View className="mb-1 flex-row items-center">
+            <Text className="text-lg font-bold text-gray-900">
+              {item.tailNumber}
+            </Text>
+            <View className="ml-2 rounded-full bg-gray-100 px-2 py-1">
+              <Text className="text-xs font-medium text-gray-600">
+                {item.ownership === "owned" ? "Owned" : "Rental"}
+              </Text>
+            </View>
+          </View>
+          <Text className="text-md mb-2 text-gray-700">
+            {item.make} {item.model}
+          </Text>
+          <View className="flex-row items-center">
+            <View
+              className="mr-2 h-3 w-3 rounded-full"
+              style={{ backgroundColor: getStatusColor(item.status) }}
+            />
+            <Text
+              className="text-sm font-medium"
+              style={{ color: getStatusColor(item.status) }}
+            >
+              {getStatusText(item.status)}
+            </Text>
+          </View>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+      </View>
+    </TouchableOpacity>
+  </Link>
+);
+
+export default function AircraftPage() {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const filteredAircraft: Aircraft[] = Aircraft.filter((aircraft: Aircraft) => {
     const query = searchQuery.toLowerCase();
     return (
       aircraft.tailNumber.toLowerCase().includes(query) ||
@@ -87,55 +138,21 @@ export default function AircraftListPage() {
     );
   });
 
-  const renderAircraftItem = ({ item }: { item: (typeof mockAircraft)[0] }) => (
-    <Link href={`/dashboard/aircraft/${item.id}`} asChild>
-      <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4">
-        <View className="flex-row items-center justify-between">
-          <View className="flex-1">
-            <View className="mb-1 flex-row items-center">
-              <Text className="text-lg font-bold text-gray-900">
-                {item.tailNumber}
-              </Text>
-              <View className="ml-2 rounded-full bg-gray-100 px-2 py-1">
-                <Text className="text-xs font-medium text-gray-600">
-                  {item.ownership === "owned" ? "Owned" : "Rental"}
-                </Text>
-              </View>
-            </View>
-            <Text className="text-md mb-2 text-gray-700">
-              {item.make} {item.model}
-            </Text>
-            <View className="flex-row items-center">
-              <View
-                className="mr-2 h-3 w-3 rounded-full"
-                style={{ backgroundColor: getStatusColor(item.status) }}
-              />
-              <Text
-                className="text-sm font-medium"
-                style={{ color: getStatusColor(item.status) }}
-              >
-                {getStatusText(item.status)}
-              </Text>
-            </View>
-          </View>
-          <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-        </View>
-      </TouchableOpacity>
-    </Link>
-  );
-
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ headerShown: false }} />
-      <View className="bg-white px-4 py-4">
-        <Text className="text-lg font-bold text-gray-900">My Aircraft</Text>
-      </View>
-      <View className="border-b border-gray-200 bg-white px-4 pb-3">
-        <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
+      <View className="bg-white px-4 py-3 shadow-sm">
+        <View className="mb-4 flex-row items-center justify-between">
+          <Text className="text-xl font-bold text-gray-900">My Aircrafts</Text>
+          <Text className="text-sm text-gray-500">
+            {filteredAircraft.length} aircraft {searchQuery && "found"}
+          </Text>
+        </View>
+        <View className="flex-row items-center rounded-xl border border-gray-100 bg-gray-100 px-4 py-2">
           <Ionicons name="search" size={20} color="#6B7280" />
           <TextInput
-            className="ml-2 flex-1 text-base text-gray-900"
-            placeholder="Search aircraft..."
+            className="ml-3 flex-1 text-base text-gray-900"
+            placeholder="Search aircrafts..."
             placeholderTextColor="#9CA3AF"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -145,9 +162,9 @@ export default function AircraftListPage() {
           {searchQuery.length > 0 && (
             <TouchableOpacity
               onPress={() => setSearchQuery("")}
-              className="ml-2"
+              className="ml-2 rounded-full bg-gray-200 p-1"
             >
-              <Ionicons name="close-circle" size={20} color="#6B7280" />
+              <Ionicons name="close" size={16} color="#6B7280" />
             </TouchableOpacity>
           )}
         </View>
@@ -155,7 +172,7 @@ export default function AircraftListPage() {
       <View className="flex-1 px-4 pt-4">
         <FlatList
           data={filteredAircraft}
-          renderItem={renderAircraftItem}
+          renderItem={AircraftItem}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
@@ -166,12 +183,10 @@ export default function AircraftListPage() {
                 color="#9CA3AF"
               />
               <Text className="mt-4 text-lg text-gray-500">
-                {searchQuery ? "No aircraft found" : "No aircraft found"}
+                {searchQuery && "No aircraft found"}
               </Text>
               <Text className="mt-1 text-sm text-gray-400">
-                {searchQuery
-                  ? `No aircraft match "${searchQuery}"`
-                  : "Add your first aircraft to get started"}
+                {searchQuery && `No aircraft match for "${searchQuery}"`}
               </Text>
             </View>
           }
