@@ -126,7 +126,7 @@ export default function AircraftPage() {
               onPress={() => setSearchQuery("")}
               className="ml-2 rounded-full bg-gray-200 p-1"
             >
-              <Ionicons name="close" size={16} color="#6B7280" />
+              <Ionicons name="close" size={20} color="#6B7280" />
             </TouchableOpacity>
           )}
         </View>

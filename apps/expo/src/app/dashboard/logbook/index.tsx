@@ -1,3 +1,4 @@
+import type { Flight } from "@/lib/logbook";
 import { useState } from "react";
 import {
   FlatList,
@@ -8,10 +9,14 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import {
+  calculateTotalFlightTime,
+  formatDate,
+  formatFlightDuration,
+} from "@/lib/logbook";
 import { Ionicons } from "@expo/vector-icons";
 
-// Mock flight data - replace with actual data source
-const mockFlights = [
+const flights: Flight[] = [
   {
     id: "1",
     date: "2024-08-05",
@@ -38,17 +43,43 @@ const mockFlights = [
   },
 ];
 
-export default function LogBookPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredFlights, setFilteredFlights] = useState(mockFlights);
+const FlightItem = ({ item }: { item: Flight }) => (
+  <Link href={`/dashboard/logbook/flight/${item.id}`} asChild>
+    <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <View className="flex-row items-start justify-between">
+        <View className="flex-1">
+          <Text className="text-lg font-semibold text-gray-900">
+            {item.route}
+          </Text>
+          <Text className="mt-1 text-sm text-gray-600">
+            {item.aircraft} • {item.tailNumber}
+          </Text>
+          <Text className="mt-1 text-sm text-gray-500">
+            {formatDate(item.date)}
+          </Text>
+        </View>
+        <View className="items-end">
+          <Text className="text-lg font-bold text-primary">
+            {formatFlightDuration(item.duration)}
+          </Text>
+          <Ionicons name="chevron-forward" size={16} color="#9CA3AF" />
+        </View>
+      </View>
+    </TouchableOpacity>
+  </Link>
+);
+
+export default function LogbookPage() {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredFlights, setFilteredFlights] = useState<Flight[]>(flights);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query === "") {
-      setFilteredFlights(mockFlights);
+      setFilteredFlights(flights);
     } else {
-      const filtered = mockFlights.filter(
-        (flight) =>
+      const filtered = flights.filter(
+        (flight: Flight) =>
           flight.route.toLowerCase().includes(query.toLowerCase()) ||
           flight.aircraft.toLowerCase().includes(query.toLowerCase()) ||
           flight.tailNumber.toLowerCase().includes(query.toLowerCase()),
@@ -57,66 +88,50 @@ export default function LogBookPage() {
     }
   };
 
-  const renderFlightItem = ({ item }: { item: (typeof mockFlights)[0] }) => (
-    <Link href={`/dashboard/logbook/flight/${item.id}`} asChild>
-      <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-        <View className="flex-row items-start justify-between">
-          <View className="flex-1">
-            <Text className="text-lg font-semibold text-gray-900">
-              {item.route}
-            </Text>
-            <Text className="mt-1 text-sm text-gray-600">
-              {item.aircraft} • {item.tailNumber}
-            </Text>
-            <Text className="mt-1 text-sm text-gray-500">{item.date}</Text>
-          </View>
-          <View className="items-end">
-            <Text className="text-lg font-bold text-primary">
-              {item.duration}h
-            </Text>
-            <Ionicons name="chevron-forward" size={16} color="#9CA3AF" />
-          </View>
-        </View>
-      </TouchableOpacity>
-    </Link>
-  );
+  const totalFlightTime = calculateTotalFlightTime(filteredFlights);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ headerShown: false }} />
-      <View className="border-b border-gray-200 bg-white px-4 pb-3">
-        <View className="bg-white px-4 py-4">
-          <Text className="text-lg font-bold text-gray-900">My Logbook</Text>
+      <View className="bg-white px-4 py-3">
+        <View className="mb-4 flex-row items-center justify-between">
+          <Text className="text-xl font-bold text-gray-900">My Logbook</Text>
+          <Text className="text-sm text-gray-500">
+            {totalFlightTime}h total
+          </Text>
         </View>
         <View className="flex-row items-center gap-3">
-          <View className="flex-1 flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
-            <Ionicons name="search" size={20} color="#9CA3AF" />
+          <View className="flex-1 flex-row items-center rounded-xl border border-gray-100 bg-gray-50 px-4 py-2">
+            <Ionicons name="search" size={20} color="#6B7280" />
             <TextInput
-              className="ml-2 h-6 flex-1 text-gray-900"
+              className="ml-3 flex-1 text-base text-gray-900"
               placeholder="Search flights..."
               value={searchQuery}
               onChangeText={handleSearch}
               placeholderTextColor="#9CA3AF"
+              autoCapitalize="none"
+              autoCorrect={false}
             />
             {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => handleSearch("")}>
-                <Ionicons name="close-circle" size={20} color="#9CA3AF" />
+              <TouchableOpacity
+                onPress={() => handleSearch("")}
+                className="ml-2 rounded-full bg-gray-200 p-1"
+              >
+                <Ionicons name="close" size={16} color="#9CA3AF" />
               </TouchableOpacity>
             )}
           </View>
           <Link href="/dashboard/logbook/add" asChild>
-            <TouchableOpacity className="items-center justify-center rounded-lg bg-primary px-4 py-2">
+            <TouchableOpacity className="items-center justify-center rounded-xl bg-primary px-4 py-2">
               <Ionicons name="add" size={20} color="white" />
             </TouchableOpacity>
           </Link>
         </View>
       </View>
-
-      {/* Flight List */}
       <View className="flex-1 px-4 pt-4">
         <FlatList
           data={filteredFlights}
-          renderItem={renderFlightItem}
+          renderItem={FlightItem}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
