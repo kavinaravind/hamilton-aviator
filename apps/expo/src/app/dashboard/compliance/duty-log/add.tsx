@@ -1,4 +1,4 @@
-import type { DutyEntry } from "@/lib/duty";
+import type { DutyEntry } from "@/lib/compliance/duty-log";
 import { useState } from "react";
 import {
   Alert,
@@ -12,7 +12,11 @@ import {
   View,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
-import { getDutyTypeColor, getDutyTypeIcon, getDutyTypeText } from "@/lib/duty";
+import {
+  getDutyTypeColor,
+  getDutyTypeIcon,
+  getDutyTypeText,
+} from "@/lib/compliance/duty-log";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function AddDutyPage() {

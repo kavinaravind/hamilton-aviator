@@ -1,4 +1,4 @@
-import type { DutyEntry } from "@/lib/duty";
+import type { DutyEntry } from "@/lib/compliance/duty-log";
 import {
   Alert,
   SafeAreaView,
@@ -16,7 +16,7 @@ import {
   getDutyTypeColor,
   getDutyTypeIcon,
   getDutyTypeText,
-} from "@/lib/duty";
+} from "@/lib/compliance/duty-log";
 import { Ionicons } from "@expo/vector-icons";
 
 const DutyEntries: DutyEntry[] = [
