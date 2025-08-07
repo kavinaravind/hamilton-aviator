@@ -19,7 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 const flights: Flight[] = [
   {
     id: "1",
-    date: "2024-08-05",
+    date: "2025-08-05",
     route: "KLAX - KLAS",
     aircraft: "C172",
     duration: "2.3",
@@ -27,7 +27,7 @@ const flights: Flight[] = [
   },
   {
     id: "2",
-    date: "2024-08-03",
+    date: "2025-08-03",
     route: "KPHX - KLAX",
     aircraft: "PA28",
     duration: "3.1",
@@ -35,7 +35,7 @@ const flights: Flight[] = [
   },
   {
     id: "3",
-    date: "2024-07-30",
+    date: "2025-07-30",
     route: "KLAS - KPHX",
     aircraft: "C172",
     duration: "1.8",
