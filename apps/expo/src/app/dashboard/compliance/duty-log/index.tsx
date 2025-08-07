@@ -3,6 +3,7 @@ import {
   FlatList,
   SafeAreaView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -50,6 +51,24 @@ const mockDutyPeriods = [
 ];
 
 export default function DutyLogPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredDutyPeriods, setFilteredDutyPeriods] =
+    useState(mockDutyPeriods);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query === "") {
+      setFilteredDutyPeriods(mockDutyPeriods);
+    } else {
+      const filtered = mockDutyPeriods.filter(
+        (period) =>
+          period.description.toLowerCase().includes(query.toLowerCase()) ||
+          period.type.toLowerCase().includes(query.toLowerCase()),
+      );
+      setFilteredDutyPeriods(filtered);
+    }
+  };
+
   const getDutyTypeColor = (type: string) => {
     switch (type) {
       case "flight-duty":
@@ -203,10 +222,36 @@ export default function DutyLogPage() {
         </View>
       </View>
 
+      {/* Search and Add Button Bar */}
+      <View className="border-b border-gray-200 bg-white px-4 py-3">
+        <View className="flex-row items-center gap-3">
+          <View className="flex-1 flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
+            <Ionicons name="search" size={20} color="#9CA3AF" />
+            <TextInput
+              className="ml-2 flex-1 text-gray-900"
+              placeholder="Search duty periods..."
+              value={searchQuery}
+              onChangeText={handleSearch}
+              placeholderTextColor="#9CA3AF"
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => handleSearch("")}>
+                <Ionicons name="close-circle" size={20} color="#9CA3AF" />
+              </TouchableOpacity>
+            )}
+          </View>
+          <Link href="/dashboard/compliance/duty-log/add" asChild>
+            <TouchableOpacity className="items-center justify-center rounded-lg bg-primary px-4 py-2">
+              <Ionicons name="add" size={20} color="white" />
+            </TouchableOpacity>
+          </Link>
+        </View>
+      </View>
+
       {/* Duty Periods List */}
       <View className="flex-1 px-4 pt-4">
         <FlatList
-          data={mockDutyPeriods}
+          data={filteredDutyPeriods}
           renderItem={renderDutyPeriod}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
@@ -214,28 +259,18 @@ export default function DutyLogPage() {
             <View className="items-center justify-center py-12">
               <Ionicons name="time-outline" size={48} color="#9CA3AF" />
               <Text className="mt-4 text-lg text-gray-500">
-                No duty periods logged
+                {searchQuery
+                  ? "No duty periods found"
+                  : "No duty periods logged"}
               </Text>
               <Text className="mt-1 text-sm text-gray-400">
-                Start tracking your duty time
+                {searchQuery
+                  ? "Try adjusting your search"
+                  : "Start tracking your duty time"}
               </Text>
             </View>
           }
         />
-      </View>
-
-      {/* Add Duty Period Button */}
-      <View className="px-4 pb-6">
-        <Link href="/dashboard/duty/add" asChild>
-          <TouchableOpacity className="items-center rounded-lg bg-primary py-4 shadow-sm">
-            <View className="flex-row items-center">
-              <Ionicons name="add" size={24} color="white" />
-              <Text className="ml-2 text-lg font-semibold text-white">
-                Add Duty Period
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </Link>
       </View>
     </SafeAreaView>
   );

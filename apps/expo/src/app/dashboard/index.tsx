@@ -8,22 +8,6 @@ import {
 import { Link, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-// Mock data - replace with actual data source
-const currencyData = {
-  passenger90Day: {
-    current: true,
-    expiresDate: "2025-02-15",
-    daysRemaining: 45,
-  },
-  ifr: { current: true, expiresDate: "2025-01-20", daysRemaining: 20 },
-  biannualFlightReview: {
-    current: true,
-    expiresDate: "2025-08-15",
-    daysRemaining: 180,
-  },
-  medical: { current: true, expiresDate: "2026-03-01", daysRemaining: 365 },
-};
-
 const flightTimeData = {
   totalTime: "1,247.3",
   pic: "892.1",
@@ -84,58 +68,6 @@ export default function DashboardPage() {
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ title: "Hamilton Dashboard" }} />
       <ScrollView className="flex-1 px-4 pt-4">
-        <View className="mb-6">
-          <Text className="mb-3 text-xl font-bold text-gray-900">
-            Currency Status
-          </Text>
-          <View className="grid grid-cols-2 gap-3">
-            <Link href="/dashboard/currency/passenger" asChild>
-              <TouchableOpacity className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <View className="mb-2 flex-row items-center justify-between">
-                  <Text className="text-sm font-medium text-gray-600">
-                    90-Day Passenger
-                  </Text>
-                  <View
-                    className="h-3 w-3 rounded-full"
-                    style={{
-                      backgroundColor: getCurrencyStatus(
-                        currencyData.passenger90Day,
-                      ).color,
-                    }}
-                  />
-                </View>
-                <Text className="text-lg font-bold text-gray-900">
-                  {getCurrencyStatus(currencyData.passenger90Day).text}
-                </Text>
-                <Text className="mt-1 text-xs text-gray-500">
-                  Expires {currencyData.passenger90Day.expiresDate}
-                </Text>
-              </TouchableOpacity>
-            </Link>
-            <Link href="/dashboard/currency/ifr" asChild>
-              <TouchableOpacity className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <View className="mb-2 flex-row items-center justify-between">
-                  <Text className="text-sm font-medium text-gray-600">
-                    IFR Currency
-                  </Text>
-                  <View
-                    className="h-3 w-3 rounded-full"
-                    style={{
-                      backgroundColor: getCurrencyStatus(currencyData.ifr)
-                        .color,
-                    }}
-                  />
-                </View>
-                <Text className="text-lg font-bold text-gray-900">
-                  {getCurrencyStatus(currencyData.ifr).text}
-                </Text>
-                <Text className="mt-1 text-xs text-gray-500">
-                  Expires {currencyData.ifr.expiresDate}
-                </Text>
-              </TouchableOpacity>
-            </Link>
-          </View>
-        </View>
         <View className="mb-6">
           <Text className="mb-3 text-xl font-bold text-gray-900">
             Flight Time Summary

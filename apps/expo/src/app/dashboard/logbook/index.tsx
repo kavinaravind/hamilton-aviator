@@ -84,23 +84,31 @@ export default function LogBookPage() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ headerShown: false }} />
-
-      {/* Search and Filter Bar */}
-      <View className="border-b border-gray-200 bg-white px-4 py-3">
-        <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
-          <Ionicons name="search" size={20} color="#9CA3AF" />
-          <TextInput
-            className="ml-2 flex-1 text-gray-900"
-            placeholder="Search flights (route, aircraft, tail number...)"
-            value={searchQuery}
-            onChangeText={handleSearch}
-            placeholderTextColor="#9CA3AF"
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => handleSearch("")}>
-              <Ionicons name="close-circle" size={20} color="#9CA3AF" />
+      <View className="border-b border-gray-200 bg-white px-4 pb-3">
+        <View className="bg-white px-4 py-4">
+          <Text className="text-lg font-bold text-gray-900">My Logbook</Text>
+        </View>
+        <View className="flex-row items-center gap-3">
+          <View className="flex-1 flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
+            <Ionicons name="search" size={20} color="#9CA3AF" />
+            <TextInput
+              className="ml-2 h-6 flex-1 text-gray-900"
+              placeholder="Search flights..."
+              value={searchQuery}
+              onChangeText={handleSearch}
+              placeholderTextColor="#9CA3AF"
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => handleSearch("")}>
+                <Ionicons name="close-circle" size={20} color="#9CA3AF" />
+              </TouchableOpacity>
+            )}
+          </View>
+          <Link href="/dashboard/logbook/add" asChild>
+            <TouchableOpacity className="items-center justify-center rounded-lg bg-primary px-4 py-2">
+              <Ionicons name="add" size={20} color="white" />
             </TouchableOpacity>
-          )}
+          </Link>
         </View>
       </View>
 
@@ -126,13 +134,6 @@ export default function LogBookPage() {
           }
         />
       </View>
-
-      {/* Floating Action Button */}
-      <Link href="/dashboard/logbook/add" asChild>
-        <TouchableOpacity className="absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg">
-          <Ionicons name="add" size={28} color="white" />
-        </TouchableOpacity>
-      </Link>
     </SafeAreaView>
   );
 }
