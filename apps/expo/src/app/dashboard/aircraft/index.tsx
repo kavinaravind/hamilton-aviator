@@ -1,3 +1,4 @@
+import type { Aircraft } from "@/lib/aircraft";
 import { useState } from "react";
 import {
   FlatList,
@@ -8,21 +9,10 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { getStatusColor, getStatusText } from "@/lib/aircraft";
 import { Ionicons } from "@expo/vector-icons";
 
-type AircraftStatus = "airworthy" | "maintenance-soon" | "maintenance-due";
-type AircraftOwnership = "owned" | "rented";
-
-interface Aircraft {
-  id: string;
-  tailNumber: string;
-  make: string;
-  model: string;
-  status: AircraftStatus;
-  ownership: AircraftOwnership;
-}
-
-const Aircraft: Aircraft[] = [
+const Aircrafts: Aircraft[] = [
   {
     id: "1",
     tailNumber: "N123AB",
@@ -48,7 +38,7 @@ const Aircraft: Aircraft[] = [
     ownership: "owned",
   },
   {
-    id: "4",
+    id: "412",
     tailNumber: "N321GH",
     make: "Piper",
     model: "PA-34",
@@ -57,37 +47,7 @@ const Aircraft: Aircraft[] = [
   },
 ];
 
-const getStatusColor = (status: AircraftStatus): string => {
-  switch (status) {
-    case "airworthy":
-      return "#10B981";
-    case "maintenance-soon":
-      return "#F59E0B";
-    case "maintenance-due":
-      return "#EF4444";
-    default:
-      return "#6B7280";
-  }
-};
-
-const getStatusText = (status: AircraftStatus): string => {
-  switch (status) {
-    case "airworthy":
-      return "Airworthy";
-    case "maintenance-soon":
-      return "Maintenance Soon";
-    case "maintenance-due":
-      return "Maintenance Due";
-    default:
-      return "Unknown";
-  }
-};
-
-interface AircraftItemProps {
-  item: Aircraft;
-}
-
-const AircraftItem = ({ item }: AircraftItemProps) => (
+const AircraftItem = ({ item }: { item: Aircraft }) => (
   <Link href={`/dashboard/aircraft/${item.id}`} asChild>
     <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4">
       <View className="flex-row items-center justify-between">
@@ -127,21 +87,23 @@ const AircraftItem = ({ item }: AircraftItemProps) => (
 export default function AircraftPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const filteredAircraft: Aircraft[] = Aircraft.filter((aircraft: Aircraft) => {
-    const query = searchQuery.toLowerCase();
-    return (
-      aircraft.tailNumber.toLowerCase().includes(query) ||
-      aircraft.make.toLowerCase().includes(query) ||
-      aircraft.model.toLowerCase().includes(query) ||
-      getStatusText(aircraft.status).toLowerCase().includes(query) ||
-      aircraft.ownership.toLowerCase().includes(query)
-    );
-  });
+  const filteredAircraft: Aircraft[] = Aircrafts.filter(
+    (aircraft: Aircraft) => {
+      const query = searchQuery.toLowerCase();
+      return (
+        aircraft.tailNumber.toLowerCase().includes(query) ||
+        aircraft.make.toLowerCase().includes(query) ||
+        aircraft.model.toLowerCase().includes(query) ||
+        getStatusText(aircraft.status).toLowerCase().includes(query) ||
+        aircraft.ownership.toLowerCase().includes(query)
+      );
+    },
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ headerShown: false }} />
-      <View className="bg-white px-4 py-3 shadow-sm">
+      <View className="bg-white px-4 py-3">
         <View className="mb-4 flex-row items-center justify-between">
           <Text className="text-xl font-bold text-gray-900">My Aircrafts</Text>
           <Text className="text-sm text-gray-500">

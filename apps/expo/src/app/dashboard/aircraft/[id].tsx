@@ -1,3 +1,4 @@
+import type { DetailedAircraft } from "@/lib/aircraft";
 import {
   Alert,
   SafeAreaView,
@@ -7,9 +8,11 @@ import {
   View,
 } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { getStatusColor, getStatusText } from "@/lib/aircraft";
+import { formatDate } from "@/lib/util";
 import { Ionicons } from "@expo/vector-icons";
 
-const mockAircraft = [
+const Aircrafts: DetailedAircraft[] = [
   {
     id: "1",
     tailNumber: "N123AB",
@@ -140,11 +143,11 @@ const mockAircraft = [
   },
 ];
 
-export default function AircraftDetailPage() {
+export default function AircraftDetailsPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
-  const aircraft = mockAircraft.find((a) => a.id === id);
+  const aircraft = Aircrafts.find((a) => a.id === id);
 
   if (!aircraft) {
     return (
@@ -168,40 +171,6 @@ export default function AircraftDetailPage() {
       </SafeAreaView>
     );
   }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "airworthy":
-        return "#10B981"; // green
-      case "maintenance-soon":
-        return "#F59E0B"; // yellow
-      case "maintenance-due":
-        return "#EF4444"; // red
-      default:
-        return "#6B7280"; // gray
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "airworthy":
-        return "Airworthy";
-      case "maintenance-soon":
-        return "Maintenance Soon";
-      case "maintenance-due":
-        return "Maintenance Due";
-      default:
-        return "Unknown";
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
@@ -264,7 +233,7 @@ export default function AircraftDetailPage() {
             </View>
           </View>
         </View>
-        <View className="mt-4 bg-white px-6 py-4">
+        <View className="mt-2 bg-white px-6 py-4">
           <Text className="mb-3 text-lg font-bold text-gray-900">
             Flight Time
           </Text>
@@ -285,11 +254,11 @@ export default function AircraftDetailPage() {
               <Text className="text-2xl font-bold text-purple-600">
                 {aircraft.propeller.totalTime}
               </Text>
-              <Text className="text-sm text-gray-500">Prop Hours</Text>
+              <Text className="text-sm text-gray-500">Propeller Hours</Text>
             </View>
           </View>
         </View>
-        <View className="mt-4 bg-white px-6 py-4">
+        <View className="mt-2 bg-white px-6 py-4">
           <Text className="mb-3 text-lg font-bold text-gray-900">
             Engine & Propeller
           </Text>
@@ -310,7 +279,7 @@ export default function AircraftDetailPage() {
             </View>
           </View>
         </View>
-        <View className="mt-4 bg-white px-6 py-4">
+        <View className="mt-2 bg-white px-6 py-4">
           <Text className="mb-3 text-lg font-bold text-gray-900">
             Maintenance
           </Text>
@@ -333,7 +302,7 @@ export default function AircraftDetailPage() {
             </View>
           </View>
         </View>
-        <View className="mt-4 bg-white px-6 py-4">
+        <View className="mt-2 bg-white px-6 py-4">
           <Text className="mb-3 text-lg font-bold text-gray-900">
             Insurance
           </Text>
@@ -360,7 +329,7 @@ export default function AircraftDetailPage() {
             </View>
           </View>
         </View>
-        <View className="mb-6 mt-4 bg-white px-6 py-4">
+        <View className="mb-6 mt-2 bg-white px-6 py-4">
           <Text className="mb-3 text-lg font-bold text-gray-900">
             Registration
           </Text>
