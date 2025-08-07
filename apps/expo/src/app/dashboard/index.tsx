@@ -98,7 +98,7 @@ const upcomingItems: UpcomingItem[] = [
 ];
 
 export default function DashboardPage() {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>("month");
+  const [selectedPeriod, setSelectedPeriod] = useState<string>("week");
 
   const periods: Period[] = [
     { id: "week", label: "7 Days" },

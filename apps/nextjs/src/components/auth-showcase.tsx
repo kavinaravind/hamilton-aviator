@@ -1,5 +1,5 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { auth, getSession } from "@/lib/auth/server";
 
 import { Button } from "@hamilton/ui/components/ui/button";
@@ -38,20 +38,7 @@ export async function AuthShowcase() {
         <span>Logged in as {session.user.name}</span>
       </p>
 
-      <form>
-        <Button
-          size="lg"
-          formAction={async () => {
-            "use server";
-            await auth.api.signOut({
-              headers: await headers(),
-            });
-            redirect("/");
-          }}
-        >
-          Sign out
-        </Button>
-      </form>
+      <SignOutButton size="lg" />
     </div>
   );
 }
