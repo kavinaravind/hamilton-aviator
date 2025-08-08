@@ -1,10 +1,5 @@
 "use client";
 
-import type {
-  RecentReport,
-  ReportFilter,
-  ReportType,
-} from "@lib/compliance/reports";
 import React, { useState } from "react";
 import {
   formatDate,
@@ -12,7 +7,10 @@ import {
   getReportIcon,
   getStatusIcon,
   getStatusVariant,
-} from "@lib/compliance/reports";
+  RecentReport,
+  ReportFilter,
+  ReportType,
+} from "@/lib/compliance/reports";
 import { AlertTriangle, Download, FileText, Search } from "lucide-react";
 
 import { Alert, AlertDescription } from "@hamilton/ui/components/ui/alert";

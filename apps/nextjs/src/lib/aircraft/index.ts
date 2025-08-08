@@ -1,5 +1,71 @@
 import { AlertTriangle, CheckCircle, Wrench } from "lucide-react";
 
+// Aircraft status types for details page
+export type AircraftStatus =
+  | "airworthy"
+  | "maintenance-soon"
+  | "maintenance-due";
+
+export interface Aircraft {
+  id: string;
+  tailNumber: string;
+  type?: string;
+  make?: string;
+  model: string;
+  year?: number | string;
+  ownership: AircraftOwnership;
+  status: AircraftStatus;
+  totalTime?: number | string;
+  lastInspection?: string;
+  nextInspection?: string;
+  location?: string;
+  notes?: string;
+  inspectionType?: string;
+  hoursToInspection?: number;
+  daysToInspection?: number;
+}
+
+export interface DetailedAircraft extends Aircraft {
+  year: string;
+  totalTime: string;
+  make: string;
+  engine: {
+    make: string;
+    model: string;
+    totalTime: string;
+  };
+  propeller: {
+    make: string;
+    model: string;
+    totalTime: string;
+  };
+  annualDue: string;
+  lastMaintenance: string;
+  insurance: {
+    company: string;
+    expires: string;
+    policyNumber: string;
+  };
+  registration: {
+    expires: string;
+    category: string;
+    class: string;
+  };
+}
+
+export const getStatusText = (status: AircraftStatus): string => {
+  switch (status) {
+    case "airworthy":
+      return "Airworthy";
+    case "maintenance-soon":
+      return "Maintenance Soon";
+    case "maintenance-due":
+      return "Maintenance Due";
+    default:
+      return "Unknown";
+  }
+};
+
 export function getStatusIcon(status: string) {
   switch (status) {
     case "airworthy":
@@ -18,24 +84,6 @@ export type AircraftStatusType =
   | "maintenance-soon"
   | "maintenance-due";
 export type AircraftOwnership = "owned" | "rented";
-
-export interface Aircraft {
-  id: string;
-  tailNumber: string;
-  type: string;
-  model: string;
-  year: number;
-  ownership: AircraftOwnership;
-  status: AircraftStatusType;
-  totalTime: number;
-  lastInspection: string;
-  nextInspection: string;
-  location: string;
-  notes?: string;
-  inspectionType?: string;
-  hoursToInspection?: number;
-  daysToInspection?: number;
-}
 
 export type AircraftFilter = {
   id: string;

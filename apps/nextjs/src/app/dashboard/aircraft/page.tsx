@@ -133,18 +133,10 @@ function AircraftCard({ aircraft }: { aircraft: Aircraft }) {
             </div>
           </div>
         )}
-        <div className="flex space-x-2 pt-2">
+        <div className="flex pt-2">
           <Link href={`/dashboard/aircraft/${aircraft.id}`} className="flex-1">
             <Button variant="outline" size="sm" className="w-full">
               View Details
-            </Button>
-          </Link>
-          <Link
-            href={`/dashboard/aircraft/${aircraft.id}/edit`}
-            className="flex-1"
-          >
-            <Button size="sm" className="w-full">
-              Edit
             </Button>
           </Link>
         </div>
@@ -182,12 +174,6 @@ export default function AircraftPage() {
             Manage your aircraft fleet and maintenance schedules
           </p>
         </div>
-        <Link href="/dashboard/aircraft/add">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Aircraft
-          </Button>
-        </Link>
       </div>
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="relative max-w-sm flex-1">
@@ -232,16 +218,8 @@ export default function AircraftPage() {
           <p className="text-muted-foreground">
             {searchQuery || selectedFilter !== "all"
               ? "Try adjusting your search or filter criteria"
-              : "Get started by adding your first aircraft"}
+              : "No aircraft in your fleet."}
           </p>
-          {!searchQuery && selectedFilter === "all" && (
-            <Link href="/dashboard/aircraft/add" className="mt-4 inline-block">
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Add Aircraft
-              </Button>
-            </Link>
-          )}
         </div>
       )}
     </div>

@@ -148,21 +148,13 @@ function LogEntryCard({ entry }: { entry: LogEntry }) {
           </div>
         )}
 
-        <div className="flex space-x-2 pt-2">
+        <div className="flex pt-2">
           <Link
             href={`/dashboard/logbook/flight/${entry.id}`}
             className="flex-1"
           >
             <Button variant="outline" size="sm" className="w-full">
               View Details
-            </Button>
-          </Link>
-          <Link
-            href={`/dashboard/logbook/flight/${entry.id}/edit`}
-            className="flex-1"
-          >
-            <Button size="sm" className="w-full">
-              Edit
             </Button>
           </Link>
         </div>
