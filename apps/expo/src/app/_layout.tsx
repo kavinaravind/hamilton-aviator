@@ -10,7 +10,7 @@ export default function RootLayout() {
   return (
     <>
       <Head>
-        <title>Hamilton Path</title>
+        <title>Hamilton Aviator</title>
         <meta
           name="description"
           content="Log flights, track duty hours, manage maintenance records, and generate FAA-ready reports."
