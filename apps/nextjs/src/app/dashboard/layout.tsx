@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
 import { DynamicBreadcrumb } from "@/components/navigation/dynamic-breadcrumb";
 import { getSession } from "@/lib/auth/server";
@@ -12,8 +13,8 @@ import {
 } from "@hamilton/ui/components/ui/sidebar";
 
 export const metadata: Metadata = {
-  title: "Next Shadcn Dashboard Starter",
-  description: "Basic dashboard with Next.js and Shadcn",
+  title: "Hamilton Aviator",
+  description: "Your digital copilot",
 };
 
 export default async function DashboardLayout({
@@ -23,8 +24,13 @@ export default async function DashboardLayout({
 }) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+
   const session = await getSession();
-  const user = session?.user
+  if (!session) {
+    redirect("/auth/sign-in");
+  }
+
+  const user = session.user
     ? {
         id: session.user.id,
         name: session.user.name,

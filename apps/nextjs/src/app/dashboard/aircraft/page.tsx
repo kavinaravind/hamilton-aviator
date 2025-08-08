@@ -1,18 +1,10 @@
 "use client";
 
-import type { Aircraft, AircraftFilter } from "@/lib/dashboard";
+import type { Aircraft, AircraftFilter } from "@/lib/aircraft";
 import React, { useState } from "react";
 import Link from "next/link";
-import { formatDate, getStatusColor } from "@/lib/dashboard";
-import {
-  AlertTriangle,
-  CheckCircle,
-  Filter,
-  Plane,
-  Plus,
-  Search,
-  Wrench,
-} from "lucide-react";
+import { getStatusColor, getStatusIcon } from "@/lib/aircraft";
+import { AlertTriangle, Plane, Plus, Search } from "lucide-react";
 
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
@@ -23,57 +15,51 @@ import {
   CardTitle,
 } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@hamilton/ui/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
 
-// Mock data - in real app, this would come from APIs
 const aircraftData: Aircraft[] = [
   {
     id: "1",
     tailNumber: "N123AB",
-    make: "Cessna",
+    type: "Cessna",
     model: "172",
     year: 2018,
-    status: "airworthy",
     ownership: "owned",
-    location: "KLAX",
+    status: "airworthy",
     totalTime: 1247.3,
     lastInspection: "2025-07-15",
     nextInspection: "2025-08-15",
+    location: "KLAX",
     inspectionType: "100-Hour",
     hoursToInspection: 7.8,
   },
   {
     id: "2",
     tailNumber: "N456CD",
-    make: "Piper",
+    type: "Piper",
     model: "Cherokee",
     year: 2020,
-    status: "maintenance-due",
     ownership: "rented",
-    location: "KPHX",
+    status: "maintenance-due",
     totalTime: 892.1,
     lastInspection: "2024-12-20",
     nextInspection: "2025-09-20",
+    location: "KPHX",
     inspectionType: "Annual",
     daysToInspection: 45,
   },
   {
     id: "3",
     tailNumber: "N789EF",
-    make: "Cessna",
+    type: "Cessna",
     model: "182",
     year: 2019,
-    status: "maintenance-soon",
     ownership: "owned",
-    location: "KLAS",
+    status: "maintenance-soon",
     totalTime: 567.2,
     lastInspection: "2025-06-01",
     nextInspection: "2025-08-20",
+    location: "KLAS",
     inspectionType: "100-Hour",
     hoursToInspection: 15.3,
   },
@@ -93,24 +79,7 @@ const filterOptions: AircraftFilter[] = [
   },
 ];
 
-interface AircraftCardProps {
-  aircraft: Aircraft;
-}
-
-function AircraftCard({ aircraft }: AircraftCardProps) {
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "airworthy":
-        return CheckCircle;
-      case "maintenance-soon":
-        return AlertTriangle;
-      case "maintenance-due":
-        return Wrench;
-      default:
-        return AlertTriangle;
-    }
-  };
-
+function AircraftCard({ aircraft }: { aircraft: Aircraft }) {
   const StatusIcon = getStatusIcon(aircraft.status);
 
   return (
@@ -129,7 +98,7 @@ function AircraftCard({ aircraft }: AircraftCardProps) {
           </Badge>
         </div>
         <p className="text-sm text-muted-foreground">
-          {aircraft.year} {aircraft.make} {aircraft.model}
+          {aircraft.year} {aircraft.type} {aircraft.model}
         </p>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -151,7 +120,6 @@ function AircraftCard({ aircraft }: AircraftCardProps) {
             <p className="font-medium">{aircraft.inspectionType}</p>
           </div>
         </div>
-
         {aircraft.status !== "airworthy" && (
           <div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
             <div className="flex items-center space-x-2">
@@ -165,7 +133,6 @@ function AircraftCard({ aircraft }: AircraftCardProps) {
             </div>
           </div>
         )}
-
         <div className="flex space-x-2 pt-2">
           <Link href={`/dashboard/aircraft/${aircraft.id}`} className="flex-1">
             <Button variant="outline" size="sm" className="w-full">
@@ -193,7 +160,7 @@ export default function AircraftPage() {
   const filteredAircraft = aircraftData.filter((aircraft) => {
     const matchesSearch =
       aircraft.tailNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      `${aircraft.make} ${aircraft.model}`
+      `${aircraft.type} ${aircraft.model}`
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
 
@@ -208,10 +175,9 @@ export default function AircraftPage() {
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Aircraft</h1>
+          <h1 className="text-3xl font-bold tracking-tight">My Aircraft</h1>
           <p className="text-muted-foreground">
             Manage your aircraft fleet and maintenance schedules
           </p>
@@ -223,8 +189,6 @@ export default function AircraftPage() {
           </Button>
         </Link>
       </div>
-
-      {/* Search and Filter */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -256,14 +220,11 @@ export default function AircraftPage() {
           </TabsList>
         </Tabs>
       </div>
-
-      {/* Aircraft Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredAircraft.map((aircraft) => (
           <AircraftCard key={aircraft.id} aircraft={aircraft} />
         ))}
       </div>
-
       {filteredAircraft.length === 0 && (
         <div className="py-12 text-center">
           <Plane className="mx-auto h-12 w-12 text-muted-foreground" />

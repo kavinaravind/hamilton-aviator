@@ -4,15 +4,7 @@ import type { LogEntry, LogFilter } from "@/lib/dashboard";
 import React, { useState } from "react";
 import Link from "next/link";
 import { formatDate } from "@/lib/dashboard";
-import {
-  Calendar,
-  Clock,
-  Filter,
-  MapPin,
-  Plane,
-  Plus,
-  Search,
-} from "lucide-react";
+import { Plane, Plus, Search } from "lucide-react";
 
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
@@ -31,14 +23,8 @@ import {
   TableHeader,
   TableRow,
 } from "@hamilton/ui/components/ui/table";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@hamilton/ui/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
 
-// Mock data - in real app, this would come from APIs
 const logEntries: LogEntry[] = [
   {
     id: "1",
@@ -119,11 +105,7 @@ const filterOptions: LogFilter[] = [
   },
 ];
 
-interface LogEntryCardProps {
-  entry: LogEntry;
-}
-
-function LogEntryCard({ entry }: LogEntryCardProps) {
+function LogEntryCard({ entry }: { entry: LogEntry }) {
   return (
     <Card className="transition-shadow hover:shadow-md">
       <CardHeader className="pb-3">
@@ -225,10 +207,9 @@ export default function LogbookPage() {
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Logbook</h1>
+          <h1 className="text-3xl font-bold tracking-tight">My Logbook</h1>
           <p className="text-muted-foreground">
             Track your flight hours and experience
           </p>
@@ -240,8 +221,6 @@ export default function LogbookPage() {
           </Button>
         </Link>
       </div>
-
-      {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
@@ -290,8 +269,6 @@ export default function LogbookPage() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Search and Filter */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -334,8 +311,6 @@ export default function LogbookPage() {
           </Tabs>
         </div>
       </div>
-
-      {/* Content */}
       {viewMode === "cards" ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredEntries.map((entry) => (
@@ -390,7 +365,6 @@ export default function LogbookPage() {
           </Table>
         </Card>
       )}
-
       {filteredEntries.length === 0 && (
         <div className="py-12 text-center">
           <Plane className="mx-auto h-12 w-12 text-muted-foreground" />

@@ -1,8 +1,15 @@
 "use client";
 
+import type { DutyEntry, DutyFilter } from "@/lib/compliance/duty-log";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Calendar, Clock, MapPin, Plus, Search, Timer } from "lucide-react";
+import {
+  formatDate,
+  getDutyTypeColor,
+  getDutyTypeIcon,
+  getStatusVariant,
+} from "@/lib/compliance/duty-log";
+import { Plus, Search, Timer } from "lucide-react";
 
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
@@ -15,49 +22,6 @@ import {
 import { Input } from "@hamilton/ui/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
 
-// --- Types ---
-export type DutyEntry = {
-  id: string;
-  date: string; // ISO date string
-  dutyType: "flight" | "ground" | "training" | string;
-  startTime: string;
-  endTime: string;
-  duration: string; // hours as string
-  location: string;
-  description: string;
-  status: "active" | "completed" | "pending" | string;
-};
-
-export type DutyFilter = {
-  id: string;
-  label: string;
-  count: number;
-};
-
-// --- Utility Functions ---
-export function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-export function getDutyTypeColor(type: string): string {
-  switch (type) {
-    case "flight":
-      return "bg-blue-100 text-blue-700";
-    case "ground":
-      return "bg-green-100 text-green-700";
-    case "training":
-      return "bg-yellow-100 text-yellow-700";
-    default:
-      return "bg-gray-100 text-gray-700";
-  }
-}
-
-// Mock data - in real app, this would come from APIs
 const dutyEntries: DutyEntry[] = [
   {
     id: "1",
@@ -124,39 +88,7 @@ const filterOptions: DutyFilter[] = [
   },
 ];
 
-interface DutyEntryCardProps {
-  entry: DutyEntry;
-}
-
-function DutyEntryCard({ entry }: DutyEntryCardProps) {
-  const getStatusVariant = (
-    status: string,
-  ): "default" | "secondary" | "destructive" => {
-    switch (status) {
-      case "active":
-        return "default";
-      case "completed":
-        return "secondary";
-      case "pending":
-        return "destructive";
-      default:
-        return "secondary";
-    }
-  };
-
-  const getDutyTypeIcon = (type: string) => {
-    switch (type) {
-      case "flight":
-        return Clock;
-      case "ground":
-        return MapPin;
-      case "training":
-        return Calendar;
-      default:
-        return Timer;
-    }
-  };
-
+function DutyEntryCard({ entry }: { entry: DutyEntry }) {
   const Icon = getDutyTypeIcon(entry.dutyType);
 
   return (
@@ -274,7 +206,6 @@ export default function DutyLogPage() {
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Duty Log</h1>
@@ -289,8 +220,6 @@ export default function DutyLogPage() {
           </Button>
         </Link>
       </div>
-
-      {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
@@ -344,8 +273,6 @@ export default function DutyLogPage() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Search and Filter */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -377,14 +304,11 @@ export default function DutyLogPage() {
           </TabsList>
         </Tabs>
       </div>
-
-      {/* Duty Entries Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredEntries.map((entry) => (
           <DutyEntryCard key={entry.id} entry={entry} />
         ))}
       </div>
-
       {filteredEntries.length === 0 && (
         <div className="py-12 text-center">
           <Timer className="mx-auto h-12 w-12 text-muted-foreground" />

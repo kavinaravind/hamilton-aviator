@@ -26,30 +26,25 @@ import {
 
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
-import { Separator } from "@hamilton/ui/components/ui/separator";
 
-// Mock data - in real app, this would come from APIs
 const flightStats: FlightStats = {
   totalTime: "1,247.3",
   pic: "892.1",
   monthlyTime: "18.7",
   last30Days: 12,
 };
-
 const aircraftStatus: AircraftStatus = {
   total: 4,
   airworthy: 2,
   maintenance: 1,
   maintenanceSoon: 1,
 };
-
 const dutyCompliance: DutyCompliance = {
   activeDuty: 1,
   monthlyHours: "87.5",
   remainingDuty: "72.5",
   nextRest: "14:30",
 };
-
 const maintenanceAlerts: MaintenanceAlert[] = [
   {
     id: "1",
@@ -66,7 +61,6 @@ const maintenanceAlerts: MaintenanceAlert[] = [
     urgent: false,
   },
 ];
-
 const recentFlights: RecentFlight[] = [
   {
     id: "1",
@@ -85,7 +79,6 @@ const recentFlights: RecentFlight[] = [
     type: "Commercial",
   },
 ];
-
 const upcomingItems: UpcomingItem[] = [
   {
     id: "1",
@@ -104,7 +97,6 @@ const upcomingItems: UpcomingItem[] = [
     urgent: false,
   },
 ];
-
 const periods: Period[] = [
   { id: "week", label: "7 Days" },
   { id: "month", label: "30 Days" },
@@ -149,10 +141,9 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">My Dashboard</h1>
           <p className="text-muted-foreground">
             Flight operations and compliance overview
           </p>
@@ -161,8 +152,6 @@ export default function DashboardPage() {
           <Button>Quick Log</Button>
         </Link>
       </div>
-
-      {/* Period Tabs */}
       <div className="flex space-x-2">
         {periods.map((period) => (
           <Button
@@ -175,8 +164,6 @@ export default function DashboardPage() {
           </Button>
         ))}
       </div>
-
-      {/* Flight Statistics */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Flight Statistics</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -210,8 +197,6 @@ export default function DashboardPage() {
           />
         </div>
       </div>
-
-      {/* Aircraft & Compliance */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Aircraft & Compliance</h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -256,8 +241,6 @@ export default function DashboardPage() {
           </Link>
         </div>
       </div>
-
-      {/* Maintenance Alerts */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Maintenance Alerts</h2>
@@ -298,8 +281,6 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
-
-      {/* Recent Flights */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Recent Flights</h2>
@@ -339,8 +320,6 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
-
-      {/* Upcoming Events */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Upcoming Events</h2>
         <div className="space-y-2">

@@ -1,16 +1,13 @@
 "use client";
 
+import type { DutyFormData } from "@/lib/compliance/duty-log";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, X } from "lucide-react";
+import { calculateDuration } from "@/lib/compliance/duty-log";
+import { Save, X } from "lucide-react";
 
 import { Button } from "@hamilton/ui/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@hamilton/ui/components/ui/card";
+import { Card, CardContent, CardHeader } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
 import { Label } from "@hamilton/ui/components/ui/label";
 import {
@@ -21,15 +18,6 @@ import {
   SelectValue,
 } from "@hamilton/ui/components/ui/select";
 import { Textarea } from "@hamilton/ui/components/ui/textarea";
-
-interface DutyFormData {
-  date: string;
-  dutyType: string;
-  startTime: string;
-  endTime: string;
-  location: string;
-  description: string;
-}
 
 export default function AddDutyEntryPage() {
   const router = useRouter();
@@ -49,30 +37,6 @@ export default function AddDutyEntryPage() {
       ...prev,
       [field]: value,
     }));
-  };
-
-  const calculateDuration = (start: string, end: string): string => {
-    if (!start || !end) return "0.0";
-
-    const [startHour, startMin] = start.split(":").map(Number);
-    const [endHour, endMin] = end.split(":").map(Number);
-
-    if (
-      startHour === undefined ||
-      startMin === undefined ||
-      endHour === undefined ||
-      endMin === undefined
-    ) {
-      return "0.0";
-    }
-
-    const startMinutes = startHour * 60 + startMin;
-    const endMinutes = endHour * 60 + endMin;
-
-    let duration = endMinutes - startMinutes;
-    if (duration < 0) duration += 24 * 60; // Handle overnight flights
-
-    return (duration / 60).toFixed(1);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -127,7 +91,6 @@ export default function AddDutyEntryPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4 pt-4">
-            {/* Date */}
             <div className="space-y-2">
               <Label htmlFor="date">Date</Label>
               <Input
@@ -138,8 +101,6 @@ export default function AddDutyEntryPage() {
                 required
               />
             </div>
-
-            {/* Duty Type */}
             <div className="space-y-2">
               <Label htmlFor="dutyType">Duty Type</Label>
               <Select
@@ -157,8 +118,6 @@ export default function AddDutyEntryPage() {
                 </SelectContent>
               </Select>
             </div>
-
-            {/* Time Range */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="startTime">Start Time</Label>
@@ -183,8 +142,6 @@ export default function AddDutyEntryPage() {
                 />
               </div>
             </div>
-
-            {/* Duration (calculated) */}
             {formData.startTime && formData.endTime && (
               <div className="rounded-lg bg-muted p-3">
                 <p className="text-sm font-medium">
@@ -194,8 +151,6 @@ export default function AddDutyEntryPage() {
                 </p>
               </div>
             )}
-
-            {/* Location */}
             <div className="space-y-2">
               <Label htmlFor="location">Location</Label>
               <Input
@@ -206,8 +161,6 @@ export default function AddDutyEntryPage() {
                 required
               />
             </div>
-
-            {/* Description */}
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
               <Textarea
@@ -223,8 +176,6 @@ export default function AddDutyEntryPage() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Action Buttons */}
         <div className="flex flex-col gap-2 sm:flex-row sm:space-x-3">
           <Button
             type="submit"

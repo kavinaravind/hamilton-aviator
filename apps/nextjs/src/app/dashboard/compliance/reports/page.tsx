@@ -1,18 +1,19 @@
 "use client";
 
-import type { RecentReport, ReportFilter, ReportType } from "@/lib/dashboard";
+import type {
+  RecentReport,
+  ReportFilter,
+  ReportType,
+} from "@lib/compliance/reports";
 import React, { useState } from "react";
-import Link from "next/link";
-import { formatDate, getReportCategoryColor } from "@/lib/dashboard";
 import {
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Download,
-  FileText,
-  Plus,
-  Search,
-} from "lucide-react";
+  formatDate,
+  getReportCategoryColor,
+  getReportIcon,
+  getStatusIcon,
+  getStatusVariant,
+} from "@lib/compliance/reports";
+import { AlertTriangle, Download, FileText, Search } from "lucide-react";
 
 import { Alert, AlertDescription } from "@hamilton/ui/components/ui/alert";
 import { Badge } from "@hamilton/ui/components/ui/badge";
@@ -24,14 +25,8 @@ import {
   CardTitle,
 } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@hamilton/ui/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
 
-// Mock data - in real app, this would come from APIs
 const reportTypes: ReportType[] = [
   {
     id: "faa-8710",
@@ -127,19 +122,6 @@ interface ReportTypeCardProps {
 }
 
 function ReportTypeCard({ reportType }: ReportTypeCardProps) {
-  const getReportIcon = (iconName: string) => {
-    switch (iconName) {
-      case "file-text":
-        return FileText;
-      case "download":
-        return Download;
-      case "clock":
-        return Clock;
-      default:
-        return FileText;
-    }
-  };
-
   const Icon = getReportIcon(reportType.icon);
 
   return (
@@ -191,39 +173,7 @@ function ReportTypeCard({ reportType }: ReportTypeCardProps) {
   );
 }
 
-interface RecentReportRowProps {
-  report: RecentReport;
-}
-
-function RecentReportRow({ report }: RecentReportRowProps) {
-  const getStatusVariant = (
-    status: string,
-  ): "default" | "secondary" | "destructive" => {
-    switch (status) {
-      case "completed":
-        return "default";
-      case "processing":
-        return "secondary";
-      case "failed":
-        return "destructive";
-      default:
-        return "secondary";
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "completed":
-        return CheckCircle;
-      case "processing":
-        return Clock;
-      case "failed":
-        return AlertTriangle;
-      default:
-        return Clock;
-    }
-  };
-
+function RecentReportRow({ report }: { report: RecentReport }) {
   const StatusIcon = getStatusIcon(report.status);
 
   return (
@@ -267,7 +217,6 @@ export default function ReportsPage() {
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
@@ -276,8 +225,6 @@ export default function ReportsPage() {
           </p>
         </div>
       </div>
-
-      {/* Help Alert */}
       <Alert>
         <AlertTriangle className="h-4 w-4" />
         <AlertDescription>
@@ -286,8 +233,6 @@ export default function ReportsPage() {
           before generating official forms.
         </AlertDescription>
       </Alert>
-
-      {/* Search and Filter */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -319,8 +264,6 @@ export default function ReportsPage() {
           </TabsList>
         </Tabs>
       </div>
-
-      {/* Report Types Grid */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Available Reports</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -329,8 +272,6 @@ export default function ReportsPage() {
           ))}
         </div>
       </div>
-
-      {/* Recent Reports */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Recent Reports</h2>
@@ -344,7 +285,6 @@ export default function ReportsPage() {
           ))}
         </div>
       </div>
-
       {filteredReportTypes.length === 0 && (
         <div className="py-12 text-center">
           <FileText className="mx-auto h-12 w-12 text-muted-foreground" />

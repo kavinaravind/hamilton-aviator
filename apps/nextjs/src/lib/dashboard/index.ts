@@ -62,6 +62,33 @@ export interface QuickStatCardProps {
   onClick?: () => void;
 }
 
+// Types for logbook entries and filters
+export type LogEntry = {
+  id: string;
+  date: string;
+  aircraft: string;
+  departure: string;
+  arrival: string;
+  route: string;
+  totalTime: string;
+  picTime: string;
+  sicTime: string;
+  instrumentTime: string;
+  nightTime: string;
+  crossCountryTime: string;
+  approaches: number;
+  landings: { day: number; night: number };
+  remarks?: string;
+  flightType: "pic" | "dual";
+  conditions: "day" | "night" | "ifr" | "vfr";
+};
+
+export type LogFilter = {
+  id: string;
+  label: string;
+  count: number;
+};
+
 // Utility functions
 export const formatDuration = (hours: number): string => {
   return hours.toFixed(1);
@@ -80,28 +107,6 @@ export const getEventTypeColor = (type: UpcomingItem["type"]): string => {
 export const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString();
 };
-
-// Aircraft types
-export type AircraftStatusType =
-  | "airworthy"
-  | "maintenance-soon"
-  | "maintenance-due";
-export type AircraftOwnership = "owned" | "rented";
-
-export interface Aircraft {
-  id: string;
-  tailNumber: string;
-  type: string;
-  model: string;
-  year: number;
-  ownership: AircraftOwnership;
-  status: AircraftStatusType;
-  totalTime: number;
-  lastInspection: string;
-  nextInspection: string;
-  location: string;
-  notes?: string;
-}
 
 // Logbook types
 export interface LogbookEntry {
@@ -168,18 +173,6 @@ export interface RecentReport {
 }
 
 // Additional utility functions
-export const getStatusColor = (status: AircraftStatusType): string => {
-  switch (status) {
-    case "airworthy":
-      return "bg-green-100 text-green-800";
-    case "maintenance-soon":
-      return "bg-yellow-100 text-yellow-800";
-    case "maintenance-due":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
 
 export const getDutyStatusColor = (status: DutyStatus): string => {
   switch (status) {
