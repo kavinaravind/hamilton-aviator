@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import DOMProvider from "@/components/dom-provider";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
 
+import { AppIcon } from "@hamilton/ui/components/icons/app";
 import { Separator } from "@hamilton/ui/components/ui/separator";
 import {
   SidebarInset,
@@ -15,12 +16,12 @@ import {
 function SidebarController({
   onStateChange,
 }: {
-  onStateChange: (sidebarState: { isOpen: boolean }) => void;
+  onStateChange: (sidebarState: boolean) => void;
 }) {
   const { state } = useSidebar();
 
   useEffect(() => {
-    onStateChange({ isOpen: state === "expanded" });
+    onStateChange(state === "expanded");
   }, [state, onStateChange]);
 
   return null;
@@ -32,19 +33,19 @@ export default function SideBar({
   onWebViewReady,
   onLogout,
 }: {
-  user?: {
+  user: {
     id: string;
     name: string;
     email: string;
     image?: string | null;
   };
-  onStateChange: (sidebarState: { isOpen: boolean }) => void;
-  onWebViewReady: (isWebViewReady: { isReady: boolean }) => void;
-  onLogout?: () => void;
+  onStateChange: (sidebarState: boolean) => void;
+  onWebViewReady: (isWebViewReady: boolean) => void;
+  onLogout: () => void;
 }) {
   // Simulate WebView readiness on mount
   useEffect(() => {
-    onWebViewReady({ isReady: true });
+    onWebViewReady(true);
   }, []);
 
   return (
@@ -60,12 +61,10 @@ export default function SideBar({
                   <SidebarTrigger className="-ml-1" />
                   <Separator orientation="vertical" className="h-6" />
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-sm font-bold text-white">
-                      H
-                    </div>
+                    <AppIcon size={24} />
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold leading-none text-foreground">
-                        Hamilton AI
+                        Hamilton Aviator
                       </span>
                       <span className="text-xs leading-none text-muted-foreground">
                         Your Digital Cockpit

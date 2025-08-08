@@ -27,7 +27,7 @@ const data = {
     avatar: "/avatars/shadcn.jpg",
   },
   header: {
-    name: "Hamilton AI",
+    name: "Hamilton Aviator",
     logo: Plane,
     description: "Your Digital Cockpit",
   },
@@ -71,13 +71,13 @@ export function AppSidebar({
   onLogout,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
-  user?: {
+  user: {
     id: string;
     name: string;
     email: string;
     image?: string | null;
   };
-  onLogout?: () => void;
+  onLogout: () => void;
 }) {
   // Transform user data to match NavUser interface
   const userData = user

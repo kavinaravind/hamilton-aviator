@@ -1,53 +1,44 @@
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { Slot, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import SideBar from "@/components/side-bar";
 import { authClient } from "@/lib/auth";
 
 export default function DashboardLayout() {
   const router = useRouter();
+
   const { data: session, isPending } = authClient.useSession();
 
-  const [sidebarState, setSidebarState] = useState<{ isOpen: boolean } | null>(
-    null,
-  );
+  const [sidebarState, setSidebarState] = useState<boolean>(false);
   const [sidebarZIndex, setSidebarZIndex] = useState<number>(0);
 
-  const [isWebViewReady, setIsWebViewReady] = useState<{
-    isReady: boolean;
-  } | null>(null);
-  const [isNativeReady, setIsNativeReady] = useState<{
-    isReady: boolean;
-  } | null>(null);
+  const [isWebViewReady, setIsWebViewReady] = useState<boolean>(false);
+  const [isNativeReady, setIsNativeReady] = useState<boolean>(false);
 
   const isAppReady = isWebViewReady && isNativeReady;
 
-  const handleLogout = async () => {
-    try {
-      await authClient.signOut();
-      router.replace("/auth/sign-in");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
-
   useEffect(() => {
-    setIsNativeReady({ isReady: true });
+    setIsNativeReady(true);
   }, []);
 
   useEffect(() => {
-    if (sidebarState?.isOpen) {
+    if (sidebarState) {
       setSidebarZIndex(100);
-    } else if (sidebarState?.isOpen === false) {
+    } else {
       const timeout = setTimeout(() => {
         setSidebarZIndex(0);
       }, 120);
-
       return () => clearTimeout(timeout);
     }
-  }, [sidebarState?.isOpen]);
+  }, [sidebarState]);
 
-  console.log("Dashboard ready states:", {
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.replace("/auth/sign-in");
+    }
+  }, [session, isPending, router]);
+
+  console.debug("Dashboard ready states:", {
     isWebViewReady,
     isNativeReady,
     isAppReady,
@@ -55,7 +46,6 @@ export default function DashboardLayout() {
     isPending,
   });
 
-  // Don't render if we're still loading session
   if (isPending) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -63,10 +53,7 @@ export default function DashboardLayout() {
       </View>
     );
   }
-
-  // Redirect if not authenticated
   if (!session) {
-    router.replace("/auth/sign-in");
     return null;
   }
 
@@ -80,26 +67,44 @@ export default function DashboardLayout() {
           right: 0,
           bottom: 0,
           zIndex: sidebarZIndex,
-          pointerEvents: sidebarState?.isOpen ? "auto" : "box-none",
+          pointerEvents: sidebarState ? "auto" : "box-none",
           opacity: isAppReady ? 1 : 0,
         }}
       >
         <SideBar
           user={session.user}
-          onWebViewReady={async ({ isReady }) => {
-            if (isWebViewReady?.isReady !== isReady) {
-              setIsWebViewReady({ isReady });
+          onWebViewReady={async (isReady) => {
+            if (isWebViewReady !== isReady) setIsWebViewReady(isReady);
+          }}
+          onStateChange={async (isOpen) => {
+            if (sidebarState !== isOpen) setSidebarState(isOpen);
+          }}
+          onLogout={async () => {
+            try {
+              await authClient.signOut();
+              router.replace("/auth/sign-in");
+            } catch (error) {
+              console.error("Logout failed:", error);
             }
           }}
-          onStateChange={async ({ isOpen }) => {
-            if (sidebarState?.isOpen !== isOpen) {
-              setSidebarState({ isOpen });
-            }
-          }}
-          onLogout={handleLogout}
         />
       </View>
-      {!isAppReady && (
+      {isAppReady ? (
+        <View
+          style={{
+            flex: 1,
+            paddingTop: 116,
+          }}
+        >
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              gestureEnabled: true,
+              animation: "slide_from_right",
+            }}
+          />
+        </View>
+      ) : (
         <View
           style={{
             flex: 1,
@@ -108,16 +113,6 @@ export default function DashboardLayout() {
           }}
         >
           <ActivityIndicator size="large" />
-        </View>
-      )}
-      {isAppReady && (
-        <View
-          style={{
-            flex: 1,
-            paddingTop: 116,
-          }}
-        >
-          <Slot />
         </View>
       )}
     </View>
