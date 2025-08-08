@@ -71,11 +71,19 @@ export default function SignIn() {
         </View>
         <Text className="mt-6 max-w-sm text-center text-sm leading-relaxed text-slate-500">
           {"By continuing, you agree to our "}
-          <Text className="font-semibold text-indigo-600">
+          <Text
+            className="font-semibold text-indigo-600"
+            onPress={() => router.push("/terms")}
+          >
             Terms of Service
           </Text>
           {" and "}
-          <Text className="font-semibold text-indigo-600">Privacy Policy</Text>
+          <Text
+            className="font-semibold text-indigo-600"
+            onPress={() => router.push("/privacy")}
+          >
+            Privacy Policy
+          </Text>
         </Text>
       </View>
     </View>

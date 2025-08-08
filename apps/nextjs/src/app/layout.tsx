@@ -13,21 +13,18 @@ import { env } from "@/env";
 export const metadata: Metadata = {
   metadataBase: new URL(
     env.VERCEL_ENV === "production"
-      ? "https://turbo.t3.gg"
+      ? "https://aviator.hamilton.ai"
       : "http://localhost:3000",
   ),
-  title: "Create T3 Turbo",
-  description: "Simple monorepo with shared backend for web & mobile apps",
+  title: "Hamilton Aviator",
+  description:
+    "A tool for pilots to log flights, track duty hours, manage maintenance records, and generate FAA-ready reports.",
   openGraph: {
-    title: "Create T3 Turbo",
-    description: "Simple monorepo with shared backend for web & mobile apps",
-    url: "https://create-t3-turbo.vercel.app",
-    siteName: "Create T3 Turbo",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@jullerino",
-    creator: "@jullerino",
+    title: "Hamilton Aviator",
+    description:
+      "A tool for pilots to log flights, track duty hours, manage maintenance records, and generate FAA-ready reports.",
+    url: "https://aviator.hamilton.ai",
+    siteName: "Hamilton Aviator",
   },
 };
 
