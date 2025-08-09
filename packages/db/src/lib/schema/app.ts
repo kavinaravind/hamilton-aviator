@@ -10,16 +10,6 @@ export const flight = pgTable("flight", {
   tailNumber: text("tail_number").notNull(),
 });
 
-// Aircraft
-export const aircraft = pgTable("aircraft", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  tailNumber: text("tail_number").notNull(),
-  make: text("make").notNull(),
-  model: text("model").notNull(),
-  status: text("status").notNull(),
-  ownership: text("ownership").notNull(),
-});
-
 // Dashboard: FlightStats
 export const flightStats = pgTable("flight_stats", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -32,10 +22,10 @@ export const flightStats = pgTable("flight_stats", {
 // Dashboard: AircraftStatus
 export const aircraftStatus = pgTable("aircraft_status", {
   id: uuid("id").primaryKey().defaultRandom(),
-  total: integer("total").notNull(),
-  airworthy: integer("airworthy").notNull(),
-  maintenance: integer("maintenance").notNull(),
-  maintenanceSoon: integer("maintenance_soon").notNull(),
+  total: integer("total").notNull().default(0),
+  airworthy: integer("airworthy").notNull().default(0),
+  maintenance: integer("maintenance").notNull().default(0),
+  maintenanceSoon: integer("maintenance_soon").notNull().default(0),
 });
 
 // Dashboard: DutyCompliance
@@ -88,4 +78,16 @@ export const reportType = pgTable("report_type", {
   estimatedTime: text("estimated_time").notNull(),
   requiredData: text("required_data").array().notNull(),
   category: text("category").notNull(),
+});
+
+// ------------------------------------------------------
+
+// Aircraft
+export const Aircraft = pgTable("aircraft", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  tailNumber: text("tail_number").notNull(),
+  make: text("make").notNull(),
+  model: text("model").notNull(),
+  status: text("status").notNull(),
+  ownership: text("ownership").notNull(),
 });

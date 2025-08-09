@@ -2,33 +2,34 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { desc, eq } from "@hamilton/db";
-import { CreatePostSchema, Post } from "@hamilton/db/schema";
+import { Aircraft } from "@hamilton/db/lib/schema";
+import { CreateAircraftSchema } from "@hamilton/validators/lib/aircraft";
 
 import { protectedProcedure, publicProcedure } from "../trpc";
 
-export const postRouter = {
+export const aircraftRouter = {
   all: publicProcedure.query(({ ctx }) => {
-    return ctx.db.query.Post.findMany({
-      orderBy: desc(Post.id),
-      limit: 10,
+    return ctx.db.query.Aircraft.findMany({
+      orderBy: desc(Aircraft.id),
+      limit: 20,
     });
   }),
 
   byId: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.db.query.Post.findFirst({
-        where: eq(Post.id, input.id),
+      return ctx.db.query.Aircraft.findFirst({
+        where: eq(Aircraft.id, input.id),
       });
     }),
 
   create: protectedProcedure
-    .input(CreatePostSchema)
+    .input(CreateAircraftSchema)
     .mutation(({ ctx, input }) => {
-      return ctx.db.insert(Post).values(input);
+      return ctx.db.insert(Aircraft).values(input);
     }),
 
   delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
-    return ctx.db.delete(Post).where(eq(Post.id, input));
+    return ctx.db.delete(Aircraft).where(eq(Aircraft.id, input));
   }),
 } satisfies TRPCRouterRecord;

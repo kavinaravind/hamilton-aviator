@@ -4,7 +4,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { oAuthProxy } from "better-auth/plugins";
 
-import { db } from "@hamilton/db/client";
+import { db } from "@hamilton/db/lib/client";
 
 export interface InitAuthOptions {
   baseUrl: string;

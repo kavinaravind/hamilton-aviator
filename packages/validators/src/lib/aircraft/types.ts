@@ -47,3 +47,12 @@ export const DetailedAircraftSchema = AircraftSchema.extend({
   }),
 });
 export type DetailedAircraft = z.infer<typeof DetailedAircraftSchema>;
+
+export const CreateAircraftSchema = z.object({
+  tailNumber: z.string(),
+  make: z.string(),
+  model: z.string(),
+  status: AircraftStatusEnum,
+  ownership: AircraftOwnershipEnum,
+});
+export type CreateAircraft = z.infer<typeof CreateAircraftSchema>;
