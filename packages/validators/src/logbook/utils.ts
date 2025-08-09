@@ -1,45 +1,4 @@
-export interface Flight {
-  id: string;
-  date: string;
-  route: string;
-  aircraft: string;
-  duration: string;
-  tailNumber: string;
-}
-
-export interface DetailedFlight extends Flight {
-  departure: {
-    airport: string;
-    time: string;
-  };
-  arrival: {
-    airport: string;
-    time: string;
-  };
-  flightTime: {
-    total: string;
-    pic: string;
-    sic: string;
-    solo: string;
-    dual: string;
-  };
-  conditions: {
-    day: string;
-    night: string;
-    actualInstrument: string;
-    simulatedInstrument: string;
-    crossCountry: string;
-  };
-  landings: {
-    day: number;
-    night: number;
-  };
-  approaches: number;
-  holds: number;
-  remarks: string;
-  instructor?: string;
-  flightType: "training" | "solo" | "cross-country" | "local" | "commercial";
-}
+import type { DetailedFlight, Flight } from "./types";
 
 export const formatFlightDuration = (duration: string): string => {
   const hours = parseFloat(duration);
@@ -60,17 +19,9 @@ export const parseRoute = (
 ): { departure: string; arrival: string } => {
   const parts = route.split(" - ");
   return {
-    departure: parts[0] || "",
-    arrival: parts[1] || parts[0] || "",
+    departure: parts[0] ?? "",
+    arrival: parts[1] ?? parts[0] ?? "",
   };
-};
-
-export const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
 };
 
 export const calculateTotalFlightTime = (flights: Flight[]): string => {
