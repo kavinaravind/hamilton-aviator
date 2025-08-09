@@ -81,6 +81,9 @@ importers:
       '@hamilton/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@hamilton/validators':
+        specifier: workspace:*
+        version: link:../../packages/validators
       '@legendapp/list':
         specifier: ^1.0.15
         version: 1.0.15(react-native@0.79.5(@babel/core@7.27.4)(@types/react@19.1.6)(bufferutil@4.0.8)(react@19.0.0))(react@19.0.0)

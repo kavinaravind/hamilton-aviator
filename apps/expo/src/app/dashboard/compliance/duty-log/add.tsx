@@ -1,4 +1,3 @@
-import type { DutyEntry } from "@/lib/compliance/duty-log";
 import { useState } from "react";
 import {
   Alert,
@@ -12,12 +11,14 @@ import {
   View,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+import type { DutyEntry } from "@hamilton/validators/lib/compliance";
 import {
   getDutyTypeColor,
   getDutyTypeIcon,
   getDutyTypeText,
-} from "@/lib/compliance/duty-log";
-import { Ionicons } from "@expo/vector-icons";
+} from "@hamilton/validators/lib/compliance";
 
 export default function AddDutyPage() {
   const router = useRouter();

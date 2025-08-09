@@ -1,13 +1,3 @@
-import type {
-  AircraftStatus,
-  DutyCompliance,
-  FlightStats,
-  MaintenanceAlert,
-  Period,
-  QuickStatCardProps,
-  RecentFlight,
-  UpcomingItem,
-} from "@/lib/dashboard";
 import { useState } from "react";
 import {
   FlatList,
@@ -17,14 +7,24 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+import type {
+  AircraftStatus,
+  DutyCompliance,
+  FlightStats,
+  MaintenanceAlert,
+  Period,
+  RecentFlight,
+  UpcomingItem,
+} from "@hamilton/validators/lib/dashboard";
 import {
   getAlertBackgroundColor,
   getAlertColor,
   getEventTypeBackgroundColor,
   getEventTypeColor,
   getEventTypeIcon,
-} from "@/lib/dashboard";
-import { Ionicons } from "@expo/vector-icons";
+} from "@hamilton/validators/lib/dashboard";
 
 const flightStats: FlightStats = {
   totalTime: "1,247.3",
@@ -123,6 +123,15 @@ export default function DashboardPage() {
       </Text>
     </TouchableOpacity>
   );
+
+  type QuickStatCardProps = {
+    title: string;
+    value: string;
+    icon: string;
+    color: string;
+    subtitle?: string | undefined;
+    onPress?: () => void;
+  };
 
   const QuickStatCard = ({
     title,

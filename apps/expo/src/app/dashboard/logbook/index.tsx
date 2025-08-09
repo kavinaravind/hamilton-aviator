@@ -1,4 +1,3 @@
-import type { Flight } from "@/lib/logbook";
 import { useState } from "react";
 import {
   FlatList,
@@ -9,12 +8,14 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+import type { Flight } from "@hamilton/validators/lib/logbook";
 import {
   calculateTotalFlightTime,
-  formatDate,
   formatFlightDuration,
-} from "@/lib/logbook";
-import { Ionicons } from "@expo/vector-icons";
+} from "@hamilton/validators/lib/logbook";
+import { formatDate } from "@hamilton/validators/shared/date";
 
 const flights: Flight[] = [
   {

@@ -4,10 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
+    "./shared/date": "./src/shared/date/index.ts",
+    "./lib/aircraft": "./src/lib/aircraft/index.ts",
+    "./lib/compliance": "./src/lib/compliance/index.ts",
+    "./lib/dashboard": "./src/lib/dashboard/index.ts",
+    "./lib/logbook": "./src/lib/logbook/index.ts"
   },
   "license": "MIT",
   "scripts": {

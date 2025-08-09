@@ -1,4 +1,3 @@
-import type { Aircraft } from "@/lib/aircraft";
 import { useState } from "react";
 import {
   FlatList,
@@ -9,8 +8,13 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
-import { getStatusColor, getStatusText } from "@/lib/aircraft";
 import { Ionicons } from "@expo/vector-icons";
+
+import type { Aircraft } from "@hamilton/validators/lib/aircraft";
+import {
+  getStatusColor,
+  getStatusText,
+} from "@hamilton/validators/lib/aircraft";
 
 const Aircrafts: Aircraft[] = [
   {

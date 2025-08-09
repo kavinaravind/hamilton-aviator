@@ -59,13 +59,3 @@ export const PeriodSchema = z.object({
   label: z.string(),
 });
 export type Period = z.infer<typeof PeriodSchema>;
-
-export const QuickStatCardPropsSchema = z.object({
-  title: z.string(),
-  value: z.string(),
-  subtitle: z.string().optional(),
-  icon: z.string(),
-  color: z.string(),
-  onPress: z.unknown().optional(),
-});
-export type QuickStatCardProps = z.infer<typeof QuickStatCardPropsSchema>;

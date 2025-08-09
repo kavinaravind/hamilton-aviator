@@ -1,4 +1,3 @@
-import type { DetailedAircraft } from "@/lib/aircraft";
 import {
   Alert,
   SafeAreaView,
@@ -8,9 +7,14 @@ import {
   View,
 } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { getStatusColor, getStatusText } from "@/lib/aircraft";
-import { formatDate } from "@/lib/util";
 import { Ionicons } from "@expo/vector-icons";
+
+import type { DetailedAircraft } from "@hamilton/validators/lib/aircraft";
+import {
+  getStatusColor,
+  getStatusText,
+} from "@hamilton/validators/lib/aircraft";
+import { formatDate } from "@hamilton/validators/shared/date";
 
 const Aircrafts: DetailedAircraft[] = [
   {

@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { NavUser } from "@/components/navigation//nav-user";
 import { NavHeader } from "@/components/navigation/nav-header";
 import { NavMain } from "@/components/navigation/nav-main";
+import { NavUser } from "@/components/navigation/nav-user";
 import {
   BookOpen,
   LayoutDashboard,

@@ -1,4 +1,3 @@
-import type { ReportType } from "@/lib/compliance/reports";
 import { useState } from "react";
 import {
   Alert,
@@ -11,6 +10,8 @@ import {
 } from "react-native";
 import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+
+import type { ReportType } from "@hamilton/validators/lib/compliance";
 
 const reportTypes: ReportType[] = [
   {

@@ -1,4 +1,3 @@
-import type { DetailedFlight } from "@/lib/logbook";
 import { useState } from "react";
 import {
   Alert,
@@ -11,6 +10,8 @@ import {
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+
+import type { DetailedFlight } from "@hamilton/validators/lib/logbook";
 
 export default function AddFlightPage() {
   const router = useRouter();

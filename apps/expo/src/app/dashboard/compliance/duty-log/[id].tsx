@@ -1,4 +1,3 @@
-import type { DutyEntry } from "@/lib/compliance/duty-log";
 import {
   Alert,
   SafeAreaView,
@@ -8,6 +7,9 @@ import {
   View,
 } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+import type { DutyEntry } from "@hamilton/validators/lib/compliance";
 import {
   formatDate,
   formatTime,
@@ -16,8 +18,7 @@ import {
   getDutyTypeColor,
   getDutyTypeIcon,
   getDutyTypeText,
-} from "@/lib/compliance/duty-log";
-import { Ionicons } from "@expo/vector-icons";
+} from "@hamilton/validators/lib/compliance";
 
 const DutyEntries: DutyEntry[] = [
   {

@@ -1,4 +1,3 @@
-import type { DetailedFlight } from "@/lib/logbook";
 import {
   SafeAreaView,
   ScrollView,
@@ -7,13 +6,15 @@ import {
   View,
 } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+import type { DetailedFlight } from "@hamilton/validators/lib/logbook";
 import {
-  formatDate,
   formatFlightDuration,
   getFlightTypeColor,
   getFlightTypeText,
-} from "@/lib/logbook";
-import { Ionicons } from "@expo/vector-icons";
+} from "@hamilton/validators/lib/logbook";
+import { formatDate } from "@hamilton/validators/shared/date";
 
 const detailedFlights: DetailedFlight[] = [
   {
