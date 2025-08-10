@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { integer, pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import { LogbookFlightTypeEnum } from "@hamilton/validators/lib/logbook";
 
@@ -9,6 +9,11 @@ export const logbookFlightTypeEnum = pgEnum(
 
 export const Logbook = pgTable("logbook", {
   id: uuid("id").primaryKey().defaultRandom(),
+  date: text("date").notNull(),
+  route: text("route").notNull(),
+  aircraft: text("aircraft").notNull(),
+  duration: text("duration").notNull(),
+  tailNumber: text("tail_number").notNull(),
   departureAirport: text("departure_airport").notNull(),
   departureTime: text("departure_time").notNull(),
   arrivalAirport: text("arrival_airport").notNull(),
@@ -25,10 +30,10 @@ export const Logbook = pgTable("logbook", {
     "condition_simulated_instrument",
   ).notNull(),
   conditionCrossCountry: text("condition_cross_country").notNull(),
-  landingsDay: text("landings_day").notNull(),
-  landingsNight: text("landings_night").notNull(),
-  approaches: text("approaches").notNull(),
-  holds: text("holds").notNull(),
+  landingsDay: integer("landings_day").notNull(),
+  landingsNight: integer("landings_night").notNull(),
+  approaches: integer("approaches").notNull(),
+  holds: integer("holds").notNull(),
   remarks: text("remarks").notNull(),
   instructor: text("instructor"),
   flightType: logbookFlightTypeEnum("flight_type").notNull(),
