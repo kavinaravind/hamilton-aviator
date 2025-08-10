@@ -81,13 +81,3 @@ export const reportType = pgTable("report_type", {
 });
 
 // ------------------------------------------------------
-
-// Aircraft
-export const Aircraft = pgTable("aircraft", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  tailNumber: text("tail_number").notNull(),
-  make: text("make").notNull(),
-  model: text("model").notNull(),
-  status: text("status").notNull(),
-  ownership: text("ownership").notNull(),
-});

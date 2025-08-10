@@ -10,7 +10,7 @@ export type AircraftStatus = z.infer<typeof AircraftStatusEnum>;
 export const AircraftOwnershipEnum = z.enum(["owned", "rented"]);
 export type AircraftOwnership = z.infer<typeof AircraftOwnershipEnum>;
 
-export const AircraftSchema = z.object({
+export const AircraftSummarySchema = z.object({
   id: z.string(),
   tailNumber: z.string(),
   make: z.string(),
@@ -18,9 +18,9 @@ export const AircraftSchema = z.object({
   status: AircraftStatusEnum,
   ownership: AircraftOwnershipEnum,
 });
-export type Aircraft = z.infer<typeof AircraftSchema>;
+export type AircraftSummary = z.infer<typeof AircraftSummarySchema>;
 
-export const DetailedAircraftSchema = AircraftSchema.extend({
+export const AircraftSchema = AircraftSummarySchema.extend({
   year: z.string(),
   totalTime: z.string(),
   engine: z.object({
@@ -46,13 +46,4 @@ export const DetailedAircraftSchema = AircraftSchema.extend({
     class: z.string(),
   }),
 });
-export type DetailedAircraft = z.infer<typeof DetailedAircraftSchema>;
-
-export const CreateAircraftSchema = z.object({
-  tailNumber: z.string(),
-  make: z.string(),
-  model: z.string(),
-  status: AircraftStatusEnum,
-  ownership: AircraftOwnershipEnum,
-});
-export type CreateAircraft = z.infer<typeof CreateAircraftSchema>;
+export type Aircraft = z.infer<typeof AircraftSchema>;
