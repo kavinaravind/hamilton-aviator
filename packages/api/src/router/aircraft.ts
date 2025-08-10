@@ -23,10 +23,11 @@ export const aircraftRouter = {
 
   byID: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.db.query.Aircraft.findFirst({
+    .query(async ({ ctx, input }) => {
+      const results = await ctx.db.query.Aircraft.findFirst({
         where: eq(Aircraft.id, input.id),
       });
+      return results ? toAircraft(results) : null;
     }),
 
   create: protectedProcedure

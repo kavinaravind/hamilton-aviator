@@ -8,48 +8,15 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 
 import type { Aircraft } from "@hamilton/validators/lib/aircraft";
 import {
   getStatusColor,
   getStatusText,
 } from "@hamilton/validators/lib/aircraft";
-
-const Aircrafts: Aircraft[] = [
-  {
-    id: "1",
-    tailNumber: "N123AB",
-    make: "Cessna",
-    model: "172",
-    status: "airworthy",
-    ownership: "owned",
-  },
-  {
-    id: "2",
-    tailNumber: "N456CD",
-    make: "Piper",
-    model: "PA-28",
-    status: "maintenance-soon",
-    ownership: "rented",
-  },
-  {
-    id: "3",
-    tailNumber: "N789EF",
-    make: "Cessna",
-    model: "172",
-    status: "maintenance-due",
-    ownership: "owned",
-  },
-  {
-    id: "412",
-    tailNumber: "N321GH",
-    make: "Piper",
-    model: "PA-34",
-    status: "airworthy",
-    ownership: "rented",
-  },
-];
 
 const AircraftItem = ({ item }: { item: Aircraft }) => (
   <Link href={`/dashboard/aircraft/${item.id}`} asChild>
@@ -89,9 +56,16 @@ const AircraftItem = ({ item }: { item: Aircraft }) => (
 );
 
 export default function AircraftPage() {
+  const {
+    data: aircrafts,
+    isPending,
+    isError,
+    error,
+  } = useQuery(trpc.aircraft.all.queryOptions());
+
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const filteredAircraft: Aircraft[] = Aircrafts.filter(
+  const filteredAircraft: Aircraft[] = (aircrafts ?? []).filter(
     (aircraft: Aircraft) => {
       const query = searchQuery.toLowerCase();
       return (
@@ -104,6 +78,37 @@ export default function AircraftPage() {
     },
   );
 
+  if (isPending) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="time-outline" size={64} color="#3B82F6" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">
+            Loading...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">Error</Text>
+          <Text className="mt-2 text-center text-gray-600">
+            {error instanceof Error
+              ? error.message
+              : "An error occurred while fetching aircraft."}
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ headerShown: false }} />
@@ -111,7 +116,8 @@ export default function AircraftPage() {
         <View className="mb-4 flex-row items-center justify-between">
           <Text className="text-xl font-bold text-gray-900">My Aircrafts</Text>
           <Text className="text-sm text-gray-500">
-            {filteredAircraft.length} aircraft {searchQuery && "found"}
+            {filteredAircraft.length} aircraft
+            {filteredAircraft.length !== 1 ? "s" : ""} {searchQuery && "found"}
           </Text>
         </View>
         <View className="flex-row items-center rounded-xl border border-gray-100 bg-gray-100 px-4 py-2">

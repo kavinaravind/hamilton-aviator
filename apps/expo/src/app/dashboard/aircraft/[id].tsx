@@ -7,151 +7,63 @@ import {
   View,
 } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 
-import type { DetailedAircraft } from "@hamilton/validators/lib/aircraft";
 import {
   getStatusColor,
   getStatusText,
 } from "@hamilton/validators/lib/aircraft";
 import { formatDate } from "@hamilton/validators/shared/date";
 
-const Aircrafts: DetailedAircraft[] = [
-  {
-    id: "1",
-    tailNumber: "N123AB",
-    make: "Cessna",
-    model: "172",
-    year: "2018",
-    status: "airworthy",
-    ownership: "owned",
-    totalTime: "1,247.5",
-    engine: {
-      make: "Lycoming",
-      model: "O-360-A4M",
-      totalTime: "1,247.5",
-    },
-    propeller: {
-      make: "McCauley",
-      model: "1C160/DTM7557",
-      totalTime: "1,247.5",
-    },
-    annualDue: "2025-03-15",
-    lastMaintenance: "2024-12-01",
-    insurance: {
-      company: "Aviation Insurance Corp",
-      expires: "2025-06-30",
-      policyNumber: "AIC-2024-789456",
-    },
-    registration: {
-      expires: "2026-01-31",
-      category: "Normal",
-      class: "Airplane",
-    },
-  },
-  {
-    id: "2",
-    tailNumber: "N456CD",
-    make: "Piper",
-    model: "PA-28",
-    year: "2015",
-    status: "maintenance-soon",
-    ownership: "rented",
-    totalTime: "2,156.8",
-    engine: {
-      make: "Lycoming",
-      model: "O-320-D2A",
-      totalTime: "2,156.8",
-    },
-    propeller: {
-      make: "Sensenich",
-      model: "74DM6-0-60",
-      totalTime: "2,156.8",
-    },
-    annualDue: "2025-02-28",
-    lastMaintenance: "2024-11-15",
-    insurance: {
-      company: "Pilot Insurance",
-      expires: "2025-05-15",
-      policyNumber: "PI-2024-123789",
-    },
-    registration: {
-      expires: "2025-12-31",
-      category: "Normal",
-      class: "Airplane",
-    },
-  },
-  {
-    id: "3",
-    tailNumber: "N789EF",
-    make: "Cessna",
-    model: "172",
-    year: "2012",
-    status: "maintenance-due",
-    ownership: "owned",
-    totalTime: "3,892.1",
-    engine: {
-      make: "Lycoming",
-      model: "O-360-A4M",
-      totalTime: "3,892.1",
-    },
-    propeller: {
-      make: "McCauley",
-      model: "1C160/DTM7557",
-      totalTime: "3,892.1",
-    },
-    annualDue: "2024-12-20",
-    lastMaintenance: "2024-06-10",
-    insurance: {
-      company: "Sky Insurance",
-      expires: "2025-04-01",
-      policyNumber: "SKY-2024-456123",
-    },
-    registration: {
-      expires: "2025-11-30",
-      category: "Normal",
-      class: "Airplane",
-    },
-  },
-  {
-    id: "4",
-    tailNumber: "N321GH",
-    make: "Piper",
-    model: "PA-34",
-    year: "2020",
-    status: "airworthy",
-    ownership: "rented",
-    totalTime: "856.3",
-    engine: {
-      make: "Continental",
-      model: "TSIO-360-KB",
-      totalTime: "856.3",
-    },
-    propeller: {
-      make: "Hartzell",
-      model: "HC-C2YK-1BF",
-      totalTime: "856.3",
-    },
-    annualDue: "2025-08-12",
-    lastMaintenance: "2024-10-05",
-    insurance: {
-      company: "Falcon Insurance",
-      expires: "2025-09-20",
-      policyNumber: "FAL-2024-987654",
-    },
-    registration: {
-      expires: "2026-07-31",
-      category: "Normal",
-      class: "Airplane",
-    },
-  },
-];
-
 export default function AircraftDetailsPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
-  const aircraft = Aircrafts.find((a) => a.id === id);
+  const {
+    data: aircraft,
+    isPending,
+    isError,
+    error,
+  } = useQuery(trpc.aircraft.byID.queryOptions({ id }));
+
+  if (isPending) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ title: "Loading..." }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="time-outline" size={64} color="#3B82F6" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">
+            Loading...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ title: "Error" }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">Error</Text>
+          <Text className="mt-2 text-center text-gray-600">
+            {error instanceof Error
+              ? error.message
+              : "An error occurred while fetching the aircraft."}
+          </Text>
+          <TouchableOpacity
+            className="mt-6 rounded-lg bg-blue-600 px-6 py-3"
+            onPress={() => router.back()}
+          >
+            <Text className="font-semibold text-white">Go Back</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!aircraft) {
     return (
