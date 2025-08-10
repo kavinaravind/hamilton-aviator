@@ -53,3 +53,8 @@ export const LogbookSchema = LogbookSummarySchema.extend({
   flightType: LogbookFlightTypeEnum,
 });
 export type Logbook = z.infer<typeof LogbookSchema>;
+
+export const LogbookCreateSchema = LogbookSchema.omit({
+  id: true,
+});
+export type LogbookCreate = z.infer<typeof LogbookCreateSchema>;

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Alert,
   SafeAreaView,
@@ -9,71 +8,95 @@ import {
   View,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
+import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
 
-import type { Logbook } from "@hamilton/validators/lib/logbook";
+import type { LogbookCreate } from "@hamilton/validators/lib/logbook";
 
 export default function AddFlightPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    date: "",
-    route: "",
-    aircraft: "",
-    tailNumber: "",
-    departureAirport: "",
-    departureTime: "",
-    arrivalAirport: "",
-    arrivalTime: "",
-    totalDuration: "",
-    pic: "",
-    sic: "",
-    solo: "",
-    dual: "",
-    dayTime: "",
-    nightTime: "",
-    actualInstrument: "",
-    simulatedInstrument: "",
-    crossCountry: "",
-    dayLandings: "",
-    nightLandings: "",
-    approaches: "",
-    holds: "",
-    flightType: "local" as Logbook["flightType"],
-    instructor: "",
-    remarks: "",
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation(
+    trpc.logbook.create.mutationOptions({
+      async onSuccess() {
+        await queryClient.invalidateQueries(trpc.logbook.all.queryFilter());
+        Alert.alert("Success", "Flight logged successfully!", [
+          {
+            text: "OK",
+            onPress: () => router.back(),
+          },
+        ]);
+      },
+      onError: (error) => {
+        Alert.alert(
+          "Error",
+          error instanceof Error ? error.message : "Failed to log flight.",
+        );
+      },
+    }),
+  );
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LogbookCreate>({
+    defaultValues: {
+      date: "",
+      route: "",
+      aircraft: "",
+      duration: "",
+      tailNumber: "",
+      departure: {
+        airport: "",
+        time: "",
+      },
+      arrival: {
+        airport: "",
+        time: "",
+      },
+      flightTime: {
+        total: "",
+        pic: "",
+        sic: "",
+        solo: "",
+        dual: "",
+      },
+      conditions: {
+        day: "",
+        night: "",
+        actualInstrument: "",
+        simulatedInstrument: "",
+        crossCountry: "",
+      },
+      landings: {
+        day: 0,
+        night: 0,
+      },
+      approaches: 0,
+      holds: 0,
+      remarks: "",
+      instructor: "",
+      flightType: "local",
+    },
   });
 
-  const handleSave = () => {
-    if (
-      !formData.date ||
-      !formData.departureAirport ||
-      !formData.arrivalAirport ||
-      !formData.totalDuration
-    ) {
-      Alert.alert("Error", "Please fill in all required fields");
-      return;
-    }
-    Alert.alert("Success", "Flight logged successfully!", [
-      {
-        text: "OK",
-        onPress: () => router.back(),
-      },
-    ]);
-  };
-
-  const updateFormData = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleSave = (data: LogbookCreate) => {
+    mutate(data);
   };
 
   const FormField = ({
     label,
-    field,
+    name,
     placeholder,
     required = false,
-    keyboardType = "default" as any,
+    keyboardType = "default",
   }: {
     label: string;
-    field: string;
+    name: any;
     placeholder: string;
     required?: boolean;
     keyboardType?: "default" | "numeric" | "decimal-pad";
@@ -82,14 +105,32 @@ export default function AddFlightPage() {
       <Text className="mb-2 text-sm font-medium text-gray-700">
         {label} {required && <Text className="text-red-500">*</Text>}
       </Text>
-      <TextInput
-        className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
-        placeholder={placeholder}
-        placeholderTextColor="#9CA3AF"
-        value={formData[field as keyof typeof formData]}
-        onChangeText={(value) => updateFormData(field, value)}
-        keyboardType={keyboardType}
+      <Controller
+        control={control}
+        name={name}
+        rules={required ? { required: true } : {}}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
+            placeholder={placeholder}
+            placeholderTextColor="#9CA3AF"
+            value={value === 0 ? "" : (value?.toString() ?? "")}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            keyboardType={keyboardType}
+          />
+        )}
       />
+      {Boolean(
+        errors &&
+          typeof name === "string" &&
+          name
+            .split(".")
+            .reduce((acc, key) => acc && (acc as any)[key], errors),
+      ) &&
+        required && (
+          <Text className="text-xs text-red-500">This field is required.</Text>
+        )}
     </View>
   );
 
@@ -109,7 +150,7 @@ export default function AddFlightPage() {
           </Text>
           <FormField
             label="Date"
-            field="date"
+            name="date"
             placeholder="YYYY-MM-DD"
             required
           />
@@ -117,7 +158,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Departure Airport"
-                field="departureAirport"
+                name="departure.airport"
                 placeholder="KLAX"
                 required
               />
@@ -125,7 +166,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Departure Time"
-                field="departureTime"
+                name="departure.time"
                 placeholder="14:30"
               />
             </View>
@@ -134,7 +175,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Arrival Airport"
-                field="arrivalAirport"
+                name="arrival.airport"
                 placeholder="KLAS"
                 required
               />
@@ -142,26 +183,26 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Arrival Time"
-                field="arrivalTime"
+                name="arrival.time"
                 placeholder="16:45"
               />
             </View>
           </View>
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <FormField label="Aircraft" field="aircraft" placeholder="C172" />
+              <FormField label="Aircraft" name="aircraft" placeholder="C172" />
             </View>
             <View className="flex-1">
               <FormField
                 label="Tail Number"
-                field="tailNumber"
+                name="tailNumber"
                 placeholder="N123AB"
               />
             </View>
           </View>
           <FormField
             label="Total Duration"
-            field="totalDuration"
+            name="flightTime.total"
             placeholder="2.3"
             required
             keyboardType="decimal-pad"
@@ -175,7 +216,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="PIC"
-                field="pic"
+                name="flightTime.pic"
                 placeholder="2.3"
                 keyboardType="decimal-pad"
               />
@@ -183,18 +224,17 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="SIC"
-                field="sic"
+                name="flightTime.sic"
                 placeholder="0.0"
                 keyboardType="decimal-pad"
               />
             </View>
           </View>
-
           <View className="flex-row gap-3">
             <View className="flex-1">
               <FormField
                 label="Solo"
-                field="solo"
+                name="flightTime.solo"
                 placeholder="0.0"
                 keyboardType="decimal-pad"
               />
@@ -202,7 +242,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Dual"
-                field="dual"
+                name="flightTime.dual"
                 placeholder="0.0"
                 keyboardType="decimal-pad"
               />
@@ -217,7 +257,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Day"
-                field="dayTime"
+                name="conditions.day"
                 placeholder="2.3"
                 keyboardType="decimal-pad"
               />
@@ -225,7 +265,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Night"
-                field="nightTime"
+                name="conditions.night"
                 placeholder="0.0"
                 keyboardType="decimal-pad"
               />
@@ -235,7 +275,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Actual Instrument"
-                field="actualInstrument"
+                name="conditions.actualInstrument"
                 placeholder="0.0"
                 keyboardType="decimal-pad"
               />
@@ -243,7 +283,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Simulated Instrument"
-                field="simulatedInstrument"
+                name="conditions.simulatedInstrument"
                 placeholder="0.0"
                 keyboardType="decimal-pad"
               />
@@ -251,7 +291,7 @@ export default function AddFlightPage() {
           </View>
           <FormField
             label="Cross Country"
-            field="crossCountry"
+            name="conditions.crossCountry"
             placeholder="2.3"
             keyboardType="decimal-pad"
           />
@@ -264,7 +304,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Day Landings"
-                field="dayLandings"
+                name="landings.day"
                 placeholder="2"
                 keyboardType="numeric"
               />
@@ -272,7 +312,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Night Landings"
-                field="nightLandings"
+                name="landings.night"
                 placeholder="0"
                 keyboardType="numeric"
               />
@@ -282,7 +322,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Approaches"
-                field="approaches"
+                name="approaches"
                 placeholder="1"
                 keyboardType="numeric"
               />
@@ -290,7 +330,7 @@ export default function AddFlightPage() {
             <View className="flex-1">
               <FormField
                 label="Holds"
-                field="holds"
+                name="holds"
                 placeholder="0"
                 keyboardType="numeric"
               />
@@ -305,60 +345,67 @@ export default function AddFlightPage() {
             <Text className="mb-2 text-sm font-medium text-gray-700">
               Flight Type
             </Text>
-            <View className="flex-row flex-wrap gap-2">
-              {(
-                [
-                  "training",
-                  "solo",
-                  "cross-country",
-                  "local",
-                  "commercial",
-                ] as const
-              ).map((type) => (
-                <TouchableOpacity
-                  key={type}
-                  className={`rounded-full px-4 py-2 ${
-                    formData.flightType === type ? "bg-blue-600" : "bg-gray-200"
-                  }`}
-                  onPress={() => updateFormData("flightType", type)}
-                >
-                  <Text
-                    className={`text-sm font-medium ${
-                      formData.flightType === type
-                        ? "text-white"
-                        : "text-gray-700"
-                    }`}
-                  >
-                    {type.charAt(0).toUpperCase() +
-                      type.slice(1).replace("-", " ")}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <Controller
+              control={control}
+              name="flightType"
+              render={({ field: { onChange, value } }) => (
+                <View className="flex-row flex-wrap gap-2">
+                  {(
+                    [
+                      "training",
+                      "solo",
+                      "cross-country",
+                      "local",
+                      "commercial",
+                    ] as const
+                  ).map((type) => (
+                    <TouchableOpacity
+                      key={type}
+                      className={`rounded-full px-4 py-2 ${value === type ? "bg-blue-600" : "bg-gray-200"}`}
+                      onPress={() => onChange(type)}
+                    >
+                      <Text
+                        className={`text-sm font-medium ${value === type ? "text-white" : "text-gray-700"}`}
+                      >
+                        {type.charAt(0).toUpperCase() +
+                          type.slice(1).replace("-", " ")}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            />
           </View>
           <FormField
             label="Instructor (if applicable)"
-            field="instructor"
+            name="instructor"
             placeholder="John Smith"
           />
         </View>
         <View className="mt-2 bg-white px-6 py-4">
           <Text className="mb-3 text-lg font-bold text-gray-900">Remarks</Text>
-          <TextInput
-            className="h-24 rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
-            placeholder="Flight remarks, notes, or comments..."
-            placeholderTextColor="#9CA3AF"
-            value={formData.remarks}
-            onChangeText={(value) => updateFormData("remarks", value)}
-            multiline
-            textAlignVertical="top"
+          <Controller
+            control={control}
+            name="remarks"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                className="h-24 rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
+                placeholder="Flight remarks, notes, or comments..."
+                placeholderTextColor="#9CA3AF"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                multiline
+                textAlignVertical="top"
+              />
+            )}
           />
         </View>
         <View className="mb-8 mt-2 bg-white px-6 py-4">
           <View className="flex-row gap-3">
             <TouchableOpacity
               className="flex-1 rounded-lg bg-primary py-3 shadow-sm active:bg-primary"
-              onPress={handleSave}
+              onPress={handleSubmit(handleSave)}
             >
               <View className="flex-row items-center justify-center">
                 <Ionicons name="save-outline" size={18} color="white" />

@@ -1,12 +1,15 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod/v4";
 
-import type { Logbook as TLogbook } from "@hamilton/validators/lib/logbook";
+import type {
+  Logbook as TLogbook,
+  LogbookCreate as TLogbookCreate,
+} from "@hamilton/validators/lib/logbook";
 import { desc, eq } from "@hamilton/db";
 import { Logbook } from "@hamilton/db/lib/schema";
 import {
+  LogbookCreateSchema,
   LogbookFlightTypeEnum,
-  LogbookSchema,
 } from "@hamilton/validators/lib/logbook";
 
 import { protectedProcedure } from "../trpc";
@@ -29,9 +32,11 @@ export const logbookRouter = {
       return results ? toLogbook(results) : null;
     }),
 
-  create: protectedProcedure.input(LogbookSchema).mutation(({ ctx, input }) => {
-    return ctx.db.insert(Logbook).values(fromLogbook(input));
-  }),
+  create: protectedProcedure
+    .input(LogbookCreateSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.db.insert(Logbook).values(fromLogbook(input));
+    }),
 
   delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
     return ctx.db.delete(Logbook).where(eq(Logbook.id, input));
@@ -80,9 +85,8 @@ function toLogbook(row: typeof Logbook.$inferSelect): TLogbook {
   };
 }
 
-function fromLogbook(input: TLogbook): typeof Logbook.$inferInsert {
+function fromLogbook(input: TLogbookCreate): typeof Logbook.$inferInsert {
   return {
-    id: input.id,
     date: input.date,
     route: input.route,
     aircraft: input.aircraft,
