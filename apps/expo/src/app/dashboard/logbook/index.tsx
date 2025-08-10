@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -8,43 +8,18 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 
-import type { Flight } from "@hamilton/validators/lib/logbook";
+import type { Logbook } from "@hamilton/validators/lib/logbook";
 import {
   calculateTotalFlightTime,
   formatFlightDuration,
 } from "@hamilton/validators/lib/logbook";
 import { formatDate } from "@hamilton/validators/shared/date";
 
-const flights: Flight[] = [
-  {
-    id: "1",
-    date: "2025-08-05",
-    route: "KLAX - KLAS",
-    aircraft: "C172",
-    duration: "2.3",
-    tailNumber: "N123AB",
-  },
-  {
-    id: "2",
-    date: "2025-08-03",
-    route: "KPHX - KLAX",
-    aircraft: "PA28",
-    duration: "3.1",
-    tailNumber: "N456CD",
-  },
-  {
-    id: "3",
-    date: "2025-07-30",
-    route: "KLAS - KPHX",
-    aircraft: "C172",
-    duration: "1.8",
-    tailNumber: "N789EF",
-  },
-];
-
-const FlightItem = ({ item }: { item: Flight }) => (
+const FlightItem = ({ item }: { item: Logbook }) => (
   <Link href={`/dashboard/logbook/flight/${item.id}`} asChild>
     <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <View className="flex-row items-start justify-between">
@@ -71,25 +46,71 @@ const FlightItem = ({ item }: { item: Flight }) => (
 );
 
 export default function LogbookPage() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredFlights, setFilteredFlights] = useState<Flight[]>(flights);
+  const {
+    data: flights,
+    isPending,
+    isError,
+    error,
+  } = useQuery(trpc.logbook.all.queryOptions());
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (query === "") {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const [filteredFlights, setFilteredFlights] = useState<Logbook[]>([]);
+
+  useEffect(() => {
+    if (!flights) {
+      setFilteredFlights([]);
+      return;
+    }
+    if (searchQuery === "") {
       setFilteredFlights(flights);
     } else {
       const filtered = flights.filter(
-        (flight: Flight) =>
-          flight.route.toLowerCase().includes(query.toLowerCase()) ||
-          flight.aircraft.toLowerCase().includes(query.toLowerCase()) ||
-          flight.tailNumber.toLowerCase().includes(query.toLowerCase()),
+        (flight: Logbook) =>
+          flight.route.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          flight.aircraft.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          flight.tailNumber.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredFlights(filtered);
     }
+  }, [flights, searchQuery]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
   const totalFlightTime = calculateTotalFlightTime(filteredFlights);
+
+  if (isPending) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="time-outline" size={64} color="#3B82F6" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">
+            Loading...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">Error</Text>
+          <Text className="mt-2 text-center text-gray-600">
+            {error instanceof Error
+              ? error.message
+              : "An error occurred while fetching aircraft."}
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">

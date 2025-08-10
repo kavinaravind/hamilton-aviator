@@ -11,7 +11,7 @@ import {
 import { Stack, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-import type { DetailedFlight } from "@hamilton/validators/lib/logbook";
+import type { Logbook } from "@hamilton/validators/lib/logbook";
 
 export default function AddFlightPage() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function AddFlightPage() {
     nightLandings: "",
     approaches: "",
     holds: "",
-    flightType: "local" as DetailedFlight["flightType"],
+    flightType: "local" as Logbook["flightType"],
     instructor: "",
     remarks: "",
   });

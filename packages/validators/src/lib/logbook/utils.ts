@@ -1,4 +1,4 @@
-import type { DetailedFlight, Flight } from "./types";
+import type { Logbook } from "./types";
 
 export const formatFlightDuration = (duration: string): string => {
   const hours = parseFloat(duration);
@@ -24,7 +24,7 @@ export const parseRoute = (
   };
 };
 
-export const calculateTotalFlightTime = (flights: Flight[]): string => {
+export const calculateTotalFlightTime = (flights: Logbook[]): string => {
   const totalHours = flights.reduce((sum, flight) => {
     return sum + parseFloat(flight.duration);
   }, 0);
@@ -33,7 +33,7 @@ export const calculateTotalFlightTime = (flights: Flight[]): string => {
 };
 
 export const getFlightTypeColor = (
-  flightType: DetailedFlight["flightType"],
+  flightType: Logbook["flightType"],
 ): string => {
   switch (flightType) {
     case "training":
@@ -52,7 +52,7 @@ export const getFlightTypeColor = (
 };
 
 export const getFlightTypeText = (
-  flightType: DetailedFlight["flightType"],
+  flightType: Logbook["flightType"],
 ): string => {
   switch (flightType) {
     case "training":
