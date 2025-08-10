@@ -1,6 +1,15 @@
 import { z } from "zod/v4";
 
-export const FlightSchema = z.object({
+export const LogbookFlightTypeEnum = z.enum([
+  "training",
+  "solo",
+  "cross-country",
+  "local",
+  "commercial",
+]);
+export type LogbookFlightType = z.infer<typeof LogbookFlightTypeEnum>;
+
+export const LogbookSummarySchema = z.object({
   id: z.string(),
   date: z.string(),
   route: z.string(),
@@ -8,9 +17,9 @@ export const FlightSchema = z.object({
   duration: z.string(),
   tailNumber: z.string(),
 });
-export type Flight = z.infer<typeof FlightSchema>;
+export type LogbookSummary = z.infer<typeof LogbookSummarySchema>;
 
-export const DetailedFlightSchema = FlightSchema.extend({
+export const LogbookSchema = LogbookSummarySchema.extend({
   departure: z.object({
     airport: z.string(),
     time: z.string(),
@@ -41,12 +50,6 @@ export const DetailedFlightSchema = FlightSchema.extend({
   holds: z.number(),
   remarks: z.string(),
   instructor: z.string().optional(),
-  flightType: z.enum([
-    "training",
-    "solo",
-    "cross-country",
-    "local",
-    "commercial",
-  ]),
+  flightType: LogbookFlightTypeEnum,
 });
-export type DetailedFlight = z.infer<typeof DetailedFlightSchema>;
+export type Logbook = z.infer<typeof LogbookSchema>;
