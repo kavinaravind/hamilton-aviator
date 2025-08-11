@@ -38,19 +38,19 @@ export const DutyLogSummarySchema = z.object({
       { message: "endTime must be an ISO 8601 datetime string" },
     )
     .nullable(),
-  duration: z.string(),
+  duration: z.string().nullable(),
   status: DutyLogStatusEnum,
 });
 export type DutyLogSummary = z.infer<typeof DutyLogSummarySchema>;
 
 export const DutyLogSchema = DutyLogSummarySchema.extend({
-  location: z.string().optional(),
-  crew: z.string().optional(),
-  aircraft: z.string().optional(),
-  flightNumber: z.string().optional(),
-  instructor: z.string().optional(),
-  trainingType: DutyLogTrainingTypeEnum.optional(),
-  notes: z.string().optional(),
+  location: z.string().nullable(),
+  crew: z.string().nullable(),
+  aircraft: z.string().nullable(),
+  flightNumber: z.string().nullable(),
+  instructor: z.string().nullable(),
+  trainingType: DutyLogTrainingTypeEnum.nullable(),
+  notes: z.string().nullable(),
 });
 export type DutyLog = z.infer<typeof DutyLogSchema>;
 

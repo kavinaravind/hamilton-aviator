@@ -54,7 +54,6 @@ export default function LogbookPage() {
   } = useQuery(trpc.logbook.all.queryOptions());
 
   const [searchQuery, setSearchQuery] = useState<string>("");
-
   const [filteredFlights, setFilteredFlights] = useState<Logbook[]>([]);
 
   useEffect(() => {

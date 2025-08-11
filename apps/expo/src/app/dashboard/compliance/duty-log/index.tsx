@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -8,7 +8,9 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 
 import type { DutyLog } from "@hamilton/validators/lib/compliance";
 import {
@@ -20,85 +22,127 @@ import {
   getDutyTypeText,
 } from "@hamilton/validators/lib/compliance";
 
-export default function DutyLogPage() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredDutyEntries, setFilteredDutyEntries] =
-    useState<DutyLog[]>(DutyEntries);
+const renderDutyLogEntry = ({ item }: { item: DutyLog }) => (
+  <Link href={`/dashboard/compliance/duty-log/${item.id}`} asChild>
+    <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <View className="flex-row items-start justify-between">
+        <View className="flex-1">
+          <View className="mb-2 flex-row items-center">
+            <View
+              className="mr-3 h-10 w-10 items-center justify-center rounded-full"
+              style={{ backgroundColor: getDutyTypeColor(item.type) + "20" }}
+            >
+              <Ionicons
+                name={getDutyTypeIcon(item.type) as any}
+                size={20}
+                color={getDutyTypeColor(item.type)}
+              />
+            </View>
+            <View className="flex-1">
+              <Text className="text-lg font-semibold text-gray-900">
+                {getDutyTypeText(item.type)}
+              </Text>
+              <Text className="text-sm text-gray-600">{item.description}</Text>
+            </View>
+            {item.status === "active" && (
+              <View className="rounded-full bg-green-100 px-2 py-1">
+                <Text className="text-xs font-medium text-green-600">
+                  Active
+                </Text>
+              </View>
+            )}
+          </View>
+          <View className="flex-row items-center justify-between">
+            <View>
+              <Text className="text-sm font-medium text-gray-700">
+                {formatDate(item.startTime)}
+              </Text>
+              <Text className="text-sm text-gray-500">
+                {formatTime(item.startTime)} -{" "}
+                {item.endTime ? formatTime(item.endTime) : "In Progress"}
+              </Text>
+            </View>
+            <View className="items-end">
+              <Text className="text-lg font-bold text-primary">
+                {item.duration}
+              </Text>
+              <Text className="text-xs text-gray-500">Duration</Text>
+            </View>
+          </View>
+        </View>
+        <Ionicons
+          name="chevron-forward"
+          size={16}
+          color="#9CA3AF"
+          className="ml-2"
+        />
+      </View>
+    </TouchableOpacity>
+  </Link>
+);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (query === "") {
-      setFilteredDutyEntries(DutyEntries);
+export default function DutyLogPage() {
+  const {
+    data: dutyEntries,
+    isPending,
+    isError,
+    error,
+  } = useQuery(trpc.dutyLog.all.queryOptions());
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredDutyEntries, setFilteredDutyEntries] = useState<DutyLog[]>([]);
+
+  useEffect(() => {
+    if (!dutyEntries) {
+      setFilteredDutyEntries([]);
+      return;
+    }
+    if (searchQuery === "") {
+      setFilteredDutyEntries(dutyEntries);
     } else {
-      const filtered = DutyEntries.filter(
+      const filtered = dutyEntries.filter(
         (entry: DutyLog) =>
-          entry.description.toLowerCase().includes(query.toLowerCase()) ||
-          entry.type.toLowerCase().includes(query.toLowerCase()),
+          entry.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          entry.type.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredDutyEntries(filtered);
     }
+  }, [dutyEntries, searchQuery]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
-  const renderDutyLogEntry = ({ item }: { item: DutyLog }) => (
-    <Link href={`/dashboard/compliance/duty-log/${item.id}`} asChild>
-      <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-        <View className="flex-row items-start justify-between">
-          <View className="flex-1">
-            <View className="mb-2 flex-row items-center">
-              <View
-                className="mr-3 h-10 w-10 items-center justify-center rounded-full"
-                style={{ backgroundColor: getDutyTypeColor(item.type) + "20" }}
-              >
-                <Ionicons
-                  name={getDutyTypeIcon(item.type) as any}
-                  size={20}
-                  color={getDutyTypeColor(item.type)}
-                />
-              </View>
-              <View className="flex-1">
-                <Text className="text-lg font-semibold text-gray-900">
-                  {getDutyTypeText(item.type)}
-                </Text>
-                <Text className="text-sm text-gray-600">
-                  {item.description}
-                </Text>
-              </View>
-              {item.status === "active" && (
-                <View className="rounded-full bg-green-100 px-2 py-1">
-                  <Text className="text-xs font-medium text-green-600">
-                    Active
-                  </Text>
-                </View>
-              )}
-            </View>
-            <View className="flex-row items-center justify-between">
-              <View>
-                <Text className="text-sm font-medium text-gray-700">
-                  {formatDate(item.startTime)}
-                </Text>
-                <Text className="text-sm text-gray-500">
-                  {formatTime(item.startTime)} -{" "}
-                  {item.endTime ? formatTime(item.endTime) : "In Progress"}
-                </Text>
-              </View>
-              <View className="items-end">
-                <Text className="text-lg font-bold text-primary">
-                  {item.duration}
-                </Text>
-                <Text className="text-xs text-gray-500">Duration</Text>
-              </View>
-            </View>
-          </View>
-          <Ionicons
-            name="chevron-forward"
-            size={16}
-            color="#9CA3AF"
-            className="ml-2"
-          />
+  if (isPending) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="time-outline" size={64} color="#3B82F6" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">
+            Loading...
+          </Text>
         </View>
-      </TouchableOpacity>
-    </Link>
-  );
+      </SafeAreaView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">Error</Text>
+          <Text className="mt-2 text-center text-gray-600">
+            {error instanceof Error
+              ? error.message
+              : "An error occurred while fetching aircraft."}
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
@@ -110,12 +154,12 @@ export default function DutyLogPage() {
               My Duty Log
             </Text>
             <Text className="text-sm text-gray-600">
-              {DutyEntries.length} logged duties
+              {dutyEntries.length} logged duties
             </Text>
           </View>
           <View className="items-end">
             <Text className="text-lg font-bold text-primary">
-              {calculateMonthlyDutyTime(DutyEntries)}
+              {calculateMonthlyDutyTime(dutyEntries)}
             </Text>
             <Text className="text-xs text-gray-500">This month</Text>
           </View>
