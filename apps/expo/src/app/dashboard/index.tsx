@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { RecentFlights } from "@/components/dashboard/recent-flights";
 import { Ionicons } from "@expo/vector-icons";
 
 import type {
@@ -16,14 +17,10 @@ import type {
   MaintenanceAlert,
   Period,
   RecentFlight,
-  UpcomingItem,
 } from "@hamilton/validators/lib/dashboard";
 import {
   getAlertBackgroundColor,
   getAlertColor,
-  getEventTypeBackgroundColor,
-  getEventTypeColor,
-  getEventTypeIcon,
 } from "@hamilton/validators/lib/dashboard";
 
 const flightStats: FlightStats = {
@@ -60,51 +57,53 @@ const maintenanceAlerts: MaintenanceAlert[] = [
     urgent: false,
   },
 ];
-const recentFlights: RecentFlight[] = [
-  {
-    id: "1",
-    date: "2025-08-05",
-    route: "KLAX - KLAS",
-    aircraft: "N123AB",
-    duration: "2.3",
-    type: "Cross-Country",
-  },
-  {
-    id: "2",
-    date: "2025-08-03",
-    route: "KPHX - KLAX",
-    aircraft: "N456CD",
-    duration: "3.1",
-    type: "Commercial",
-  },
+
+const periods: Period[] = [
+  { id: "week", label: "7 Days" },
+  { id: "month", label: "30 Days" },
+  { id: "year", label: "1 Year" },
 ];
-const upcomingItems: UpcomingItem[] = [
-  {
-    id: "1",
-    type: "checkride",
-    title: "Commercial Pilot Checkride",
-    date: "2025-08-15",
-    location: "KLAX",
-    urgent: true,
-  },
-  {
-    id: "2",
-    type: "training",
-    title: "Recurrent Training - Simulator",
-    date: "2025-08-20",
-    location: "Training Center",
-    urgent: false,
-  },
-];
+
+type QuickStatCardProps = {
+  title: string;
+  value: string;
+  icon: string;
+  color: string;
+  subtitle?: string | undefined;
+  onPress?: () => void;
+};
+
+const QuickStatCard = ({
+  title,
+  value,
+  subtitle,
+  icon,
+  color,
+  onPress,
+}: QuickStatCardProps) => (
+  <TouchableOpacity
+    className="flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+    onPress={onPress}
+    disabled={!onPress}
+  >
+    <View className="flex-row items-center justify-between">
+      <View className="flex-1">
+        <Text className="text-sm font-medium text-gray-600">{title}</Text>
+        <Text className="text-2xl font-bold text-gray-900">{value}</Text>
+        {subtitle && <Text className="text-xs text-gray-500">{subtitle}</Text>}
+      </View>
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={{ backgroundColor: color + "20" }}
+      >
+        <Ionicons name={icon as any} size={20} color={color} />
+      </View>
+    </View>
+  </TouchableOpacity>
+);
 
 export default function DashboardPage() {
   const [selectedPeriod, setSelectedPeriod] = useState<string>("week");
-
-  const periods: Period[] = [
-    { id: "week", label: "7 Days" },
-    { id: "month", label: "30 Days" },
-    { id: "year", label: "1 Year" },
-  ];
 
   const renderPeriodTab = (period: Period) => (
     <TouchableOpacity
@@ -121,46 +120,6 @@ export default function DashboardPage() {
       >
         {period.label}
       </Text>
-    </TouchableOpacity>
-  );
-
-  type QuickStatCardProps = {
-    title: string;
-    value: string;
-    icon: string;
-    color: string;
-    subtitle?: string | undefined;
-    onPress?: () => void;
-  };
-
-  const QuickStatCard = ({
-    title,
-    value,
-    subtitle,
-    icon,
-    color,
-    onPress,
-  }: QuickStatCardProps) => (
-    <TouchableOpacity
-      className="flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
-      onPress={onPress}
-      disabled={!onPress}
-    >
-      <View className="flex-row items-center justify-between">
-        <View className="flex-1">
-          <Text className="text-sm font-medium text-gray-600">{title}</Text>
-          <Text className="text-2xl font-bold text-gray-900">{value}</Text>
-          {subtitle && (
-            <Text className="text-xs text-gray-500">{subtitle}</Text>
-          )}
-        </View>
-        <View
-          className="h-10 w-10 items-center justify-center rounded-full"
-          style={{ backgroundColor: color + "20" }}
-        >
-          <Ionicons name={icon as any} size={20} color={color} />
-        </View>
-      </View>
     </TouchableOpacity>
   );
 
@@ -183,13 +142,6 @@ export default function DashboardPage() {
             </TouchableOpacity>
           </Link>
         </View>
-        <FlatList
-          data={periods}
-          renderItem={({ item }) => renderPeriodTab(item)}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
       </View>
       <FlatList
         className="flex-1"
@@ -197,9 +149,19 @@ export default function DashboardPage() {
         renderItem={() => (
           <View className="px-4 pt-2">
             <View className="mb-4">
-              <Text className="mb-3 text-lg font-bold text-gray-900">
-                Flight Statistics
-              </Text>
+              <View className="mb-3 flex-row items-center justify-between">
+                <Text className="text-lg font-bold text-gray-900">
+                  Flight Statistics
+                </Text>
+                <FlatList
+                  className="ml-3"
+                  data={periods}
+                  renderItem={({ item }) => renderPeriodTab(item)}
+                  keyExtractor={(item) => item.id}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
               <View className="mb-3 flex-row gap-3">
                 <QuickStatCard
                   title="Total Time"
@@ -334,103 +296,7 @@ export default function DashboardPage() {
                 </TouchableOpacity>
               ))}
             </View>
-            <View className="mb-4">
-              <View className="mb-3 flex-row items-center justify-between">
-                <Text className="text-lg font-bold text-gray-900">
-                  Recent Flights
-                </Text>
-                <Link href="/dashboard/logbook" asChild>
-                  <TouchableOpacity>
-                    <Text className="font-medium text-primary">View All</Text>
-                  </TouchableOpacity>
-                </Link>
-              </View>
-              {recentFlights.map((flight) => (
-                <Link
-                  key={flight.id}
-                  href={`/dashboard/logbook/${flight.id}`}
-                  asChild
-                >
-                  <TouchableOpacity className="mb-2 rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
-                    <View className="flex-row items-center">
-                      <View className="mr-3 h-8 w-8 items-center justify-center rounded-full bg-blue-100">
-                        <Ionicons name="airplane" size={16} color="#3B82F6" />
-                      </View>
-                      <View className="flex-1">
-                        <Text className="text-sm font-semibold text-gray-900">
-                          {flight.route}
-                        </Text>
-                        <Text className="text-xs text-gray-600">
-                          {flight.aircraft} • {flight.type}
-                        </Text>
-                        <Text className="text-xs text-gray-500">
-                          {flight.date}
-                        </Text>
-                      </View>
-                      <View className="items-end">
-                        <Text className="text-sm font-bold text-blue-600">
-                          {flight.duration}h
-                        </Text>
-                        <Ionicons
-                          name="chevron-forward"
-                          size={12}
-                          color="#9CA3AF"
-                        />
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </Link>
-              ))}
-            </View>
-            <View className="mb-6">
-              <Text className="mb-3 text-lg font-bold text-gray-900">
-                Upcoming Events
-              </Text>
-              {upcomingItems.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  className="mb-2 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
-                >
-                  <View className="flex-row items-center">
-                    <View
-                      className="mr-3 h-8 w-8 items-center justify-center rounded-full"
-                      style={{
-                        backgroundColor: getEventTypeBackgroundColor(item.type),
-                      }}
-                    >
-                      <Ionicons
-                        name={getEventTypeIcon(item.type) as any}
-                        size={16}
-                        color={getEventTypeColor(item.type)}
-                      />
-                    </View>
-                    <View className="flex-1">
-                      <View className="flex-row items-center">
-                        <Text className="text-sm font-semibold text-gray-900">
-                          {item.title}
-                        </Text>
-                        {item.urgent && (
-                          <View className="ml-2 rounded-full bg-orange-100 px-2 py-1">
-                            <Text className="text-xs font-medium text-orange-600">
-                              Soon
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                      <Text className="text-xs text-gray-600">
-                        {item.location}
-                      </Text>
-                      <Text className="text-xs text-gray-500">{item.date}</Text>
-                    </View>
-                    <Ionicons
-                      name="chevron-forward"
-                      size={16}
-                      color="#9CA3AF"
-                    />
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <RecentFlights />
           </View>
         )}
         keyExtractor={(item) => item.key}

@@ -44,16 +44,6 @@ export const RecentFlightSchema = z.object({
 });
 export type RecentFlight = z.infer<typeof RecentFlightSchema>;
 
-export const UpcomingItemSchema = z.object({
-  id: z.string(),
-  type: z.enum(["checkride", "training"]),
-  title: z.string(),
-  date: z.string(),
-  location: z.string(),
-  urgent: z.boolean(),
-});
-export type UpcomingItem = z.infer<typeof UpcomingItemSchema>;
-
 export const PeriodSchema = z.object({
   id: z.string(),
   label: z.string(),
