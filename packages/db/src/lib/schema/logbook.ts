@@ -3,7 +3,7 @@ import { integer, pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { LogbookFlightTypeEnum } from "@hamilton/validators/lib/logbook";
 
 export const logbookFlightTypeEnum = pgEnum(
-  "flight_type_enum",
+  "logbook_flight_type_enum",
   LogbookFlightTypeEnum.enum,
 );
 
