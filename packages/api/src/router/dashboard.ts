@@ -45,9 +45,9 @@ export const dashboardRouter = {
         .where(gte(Logbook.date, periodStart));
 
       return {
-        totalTime: (totals?.totalTime ?? 0).toFixed(1),
-        pic: (totals?.pic ?? 0).toFixed(1),
-        periodTime: (periodAgg?.periodTime ?? 0).toFixed(1),
+        totalTime: Number(totals?.totalTime ?? 0).toFixed(1),
+        pic: Number(totals?.pic ?? 0).toFixed(1),
+        periodTime: Number(periodAgg?.periodTime ?? 0).toFixed(1),
         periodFlights: Number(periodAgg?.periodFlights ?? 0),
       };
     }),
@@ -74,7 +74,6 @@ export const dashboardRouter = {
   }),
 
   dutyCompliance: protectedProcedure.query(async ({ ctx }) => {
-    // Example: active duty logs, monthly hours, remaining, next rest
     const now = new Date();
     const monthAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 30);
     const logs = await ctx.db.query.DutyLog.findMany({
@@ -82,15 +81,13 @@ export const dashboardRouter = {
     });
     const activeDuty = logs.filter((l) => l.status === "active").length;
     const monthlyHours = logs.reduce(
-      (acc, l) => acc + parseFloat(l.duration || "0"),
+      (acc, l) => acc + parseFloat(l.duration ?? "0"),
       0,
     );
-    // For demo, remainingDuty and nextRest are placeholders
     return {
       activeDuty,
       monthlyHours: monthlyHours.toFixed(1),
-      remainingDuty: "72.5", // TODO: calculate based on rules
-      nextRest: "14:30", // TODO: calculate based on rules
+      remainingDuty: "72.5", // TODO: idk, calculate based on rules
     };
   }),
 

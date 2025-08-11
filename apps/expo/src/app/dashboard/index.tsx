@@ -8,84 +8,11 @@ import {
 } from "react-native";
 import { Link, Stack } from "expo-router";
 import { AircraftAndCompliance } from "@/components/dashboard/aircraft-compliance";
+import { FlightStatistics } from "@/components/dashboard/flight-statistics";
 import { MaintenanceAlerts } from "@/components/dashboard/maintenance-alerts";
 import { RecentFlights } from "@/components/dashboard/recent-flights";
-import { Ionicons } from "@expo/vector-icons";
-
-import type { FlightStats, Period } from "@hamilton/validators/lib/dashboard";
-
-const flightStats: FlightStats = {
-  totalTime: "1,247.3",
-  pic: "892.1",
-  monthlyTime: "18.7",
-  last30Days: 12,
-};
-
-const periods: Period[] = [
-  { id: "week", label: "7 Days" },
-  { id: "month", label: "30 Days" },
-  { id: "year", label: "1 Year" },
-];
-
-type QuickStatCardProps = {
-  title: string;
-  value: string;
-  icon: string;
-  color: string;
-  subtitle?: string | undefined;
-  onPress?: () => void;
-};
-
-const QuickStatCard = ({
-  title,
-  value,
-  subtitle,
-  icon,
-  color,
-  onPress,
-}: QuickStatCardProps) => (
-  <TouchableOpacity
-    className="flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
-    onPress={onPress}
-    disabled={!onPress}
-  >
-    <View className="flex-row items-center justify-between">
-      <View className="flex-1">
-        <Text className="text-sm font-medium text-gray-600">{title}</Text>
-        <Text className="text-2xl font-bold text-gray-900">{value}</Text>
-        {subtitle && <Text className="text-xs text-gray-500">{subtitle}</Text>}
-      </View>
-      <View
-        className="h-10 w-10 items-center justify-center rounded-full"
-        style={{ backgroundColor: color + "20" }}
-      >
-        <Ionicons name={icon as any} size={20} color={color} />
-      </View>
-    </View>
-  </TouchableOpacity>
-);
 
 export default function DashboardPage() {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>("week");
-
-  const renderPeriodTab = (period: Period) => (
-    <TouchableOpacity
-      key={period.id}
-      className={`mr-3 rounded-full px-4 py-2 ${
-        selectedPeriod === period.id ? "bg-blue-100" : "bg-gray-100"
-      }`}
-      onPress={() => setSelectedPeriod(period.id)}
-    >
-      <Text
-        className={`text-sm font-medium ${
-          selectedPeriod === period.id ? "text-blue-700" : "text-gray-700"
-        }`}
-      >
-        {period.label}
-      </Text>
-    </TouchableOpacity>
-  );
-
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Stack.Screen options={{ headerShown: false }} />
@@ -111,53 +38,7 @@ export default function DashboardPage() {
         data={[{ key: "content" }]}
         renderItem={() => (
           <View className="px-4 pt-2">
-            <View className="mb-4">
-              <View className="mb-3 flex-row items-center justify-between">
-                <Text className="text-lg font-bold text-gray-900">
-                  Flight Statistics
-                </Text>
-                <FlatList
-                  className="ml-3"
-                  data={periods}
-                  renderItem={({ item }) => renderPeriodTab(item)}
-                  keyExtractor={(item) => item.id}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View>
-              <View className="mb-3 flex-row gap-3">
-                <QuickStatCard
-                  title="Total Time"
-                  value={flightStats.totalTime}
-                  subtitle="hours logged"
-                  icon="time"
-                  color="#3B82F6"
-                />
-                <QuickStatCard
-                  title="PIC Time"
-                  value={flightStats.pic}
-                  subtitle="pilot in command"
-                  icon="person"
-                  color="#10B981"
-                />
-              </View>
-              <View className="flex-row gap-3">
-                <QuickStatCard
-                  title="Monthly Time"
-                  value={flightStats.monthlyTime}
-                  subtitle="this month"
-                  icon="calendar"
-                  color="#F59E0B"
-                />
-                <QuickStatCard
-                  title="Recent Flights"
-                  value={flightStats.last30Days.toString()}
-                  subtitle="last 30 days"
-                  icon="airplane"
-                  color="#8B5CF6"
-                />
-              </View>
-            </View>
+            <FlightStatistics />
             <AircraftAndCompliance />
             <MaintenanceAlerts />
             <RecentFlights />
