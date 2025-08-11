@@ -2,7 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { desc, gte, sql } from "@hamilton/db";
-import { DutyLog, Logbook } from "@hamilton/db/lib/schema";
+import { Aircraft, DutyLog, Logbook } from "@hamilton/db/lib/schema";
 
 import { protectedProcedure } from "../trpc";
 
@@ -87,24 +87,29 @@ export const dashboardRouter = {
   }),
 
   maintenanceAlerts: protectedProcedure.query(async ({ ctx }) => {
-    const all = await ctx.db.query.Aircraft.findMany();
-    // Example: due if annualDue or lastMaintenance is within 30 days or 10 hours
-    const now = new Date();
-    const soon = all.filter((a) => {
-      // Parse dates, check if due soon (placeholder logic)
-      const dueDate = new Date(a.annualDue);
-      return dueDate.getTime() - now.getTime() < 1000 * 60 * 60 * 24 * 30;
+    const aircraft = await ctx.db.query.Aircraft.findMany({
+      orderBy: [Aircraft.annualDue, desc(Aircraft.lastMaintenance)],
+      limit: 5,
     });
-    return soon.map((a) => ({
-      id: a.id,
-      aircraftId: a.tailNumber,
-      type: "Annual Inspection",
-      dueInDays: Math.ceil(
-        (new Date(a.annualDue).getTime() - now.getTime()) /
-          (1000 * 60 * 60 * 24),
-      ),
-      urgent: true,
-    }));
+    const now = new Date();
+    return aircraft.map((a) => {
+      let dueInDays = null;
+      let urgent = false;
+      if (a.annualDue) {
+        const dueDate = new Date(a.annualDue);
+        dueInDays = Math.ceil(
+          (dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+        );
+        urgent = dueInDays <= 30;
+      }
+      return {
+        id: a.id,
+        tailNumber: a.tailNumber,
+        type: "Annual Inspection",
+        dueInDays,
+        urgent,
+      };
+    });
   }),
 
   recentFlights: protectedProcedure.query(async ({ ctx }) => {

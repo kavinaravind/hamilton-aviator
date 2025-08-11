@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { MaintenanceAlerts } from "@/components/dashboard/maintenance-alerts";
 import { RecentFlights } from "@/components/dashboard/recent-flights";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -14,13 +15,7 @@ import type {
   AircraftStatus,
   DutyCompliance,
   FlightStats,
-  MaintenanceAlert,
   Period,
-  RecentFlight,
-} from "@hamilton/validators/lib/dashboard";
-import {
-  getAlertBackgroundColor,
-  getAlertColor,
 } from "@hamilton/validators/lib/dashboard";
 
 const flightStats: FlightStats = {
@@ -41,22 +36,6 @@ const dutyCompliance: DutyCompliance = {
   remainingDuty: "72.5",
   nextRest: "14:30",
 };
-const maintenanceAlerts: MaintenanceAlert[] = [
-  {
-    id: "1",
-    aircraftId: "N123AB",
-    type: "100-Hour Inspection",
-    dueInHours: 7.8,
-    urgent: true,
-  },
-  {
-    id: "2",
-    aircraftId: "N456CD",
-    type: "Annual Inspection",
-    dueInDays: 45,
-    urgent: false,
-  },
-];
 
 const periods: Period[] = [
   { id: "week", label: "7 Days" },
@@ -235,67 +214,7 @@ export default function DashboardPage() {
                 </Link>
               </View>
             </View>
-            <View className="mb-4">
-              <View className="mb-3 flex-row items-center justify-between">
-                <Text className="text-lg font-bold text-gray-900">
-                  Maintenance Alerts
-                </Text>
-                <Link href="/dashboard/aircraft" asChild>
-                  <TouchableOpacity>
-                    <Text className="font-medium text-primary">View All</Text>
-                  </TouchableOpacity>
-                </Link>
-              </View>
-              {maintenanceAlerts.map((alert) => (
-                <TouchableOpacity
-                  key={alert.id}
-                  className="mb-2 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
-                >
-                  <View className="flex-row items-center">
-                    <View
-                      className="mr-3 h-8 w-8 items-center justify-center rounded-full"
-                      style={{
-                        backgroundColor: getAlertBackgroundColor(alert.urgent),
-                      }}
-                    >
-                      <Ionicons
-                        name="warning"
-                        size={16}
-                        color={getAlertColor(alert.urgent)}
-                      />
-                    </View>
-                    <View className="flex-1">
-                      <View className="flex-row items-center">
-                        <Text className="text-sm font-semibold text-gray-900">
-                          {alert.aircraftId}
-                        </Text>
-                        {alert.urgent && (
-                          <View className="ml-2 rounded-full bg-red-100 px-2 py-1">
-                            <Text className="text-xs font-medium text-red-600">
-                              Urgent
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                      <Text className="text-xs text-gray-600">
-                        {alert.type}
-                      </Text>
-                      <Text className="text-xs text-gray-500">
-                        Due in{" "}
-                        {alert.dueInHours
-                          ? `${alert.dueInHours} hrs`
-                          : `${alert.dueInDays} days`}
-                      </Text>
-                    </View>
-                    <Ionicons
-                      name="chevron-forward"
-                      size={16}
-                      color="#9CA3AF"
-                    />
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <MaintenanceAlerts />
             <RecentFlights />
           </View>
         )}
