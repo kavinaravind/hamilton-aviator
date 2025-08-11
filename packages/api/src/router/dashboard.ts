@@ -53,16 +53,24 @@ export const dashboardRouter = {
     }),
 
   aircraftStatus: protectedProcedure.query(async ({ ctx }) => {
-    const all = await ctx.db.query.Aircraft.findMany();
-    const total = all.length;
-    const airworthy = all.filter((a) => a.status === "airworthy").length;
-    const maintenance = all.filter(
-      (a) => a.status === "maintenance-due",
-    ).length;
-    const maintenanceSoon = all.filter(
-      (a) => a.status === "maintenance-soon",
-    ).length;
-    return { total, airworthy, maintenance, maintenanceSoon };
+    const [result] = await ctx.db
+      .select({
+        total: sql`COUNT(*)`.as("total"),
+        airworthy:
+          sql`SUM(CASE WHEN ${Aircraft.status} = 'airworthy' THEN 1 ELSE 0 END)`.as(
+            "airworthy",
+          ),
+        maintenance:
+          sql`SUM(CASE WHEN ${Aircraft.status} IN ('maintenance-due', 'maintenance-soon') THEN 1 ELSE 0 END)`.as(
+            "maintenance",
+          ),
+      })
+      .from(Aircraft);
+    return {
+      total: Number(result?.total ?? 0),
+      airworthy: Number(result?.airworthy ?? 0),
+      maintenance: Number(result?.maintenance ?? 0),
+    };
   }),
 
   dutyCompliance: protectedProcedure.query(async ({ ctx }) => {

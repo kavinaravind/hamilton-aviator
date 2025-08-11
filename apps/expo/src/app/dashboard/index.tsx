@@ -7,34 +7,18 @@ import {
   View,
 } from "react-native";
 import { Link, Stack } from "expo-router";
+import { AircraftAndCompliance } from "@/components/dashboard/aircraft-compliance";
 import { MaintenanceAlerts } from "@/components/dashboard/maintenance-alerts";
 import { RecentFlights } from "@/components/dashboard/recent-flights";
 import { Ionicons } from "@expo/vector-icons";
 
-import type {
-  AircraftStatus,
-  DutyCompliance,
-  FlightStats,
-  Period,
-} from "@hamilton/validators/lib/dashboard";
+import type { FlightStats, Period } from "@hamilton/validators/lib/dashboard";
 
 const flightStats: FlightStats = {
   totalTime: "1,247.3",
   pic: "892.1",
   monthlyTime: "18.7",
   last30Days: 12,
-};
-const aircraftStatus: AircraftStatus = {
-  total: 4,
-  airworthy: 2,
-  maintenance: 1,
-  maintenanceSoon: 1,
-};
-const dutyCompliance: DutyCompliance = {
-  activeDuty: 1,
-  monthlyHours: "87.5",
-  remainingDuty: "72.5",
-  nextRest: "14:30",
 };
 
 const periods: Period[] = [
@@ -174,46 +158,7 @@ export default function DashboardPage() {
                 />
               </View>
             </View>
-            <View className="mb-4">
-              <Text className="mb-3 text-lg font-bold text-gray-900">
-                Aircraft & Compliance
-              </Text>
-              <View className="mb-3 flex-row gap-3">
-                <Link href="/dashboard/aircraft" asChild>
-                  <TouchableOpacity className="flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                    <View className="mb-2 flex-row items-center justify-between">
-                      <Text className="text-sm font-medium text-gray-600">
-                        Aircraft Fleet
-                      </Text>
-                      <Ionicons name="airplane" size={20} color="#3B82F6" />
-                    </View>
-                    <Text className="text-2xl font-bold text-gray-900">
-                      {aircraftStatus.total}
-                    </Text>
-                    <Text className="text-xs text-gray-500">
-                      {aircraftStatus.airworthy} airworthy,{" "}
-                      {aircraftStatus.maintenance} in maintenance
-                    </Text>
-                  </TouchableOpacity>
-                </Link>
-                <Link href="/dashboard/compliance/duty-log" asChild>
-                  <TouchableOpacity className="flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                    <View className="mb-2 flex-row items-center justify-between">
-                      <Text className="text-sm font-medium text-gray-600">
-                        Duty Hours
-                      </Text>
-                      <Ionicons name="timer" size={20} color="#EF4444" />
-                    </View>
-                    <Text className="text-2xl font-bold text-gray-900">
-                      {dutyCompliance.monthlyHours}
-                    </Text>
-                    <Text className="text-xs text-gray-500">
-                      {dutyCompliance.remainingDuty} remaining
-                    </Text>
-                  </TouchableOpacity>
-                </Link>
-              </View>
-            </View>
+            <AircraftAndCompliance />
             <MaintenanceAlerts />
             <RecentFlights />
           </View>
