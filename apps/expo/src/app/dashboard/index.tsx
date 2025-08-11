@@ -348,7 +348,7 @@ export default function DashboardPage() {
               {recentFlights.map((flight) => (
                 <Link
                   key={flight.id}
-                  href={`/dashboard/logbook/flight/${flight.id}`}
+                  href={`/dashboard/logbook/${flight.id}`}
                   asChild
                 >
                   <TouchableOpacity className="mb-2 rounded-lg border border-gray-200 bg-white p-3 shadow-sm">

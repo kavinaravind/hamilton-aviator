@@ -149,10 +149,7 @@ function LogEntryCard({ entry }: { entry: LogEntry }) {
         )}
 
         <div className="flex pt-2">
-          <Link
-            href={`/dashboard/logbook/flight/${entry.id}`}
-            className="flex-1"
-          >
+          <Link href={`/dashboard/logbook/${entry.id}`} className="flex-1">
             <Button variant="outline" size="sm" className="w-full">
               View Details
             </Button>
@@ -345,7 +342,7 @@ export default function LogbookPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Link href={`/dashboard/logbook/flight/${entry.id}`}>
+                    <Link href={`/dashboard/logbook/${entry.id}`}>
                       <Button variant="ghost" size="sm">
                         View
                       </Button>

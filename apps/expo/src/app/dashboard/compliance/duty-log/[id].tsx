@@ -7,9 +7,10 @@ import {
   View,
 } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 
-import type { DutyEntry } from "@hamilton/validators/lib/compliance";
 import {
   formatDate,
   formatTime,
@@ -20,50 +21,53 @@ import {
   getDutyTypeText,
 } from "@hamilton/validators/lib/compliance";
 
-const DutyEntries: DutyEntry[] = [
-  {
-    id: "1",
-    startTime: "2025-08-05T06:00:00Z",
-    endTime: null,
-    type: "flight-duty",
-    description: "Commercial flight operations",
-    duration: "-",
-    status: "active",
-  },
-  {
-    id: "2",
-    startTime: "2025-08-04T08:00:00Z",
-    endTime: "2025-08-04T12:00:00Z",
-    type: "training",
-    description: "Recurrent training - simulator",
-    duration: "4h 0m",
-    status: "completed",
-  },
-  {
-    id: "3",
-    startTime: "2025-08-03T10:00:00Z",
-    endTime: "2025-08-03T18:00:00Z",
-    type: "standby",
-    description: "Airport standby duty",
-    duration: "8h 0m",
-    status: "completed",
-  },
-  {
-    id: "4",
-    startTime: "2025-08-02T14:00:00Z",
-    endTime: "2025-08-02T20:15:00Z",
-    type: "flight-duty",
-    description: "International route",
-    duration: "6h 15m",
-    status: "completed",
-  },
-];
-
 export default function DutyDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
-  const dutyEntry = DutyEntries.find((entry) => entry.id === id);
+  const {
+    data: dutyEntry,
+    isPending,
+    isError,
+    error,
+  } = useQuery(trpc.dutyLog.byID.queryOptions({ id }));
+
+  if (isPending) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ title: "Loading..." }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="time-outline" size={64} color="#3B82F6" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">
+            Loading...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ title: "Error" }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">Error</Text>
+          <Text className="mt-2 text-center text-gray-600">
+            {error instanceof Error
+              ? error.message
+              : "An error occurred while fetching the aircraft."}
+          </Text>
+          <TouchableOpacity
+            className="mt-6 rounded-lg bg-blue-600 px-6 py-3"
+            onPress={() => router.back()}
+          >
+            <Text className="font-semibold text-white">Go Back</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!dutyEntry) {
     return (
@@ -103,7 +107,7 @@ export default function DutyDetailPage() {
             text: "Complete",
             style: "default",
             onPress: () => {
-              Alert.alert("Completed", "Duty entry has been completed");
+              Alert.alert("Completed", "TODO: Duty entry has been completed");
             },
           },
         ],
@@ -121,7 +125,7 @@ export default function DutyDetailPage() {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            Alert.alert("Deleted", "Duty entry has been deleted", [
+            Alert.alert("Deleted", "TODO: Duty entry has been deleted", [
               { text: "OK", onPress: () => router.back() },
             ]);
           },
@@ -138,7 +142,7 @@ export default function DutyDetailPage() {
           headerBackTitle: "Duty Log",
           gestureEnabled: true,
           headerRight: () => (
-            <TouchableOpacity onPress={handleEdit} className="mr-2">
+            <TouchableOpacity className="mr-2">
               <Ionicons name="create-outline" size={24} color="#007AFF" />
             </TouchableOpacity>
           ),
@@ -251,6 +255,72 @@ export default function DutyDetailPage() {
                 </Text>
                 <Text className="text-base text-gray-900">
                   {formatDate(dutyEntry.endTime)}
+                </Text>
+              </View>
+            )}
+            {dutyEntry.location && (
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-600">
+                  Location
+                </Text>
+                <Text className="text-base text-gray-900">
+                  {dutyEntry.location}
+                </Text>
+              </View>
+            )}
+            {dutyEntry.crew && (
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-600">Crew</Text>
+                <Text className="text-base text-gray-900">
+                  {dutyEntry.crew}
+                </Text>
+              </View>
+            )}
+            {dutyEntry.aircraft && (
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-600">
+                  Aircraft
+                </Text>
+                <Text className="text-base text-gray-900">
+                  {dutyEntry.aircraft}
+                </Text>
+              </View>
+            )}
+            {dutyEntry.flightNumber && (
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-600">
+                  Flight Number
+                </Text>
+                <Text className="text-base text-gray-900">
+                  {dutyEntry.flightNumber}
+                </Text>
+              </View>
+            )}
+            {dutyEntry.instructor && (
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-600">
+                  Instructor
+                </Text>
+                <Text className="text-base text-gray-900">
+                  {dutyEntry.instructor}
+                </Text>
+              </View>
+            )}
+            {dutyEntry.trainingType && (
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-600">
+                  Training Type
+                </Text>
+                <Text className="text-base text-gray-900">
+                  {dutyEntry.trainingType}
+                </Text>
+              </View>
+            )}
+            {dutyEntry.notes && (
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-600">Notes</Text>
+                <Text className="text-base text-gray-900">
+                  {dutyEntry.notes}
                 </Text>
               </View>
             )}

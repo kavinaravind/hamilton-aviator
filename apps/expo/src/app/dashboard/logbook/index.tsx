@@ -20,7 +20,7 @@ import {
 import { formatDate } from "@hamilton/validators/shared/date";
 
 const FlightItem = ({ item }: { item: Logbook }) => (
-  <Link href={`/dashboard/logbook/flight/${item.id}`} asChild>
+  <Link href={`/dashboard/logbook/${item.id}`} asChild>
     <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <View className="flex-row items-start justify-between">
         <View className="flex-1">

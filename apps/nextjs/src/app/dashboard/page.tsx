@@ -292,10 +292,7 @@ export default function DashboardPage() {
         </div>
         <div className="space-y-2">
           {recentFlights.map((flight) => (
-            <Link
-              key={flight.id}
-              href={`/dashboard/logbook/flight/${flight.id}`}
-            >
+            <Link key={flight.id} href={`/dashboard/logbook/${flight.id}`}>
               <div className="flex items-center space-x-4 rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-accent">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
                   <Plane className="h-4 w-4 text-blue-600" />
