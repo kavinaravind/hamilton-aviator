@@ -8,6 +8,7 @@ import { drizzle } from "drizzle-orm/vercel-postgres";
 import { Aircraft } from "../lib/schema/aircraft";
 import { DutyLog } from "../lib/schema/duty-log";
 import { Logbook } from "../lib/schema/logbook";
+import { Report } from "../lib/schema/report";
 
 function initDb() {
   config();
@@ -62,6 +63,11 @@ async function main() {
     DutyLog,
     "./src/scripts/data/duty-log.json",
     "DutyLog",
+  );
+  await seedTable<typeof Report.$inferInsert>(
+    Report,
+    "./src/scripts/data/report.json",
+    "Report",
   );
 }
 

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -11,9 +10,16 @@ import {
   View,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
+import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
 
-import type { DutyEntry } from "@hamilton/validators/lib/compliance";
+import type {
+  DutyLogCreate,
+  DutyLogTrainingType,
+  DutyLogType,
+} from "@hamilton/validators/lib/compliance";
 import {
   getDutyTypeColor,
   getDutyTypeIcon,
@@ -22,47 +28,72 @@ import {
 
 export default function AddDutyPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    type: "flight-duty" as DutyEntry["type"],
-    description: "",
-    startDate: "",
-    startTime: "",
-    endDate: "",
-    endTime: "",
-    notes: "",
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation(
+    trpc.dutyLog.create.mutationOptions({
+      async onSuccess() {
+        await queryClient.invalidateQueries(trpc.dutyLog.all.queryFilter());
+        Alert.alert("Success", "Duty entry has been created", [
+          { text: "OK", onPress: () => router.back() },
+        ]);
+      },
+      onError: (error) => {
+        Alert.alert(
+          "Error",
+          error instanceof Error
+            ? error.message
+            : "Failed to create duty entry.",
+        );
+      },
+    }),
+  );
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<DutyLogCreate>({
+    defaultValues: {
+      type: "flight-duty",
+      description: "",
+      startTime: "",
+      endTime: null,
+      duration: null,
+      status: "completed",
+      location: null,
+      crew: null,
+      aircraft: null,
+      flightNumber: null,
+      instructor: null,
+      trainingType: null,
+      notes: null,
+    },
   });
 
-  const dutyTypes: DutyEntry["type"][] = [
+  const dutyTypes: DutyLogType[] = [
     "flight-duty",
     "standby",
     "training",
     "maintenance",
   ];
 
-  const handleSave = () => {
-    if (!formData.description.trim()) {
-      Alert.alert("Error", "Please enter a description");
-      return;
-    }
-    if (!formData.startDate || !formData.startTime) {
-      Alert.alert("Error", "Please enter start date and time");
-      return;
-    }
-
-    Alert.alert("Success", "Duty entry has been created", [
-      { text: "OK", onPress: () => router.back() },
-    ]);
+  const handleSave = (data: DutyLogCreate) => {
+    mutate(data);
   };
 
-  const renderDutyTypeOption = (type: DutyEntry["type"]) => {
-    const isSelected = formData.type === type;
+  const renderDutyTypeOption = (type: DutyLogType) => {
+    const selectedType = watch("type");
+    const isSelected = selectedType === type;
     return (
       <TouchableOpacity
         key={type}
         className={`mb-3 flex-row items-center rounded-lg border px-4 py-3 ${
           isSelected ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white"
         }`}
-        onPress={() => setFormData({ ...formData, type })}
+        onPress={() => setValue("type", type)}
       >
         <View
           className="mr-3 h-10 w-10 items-center justify-center rounded-full"
@@ -102,7 +133,10 @@ export default function AddDutyPage() {
           headerBackTitle: "Duty Log",
           gestureEnabled: true,
           headerRight: () => (
-            <TouchableOpacity onPress={handleSave} className="mr-2">
+            <TouchableOpacity
+              onPress={handleSubmit(handleSave)}
+              className="mr-2"
+            >
               <Text className="text-base font-semibold text-blue-600">
                 Save
               </Text>
@@ -127,18 +161,29 @@ export default function AddDutyPage() {
             </Text>
             <View className="mb-4">
               <Text className="mb-2 text-sm font-medium text-gray-700">
-                Description *
+                Description <Text className="text-red-500">*</Text>
               </Text>
-              <TextInput
-                className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
-                placeholder="Enter duty description"
-                value={formData.description}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, description: text })
-                }
-                multiline
-                numberOfLines={2}
+              <Controller
+                control={control}
+                name="description"
+                rules={{ required: true }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="Enter duty description"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    multiline
+                    numberOfLines={2}
+                  />
+                )}
               />
+              {errors.description && (
+                <Text className="text-xs text-red-500">
+                  This field is required.
+                </Text>
+              )}
             </View>
           </View>
           <View className="mt-2 bg-white px-6 py-4">
@@ -147,54 +192,50 @@ export default function AddDutyPage() {
             </Text>
             <View className="mb-4">
               <Text className="mb-2 text-sm font-medium text-gray-700">
-                Start Date *
+                Start Time <Text className="text-red-500">*</Text>
               </Text>
-              <TextInput
-                className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
-                placeholder="YYYY-MM-DD"
-                value={formData.startDate}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, startDate: text })
-                }
+              <Controller
+                control={control}
+                name="startTime"
+                rules={{
+                  required: true,
+                  pattern: {
+                    value: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/,
+                    message: "Must be ISO 8601",
+                  },
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="YYYY-MM-DDTHH:MM"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
               />
-            </View>
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-medium text-gray-700">
-                Start Time *
-              </Text>
-              <TextInput
-                className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
-                placeholder="HH:MM"
-                value={formData.startTime}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, startTime: text })
-                }
-              />
-            </View>
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-medium text-gray-700">
-                End Date
-              </Text>
-              <TextInput
-                className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
-                placeholder="YYYY-MM-DD (leave empty if ongoing)"
-                value={formData.endDate}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, endDate: text })
-                }
-              />
+              {errors.startTime && (
+                <Text className="text-xs text-red-500">
+                  {errors.startTime.message || "This field is required."}
+                </Text>
+              )}
             </View>
             <View className="mb-4">
               <Text className="mb-2 text-sm font-medium text-gray-700">
                 End Time
               </Text>
-              <TextInput
-                className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
-                placeholder="HH:MM (leave empty if ongoing)"
-                value={formData.endTime}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, endTime: text })
-                }
+              <Controller
+                control={control}
+                name="endTime"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="YYYY-MM-DDTHH:MM (leave empty if ongoing)"
+                    value={value ?? ""}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
               />
             </View>
           </View>
@@ -204,17 +245,148 @@ export default function AddDutyPage() {
             </Text>
             <View className="mb-4">
               <Text className="mb-2 text-sm font-medium text-gray-700">
+                Location
+              </Text>
+              <Controller
+                control={control}
+                name="location"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="Location (optional)"
+                    value={value ?? ""}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+            </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-medium text-gray-700">
+                Crew
+              </Text>
+              <Controller
+                control={control}
+                name="crew"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="Crew (optional)"
+                    value={value ?? ""}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+            </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-medium text-gray-700">
+                Aircraft
+              </Text>
+              <Controller
+                control={control}
+                name="aircraft"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="Aircraft (optional)"
+                    value={value ?? ""}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+            </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-medium text-gray-700">
+                Flight Number
+              </Text>
+              <Controller
+                control={control}
+                name="flightNumber"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="Flight Number (optional)"
+                    value={value ?? ""}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+            </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-medium text-gray-700">
+                Instructor
+              </Text>
+              <Controller
+                control={control}
+                name="instructor"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="Instructor (optional)"
+                    value={value ?? ""}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+            </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-medium text-gray-700">
+                Training Type
+              </Text>
+              <Controller
+                control={control}
+                name="trainingType"
+                render={({ field: { onChange, value } }) => (
+                  <View className="flex-row flex-wrap gap-2">
+                    {(
+                      [
+                        "simulator",
+                        "checkride",
+                        "recurrent",
+                        "initial",
+                        "ground-school",
+                        "flight-review",
+                      ] as DutyLogTrainingType[]
+                    ).map((type) => (
+                      <TouchableOpacity
+                        key={type}
+                        className={`rounded-full px-4 py-2 ${value === type ? "bg-blue-600" : "bg-gray-200"}`}
+                        onPress={() => onChange(type)}
+                      >
+                        <Text
+                          className={`text-sm font-medium ${value === type ? "text-white" : "text-gray-700"}`}
+                        >
+                          {type.charAt(0).toUpperCase() +
+                            type.slice(1).replace("-", " ")}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              />
+            </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-medium text-gray-700">
                 Notes
               </Text>
-              <TextInput
-                className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
-                placeholder="Additional notes or comments"
-                value={formData.notes}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, notes: text })
-                }
-                multiline
-                numberOfLines={3}
+              <Controller
+                control={control}
+                name="notes"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
+                    placeholder="Additional notes or comments"
+                    value={value ?? ""}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    multiline
+                    numberOfLines={3}
+                  />
+                )}
               />
             </View>
           </View>
@@ -222,12 +394,13 @@ export default function AddDutyPage() {
             <View className="flex-row gap-3">
               <TouchableOpacity
                 className="flex-1 rounded-lg bg-primary py-3 shadow-sm active:bg-primary"
-                onPress={handleSave}
+                onPress={handleSubmit(handleSave)}
+                disabled={isPending}
               >
                 <View className="flex-row items-center justify-center">
                   <Ionicons name="save-outline" size={18} color="white" />
                   <Text className="ml-2 text-base font-semibold text-white">
-                    Save Duty
+                    {isPending ? "Saving..." : "Save Duty"}
                   </Text>
                 </View>
               </TouchableOpacity>

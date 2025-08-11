@@ -1,2 +1,2 @@
 export * from "./duty-log";
-export * from "./reports";
+export * from "./report";

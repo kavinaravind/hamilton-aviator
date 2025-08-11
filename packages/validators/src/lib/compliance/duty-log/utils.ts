@@ -1,6 +1,6 @@
-import type { DutyEntry } from "./types";
+import type { DutyLog } from "./types";
 
-export const getDutyStatusText = (status: DutyEntry["status"]): string => {
+export const getDutyStatusText = (status: DutyLog["status"]): string => {
   switch (status) {
     case "completed":
       return "Completed";
@@ -11,7 +11,7 @@ export const getDutyStatusText = (status: DutyEntry["status"]): string => {
   }
 };
 
-export const calculateMonthlyDutyTime = (entries: DutyEntry[]): string => {
+export const calculateMonthlyDutyTime = (entries: DutyLog[]): string => {
   const now = new Date();
   const month = now.getMonth();
   const year = now.getFullYear();
@@ -50,7 +50,7 @@ export const formatTime = (dateStr: string): string => {
 };
 
 // Get color for a duty type
-export const getDutyTypeColor = (type: DutyEntry["type"]): string => {
+export const getDutyTypeColor = (type: DutyLog["type"]): string => {
   switch (type) {
     case "flight-duty":
       return "#3B82F6";
@@ -66,7 +66,7 @@ export const getDutyTypeColor = (type: DutyEntry["type"]): string => {
 };
 
 // Get icon name for a duty type (Ionicons)
-export const getDutyTypeIcon = (type: DutyEntry["type"]): string => {
+export const getDutyTypeIcon = (type: DutyLog["type"]): string => {
   switch (type) {
     case "flight-duty":
       return "airplane";
@@ -81,7 +81,7 @@ export const getDutyTypeIcon = (type: DutyEntry["type"]): string => {
   }
 };
 
-export const getDutyStatusColor = (status: DutyEntry["status"]): string => {
+export const getDutyStatusColor = (status: DutyLog["status"]): string => {
   switch (status) {
     case "completed":
       return "#10B981";
@@ -92,7 +92,7 @@ export const getDutyStatusColor = (status: DutyEntry["status"]): string => {
   }
 };
 
-export const getDutyTypeText = (type: DutyEntry["type"]): string => {
+export const getDutyTypeText = (type: DutyLog["type"]): string => {
   switch (type) {
     case "flight-duty":
       return "Flight Duty";

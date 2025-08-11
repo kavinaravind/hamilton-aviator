@@ -1,0 +1,38 @@
+[
+  {
+    "title": "FAA Form 8710-1 Summary",
+    "description": "Aeronautical experience summary for checkrides and certificates",
+    "icon": "document-text",
+    "color": "#3B82F6",
+    "estimatedTime": "2-3 minutes",
+    "requiredData": [
+      "Total flight time",
+      "Cross-country time",
+      "Night time",
+      "Instrument time"
+    ],
+    "category": "regulatory"
+  },
+  {
+    "title": "Full Logbook Export",
+    "description": "Complete digital logbook in PDF format",
+    "icon": "book",
+    "color": "#10B981",
+    "estimatedTime": "1-2 minutes",
+    "requiredData": [
+      "All flight entries",
+      "Aircraft information",
+      "Pilot endorsements"
+    ],
+    "category": "export"
+  },
+  {
+    "title": "Duty Time Report",
+    "description": "Compliance report for duty time tracking",
+    "icon": "time",
+    "color": "#EF4444",
+    "estimatedTime": "1-2 minutes",
+    "requiredData": ["Duty entries", "Rest periods", "Compliance data"],
+    "category": "regulatory"
+  }
+]

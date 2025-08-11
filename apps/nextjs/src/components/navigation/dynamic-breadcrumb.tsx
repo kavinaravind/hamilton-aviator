@@ -37,7 +37,7 @@ const routeMap: Record<string, { title: string; href?: string }[]> = {
     { title: "Duty Log", href: "/dashboard/compliance/duty-log" },
     { title: "Add Entry" },
   ],
-  "/dashboard/compliance/reports": [
+  "/dashboard/compliance/report": [
     { title: "Hamilton Aviator", href: "/dashboard" },
     { title: "Compliance" },
     { title: "Reports" },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -9,73 +9,53 @@ import {
   View,
 } from "react-native";
 import { Stack } from "expo-router";
+import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 
 import type { ReportType } from "@hamilton/validators/lib/compliance";
 
-const reportTypes: ReportType[] = [
-  {
-    id: "faa-8710",
-    title: "FAA Form 8710-1 Summary",
-    description:
-      "Aeronautical experience summary for checkrides and certificates",
-    icon: "document-text",
-    color: "#3B82F6",
-    estimatedTime: "2-3 minutes",
-    requiredData: [
-      "Total flight time",
-      "Cross-country time",
-      "Night time",
-      "Instrument time",
-    ],
-    category: "regulatory",
-  },
-  {
-    id: "logbook-export",
-    title: "Full Logbook Export",
-    description: "Complete digital logbook in PDF format",
-    icon: "book",
-    color: "#10B981",
-    estimatedTime: "1-2 minutes",
-    requiredData: [
-      "All flight entries",
-      "Aircraft information",
-      "Pilot endorsements",
-    ],
-    category: "export",
-  },
-  {
-    id: "duty-log-export",
-    title: "Duty Time Report",
-    description: "Compliance report for duty time tracking",
-    icon: "time",
-    color: "#EF4444",
-    estimatedTime: "1-2 minutes",
-    requiredData: ["Duty entries", "Rest periods", "Compliance data"],
-    category: "regulatory",
-  },
+const categories = [
+  { id: "all", label: "All Reports" },
+  { id: "regulatory", label: "Regulatory" },
+  { id: "export", label: "Export" },
+  { id: "custom", label: "Custom" },
 ];
 
-export default function ReportsPage() {
+export default function ReportPage() {
+  const {
+    data: reports,
+    isPending,
+    isError,
+    error,
+  } = useQuery(trpc.report.all.queryOptions());
+
   const [isGenerating, setIsGenerating] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  const categories = [
-    { id: "all", label: "All Reports" },
-    { id: "regulatory", label: "Regulatory" },
-    { id: "export", label: "Export" },
-    { id: "custom", label: "Custom" },
-  ];
+  const [filteredReports, setFilteredReports] = useState<ReportType[]>([]);
 
-  const filteredReports = reportTypes.filter((report) => {
-    const matchesSearch =
-      report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      report.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "all" || report.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  useEffect(() => {
+    if (!reports) {
+      setFilteredReports([]);
+      return;
+    }
+    let filtered = reports;
+    if (searchQuery !== "") {
+      filtered = filtered.filter(
+        (report) =>
+          report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          report.description.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+    }
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(
+        (report) => report.category === selectedCategory,
+      );
+    }
+    setFilteredReports(filtered);
+  }, [reports, searchQuery, selectedCategory]);
 
   const handleGenerateReport = async (reportId: string, title: string) => {
     setIsGenerating(reportId);
@@ -153,6 +133,37 @@ export default function ReportsPage() {
       </Text>
     </TouchableOpacity>
   );
+
+  if (isPending) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="time-outline" size={64} color="#3B82F6" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">
+            Loading...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center px-4">
+          <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
+          <Text className="mt-4 text-xl font-bold text-gray-900">Error</Text>
+          <Text className="mt-2 text-center text-gray-600">
+            {error instanceof Error
+              ? error.message
+              : "An error occurred while fetching aircraft."}
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">

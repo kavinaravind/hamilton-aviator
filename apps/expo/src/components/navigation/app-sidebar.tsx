@@ -59,7 +59,7 @@ const data = {
         },
         {
           title: "Reports",
-          url: "/dashboard/compliance/reports",
+          url: "/dashboard/compliance/report",
         },
       ],
     },

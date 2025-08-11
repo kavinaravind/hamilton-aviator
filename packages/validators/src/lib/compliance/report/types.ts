@@ -10,5 +10,9 @@ export const ReportTypeSchema = z.object({
   requiredData: z.array(z.string()),
   category: z.string(),
 });
-
 export type ReportType = z.infer<typeof ReportTypeSchema>;
+
+export const ReportCreateSchema = ReportTypeSchema.omit({
+  id: true,
+});
+export type ReportCreate = z.infer<typeof ReportCreateSchema>;
