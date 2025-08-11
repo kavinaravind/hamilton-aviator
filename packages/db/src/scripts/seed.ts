@@ -6,6 +6,7 @@ import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 
 import { Aircraft } from "../lib/schema/aircraft";
+import { DutyLog } from "../lib/schema/duty-log";
 import { Logbook } from "../lib/schema/logbook";
 
 function initDb() {
@@ -56,6 +57,11 @@ async function main() {
     Logbook,
     "./src/scripts/data/logbook.json",
     "Logbook",
+  );
+  await seedTable<typeof DutyLog.$inferInsert>(
+    DutyLog,
+    "./src/scripts/data/duty-log.json",
+    "DutyLog",
   );
 }
 

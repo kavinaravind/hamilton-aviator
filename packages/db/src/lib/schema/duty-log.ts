@@ -25,7 +25,7 @@ export const DutyLog = pgTable("duty_log", {
   description: text("description").notNull(),
   startTime: text("start_time").notNull(),
   endTime: text("end_time"),
-  duration: text("duration").notNull(),
+  duration: text("duration"),
   status: dutyLogStatusEnum("status").notNull(),
   location: text("location"),
   crew: text("crew"),

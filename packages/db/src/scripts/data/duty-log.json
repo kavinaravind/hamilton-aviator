@@ -1,0 +1,62 @@
+[
+  {
+    "startTime": "2025-08-05T06:00:00Z",
+    "endTime": null,
+    "type": "flight-duty",
+    "description": "Commercial flight operations",
+    "duration": null,
+    "status": "active",
+    "location": "JFK",
+    "crew": "John Doe, Jane Smith",
+    "aircraft": "N123AB",
+    "flightNumber": "AA100",
+    "instructor": null,
+    "trainingType": null,
+    "notes": "Early morning ops."
+  },
+  {
+    "startTime": "2025-08-04T08:00:00Z",
+    "endTime": "2025-08-04T12:00:00Z",
+    "type": "training",
+    "description": "Recurrent training - simulator",
+    "duration": "4h 0m",
+    "status": "completed",
+    "location": "Sim Center",
+    "crew": "Alex Pilot",
+    "aircraft": "N456CD",
+    "flightNumber": "TRN200",
+    "instructor": "Instructor Mike",
+    "trainingType": "simulator",
+    "notes": "Passed all checks."
+  },
+  {
+    "startTime": "2025-08-03T10:00:00Z",
+    "endTime": "2025-08-03T18:00:00Z",
+    "type": "standby",
+    "description": "Airport standby duty",
+    "duration": "8h 0m",
+    "status": "completed",
+    "location": "LAX",
+    "crew": null,
+    "aircraft": null,
+    "flightNumber": null,
+    "instructor": null,
+    "trainingType": null,
+    "notes": "No flights assigned."
+  },
+  {
+    "startTime": "2025-08-02T14:00:00Z",
+    "endTime": "2025-08-02T20:15:00Z",
+    "type": "flight-duty",
+    "description": "International route - in progress",
+    "duration": "6h 15m",
+    "status": "completed",
+    "location": "LHR",
+    "crew": "John Doe, Jane Smith, Alex Pilot",
+    "aircraft": "N789EF",
+    "flightNumber": "BA150",
+    "instructor": null,
+    "trainingType": null,
+    "notes": "Smooth flight."
+  }
+]

@@ -10,7 +10,7 @@ import {
 import { Link, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-import type { DutyEntry } from "@hamilton/validators/lib/compliance";
+import type { DutyLog } from "@hamilton/validators/lib/compliance";
 import {
   calculateMonthlyDutyTime,
   formatDate,
@@ -20,49 +20,10 @@ import {
   getDutyTypeText,
 } from "@hamilton/validators/lib/compliance";
 
-const DutyEntries: DutyEntry[] = [
-  {
-    id: "1",
-    startTime: "2025-08-05T06:00:00Z",
-    endTime: null,
-    type: "flight-duty",
-    description: "Commercial flight operations",
-    duration: "-",
-    status: "active",
-  },
-  {
-    id: "2",
-    startTime: "2025-08-04T08:00:00Z",
-    endTime: "2025-08-04T12:00:00Z",
-    type: "training",
-    description: "Recurrent training - simulator",
-    duration: "4h 0m",
-    status: "completed",
-  },
-  {
-    id: "3",
-    startTime: "2025-08-03T10:00:00Z",
-    endTime: "2025-08-03T18:00:00Z",
-    type: "standby",
-    description: "Airport standby duty",
-    duration: "8h 0m",
-    status: "completed",
-  },
-  {
-    id: "4",
-    startTime: "2025-08-02T14:00:00Z",
-    endTime: "2025-08-02T20:15:00Z",
-    type: "flight-duty",
-    description: "International route - in progress",
-    duration: "6h 15m",
-    status: "completed",
-  },
-];
-
 export default function DutyLogPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredDutyEntries, setFilteredDutyEntries] =
-    useState<DutyEntry[]>(DutyEntries);
+    useState<DutyLog[]>(DutyEntries);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -70,7 +31,7 @@ export default function DutyLogPage() {
       setFilteredDutyEntries(DutyEntries);
     } else {
       const filtered = DutyEntries.filter(
-        (entry: DutyEntry) =>
+        (entry: DutyLog) =>
           entry.description.toLowerCase().includes(query.toLowerCase()) ||
           entry.type.toLowerCase().includes(query.toLowerCase()),
       );
@@ -78,7 +39,7 @@ export default function DutyLogPage() {
     }
   };
 
-  const renderDutyEntry = ({ item }: { item: DutyEntry }) => (
+  const renderDutyLogEntry = ({ item }: { item: DutyLog }) => (
     <Link href={`/dashboard/compliance/duty-log/${item.id}`} asChild>
       <TouchableOpacity className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
         <View className="flex-row items-start justify-between">
@@ -187,7 +148,7 @@ export default function DutyLogPage() {
       <View className="flex-1 px-4 pt-4">
         <FlatList
           data={filteredDutyEntries}
-          renderItem={renderDutyEntry}
+          renderItem={renderDutyLogEntry}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={

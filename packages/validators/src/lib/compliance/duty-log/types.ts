@@ -45,7 +45,7 @@ export type DutyLogSummary = z.infer<typeof DutyLogSummarySchema>;
 
 export const DutyLogSchema = DutyLogSummarySchema.extend({
   location: z.string().optional(),
-  crew: z.array(z.string()).optional(),
+  crew: z.string().optional(),
   aircraft: z.string().optional(),
   flightNumber: z.string().optional(),
   instructor: z.string().optional(),
@@ -53,3 +53,8 @@ export const DutyLogSchema = DutyLogSummarySchema.extend({
   notes: z.string().optional(),
 });
 export type DutyLog = z.infer<typeof DutyLogSchema>;
+
+export const DutyLogCreateSchema = DutyLogSchema.omit({
+  id: true,
+});
+export type DutyLogCreate = z.infer<typeof DutyLogCreateSchema>;
