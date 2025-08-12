@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import type { PropsWithChildren } from "react";
+import React, { Suspense } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
@@ -18,11 +20,7 @@ export const metadata: Metadata = {
   description: "Your digital copilot",
 };
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function DashboardLayout({ children }: PropsWithChildren) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
@@ -31,18 +29,17 @@ export default async function DashboardLayout({
     redirect("/auth/sign-in");
   }
 
-  const user = session.user
-    ? {
-        id: session.user.id,
-        name: session.user.name,
-        email: session.user.email,
-        image: session.user.image ?? undefined,
-      }
-    : undefined;
-
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar variant="inset" user={user} />
+      <AppSidebar
+        variant="inset"
+        user={{
+          id: session.user.id,
+          name: session.user.name,
+          email: session.user.email,
+          image: session.user.image ?? undefined,
+        }}
+      />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -51,7 +48,15 @@ export default async function DashboardLayout({
             <DynamicBreadcrumb />
           </div>
         </header>
-        <HydrateClient>{children}</HydrateClient>
+        <Suspense
+          fallback={
+            <div className="flex h-96 items-center justify-center">
+              <span className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-primary" />
+            </div>
+          }
+        >
+          <HydrateClient>{children}</HydrateClient>
+        </Suspense>
       </SidebarInset>
     </SidebarProvider>
   );
