@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { authClient } from "@/lib/auth";
 
-import { AppIcon } from "@hamilton/ui/components/icons/app";
+import { AppNativeIcon } from "@hamilton/ui/components/icons/app-native";
 import { GitHubIcon, GoogleIcon } from "@hamilton/ui/components/icons/auth";
 
 // Warm up the browser for better performance
@@ -35,7 +35,7 @@ export default function SignIn() {
     <View className="flex-1 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <View className="flex-1 items-center justify-center px-6">
         <View className="mb-6 items-center">
-          <AppIcon size={50} />
+          <AppNativeIcon size={50} />
           <Text className="mt-4 text-3xl font-bold text-slate-900">
             Hamilton Aviator
           </Text>

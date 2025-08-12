@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 
+import { AppIcon } from "@hamilton/ui/components/icons/app";
 import { Button, buttonVariants } from "@hamilton/ui/components/ui/button";
 import { cn } from "@hamilton/ui/lib/utils/index";
 
@@ -24,17 +25,15 @@ export default function SignIn() {
         Login
       </Link>
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-        <div className="absolute inset-0 bg-zinc-900" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black to-blue-950" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-2xl font-bold text-white">
-            H
-          </div>
-          Hamilton AI
+          <AppIcon size={40} />
+          <span className="ml-3">Hamilton AI</span>
         </div>
         <div className="relative z-20 mt-auto">
           <div className="rounded-xl bg-zinc-800/80 p-6 shadow-lg ring-1 ring-zinc-700/40">
             <div className="mb-3 flex items-center gap-2">
-              <span className="rounded-md border border-blue-700/30 bg-blue-900/40 px-3 py-1 text-lg font-bold tracking-wide text-blue-300 shadow-sm">
+              <span className="relative flex items-center gap-2 rounded-lg border-2 border-blue-500/60 px-3 py-2 text-xl font-extrabold tracking-widest text-blue-200 ring-1 ring-blue-400/30">
                 Hamilton Aviator
               </span>
             </div>
@@ -42,8 +41,8 @@ export default function SignIn() {
               <p className="text-lg font-medium text-white/90">
                 &ldquo;With Hamilton Aviator, I can log flights, track duty
                 hours, manage maintenance records, and generate FAA-ready
-                reports—all in one place. No more juggling spreadsheets, notes,
-                and disconnected tools. It’s the unified solution that
+                reports all in one place. No more juggling spreadsheets, notes,
+                and disconnected tools. It's the unified solution that
                 eliminates risk, inefficiency, and compliance gaps for pilots
                 like me.&rdquo;
               </p>

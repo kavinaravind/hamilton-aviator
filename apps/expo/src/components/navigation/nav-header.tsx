@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Link } from "expo-router";
 
-import { AppIcon } from "@hamilton/ui/components/icons/app";
+import { AppNativeIcon } from "@hamilton/ui/components/icons/app-native";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -28,7 +28,7 @@ export function NavHeader({
         <SidebarMenuButton size="lg" asChild>
           <Link href="/dashboard" onPress={toggleSidebar}>
             <div className="flex items-center gap-3">
-              <AppIcon size={32} />
+              <AppNativeIcon size={32} />
               <div className="flex flex-col justify-center">
                 <span className="truncate text-base font-medium leading-tight">
                   {header.name}

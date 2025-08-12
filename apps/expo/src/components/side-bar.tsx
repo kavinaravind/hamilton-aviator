@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import DOMProvider from "@/components/dom-provider";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
 
-import { AppIcon } from "@hamilton/ui/components/icons/app";
+import { AppNativeIcon } from "@hamilton/ui/components/icons/app-native";
 import { Separator } from "@hamilton/ui/components/ui/separator";
 import {
   SidebarInset,
@@ -61,7 +61,7 @@ export default function SideBar({
                   <SidebarTrigger className="-ml-1" />
                   <Separator orientation="vertical" className="h-6" />
                   <div className="flex items-center gap-2">
-                    <AppIcon size={24} />
+                    <AppNativeIcon size={24} />
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold leading-none text-foreground">
                         Hamilton Aviator
