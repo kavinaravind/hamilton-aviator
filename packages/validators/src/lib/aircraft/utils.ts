@@ -1,3 +1,5 @@
+import { AlertTriangle, CheckCircle, Wrench } from "lucide-react";
+
 import type { AircraftStatus } from "./types";
 
 export const getStatusColor = (status: AircraftStatus): string => {
@@ -25,3 +27,15 @@ export const getStatusText = (status: AircraftStatus): string => {
       return "Unknown";
   }
 };
+export function getStatusIcon(status: string) {
+  switch (status) {
+    case "airworthy":
+      return CheckCircle;
+    case "maintenance-soon":
+      return AlertTriangle;
+    case "maintenance-due":
+      return Wrench;
+    default:
+      return AlertTriangle;
+  }
+}

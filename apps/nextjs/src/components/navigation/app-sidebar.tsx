@@ -77,12 +77,11 @@ export function AppSidebar({
     image?: string | null;
   };
 }) {
-  // Transform user data to match NavUser interface
   const userData = user
     ? {
         name: user.name,
         email: user.email,
-        avatar: user.image || "/avatars/shadcn.jpg", // fallback to default avatar
+        avatar: user.image || "/avatars/shadcn.jpg",
       }
     : data.user;
 

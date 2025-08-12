@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
 import { DynamicBreadcrumb } from "@/components/navigation/dynamic-breadcrumb";
 import { getSession } from "@/lib/auth/server";
+import { HydrateClient } from "@/lib/trpc/server";
 
 import { Separator } from "@hamilton/ui/components/ui/separator";
 import {
@@ -50,7 +51,7 @@ export default async function DashboardLayout({
             <DynamicBreadcrumb />
           </div>
         </header>
-        {children}
+        <HydrateClient>{children}</HydrateClient>
       </SidebarInset>
     </SidebarProvider>
   );

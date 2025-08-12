@@ -47,3 +47,9 @@ export const AircraftSchema = AircraftSummarySchema.extend({
   }),
 });
 export type Aircraft = z.infer<typeof AircraftSchema>;
+
+export interface AircraftFilter {
+  id: string;
+  label: string;
+  count: number;
+}

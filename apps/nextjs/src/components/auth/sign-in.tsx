@@ -27,7 +27,7 @@ export default function SignIn() {
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <div className="absolute inset-0 bg-gradient-to-b from-black to-blue-950" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <AppIcon size={40} />
+          <AppIcon size={32} />
           <span className="ml-3">Hamilton AI</span>
         </div>
         <div className="relative z-20 mt-auto">
