@@ -6,7 +6,8 @@
   "exports": {
     "./lib/utils/*": "./src/lib/utils/*.ts",
     "./components/ui/*": "./src/components/ui/*.tsx",
-    "./components/icons/*": "./src/components/icons/*.tsx"
+    "./components/icons/*": "./src/components/icons/*.tsx",
+    "./components/skeleton/*": "./src/components/skeleton/*.tsx"
   },
   "license": "MIT",
   "scripts": {
