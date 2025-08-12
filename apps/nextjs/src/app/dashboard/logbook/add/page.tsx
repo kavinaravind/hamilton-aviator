@@ -1,260 +1,534 @@
 "use client";
 
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTRPC } from "@/lib/trpc/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Save, X } from "lucide-react";
+import { useForm } from "react-hook-form";
 
+import type { LogbookCreate } from "@hamilton/validators/lib/logbook";
 import { Button } from "@hamilton/ui/components/ui/button";
 import { Card, CardContent, CardHeader } from "@hamilton/ui/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@hamilton/ui/components/ui/form";
 import { Input } from "@hamilton/ui/components/ui/input";
-import { Label } from "@hamilton/ui/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@hamilton/ui/components/ui/select";
 import { Textarea } from "@hamilton/ui/components/ui/textarea";
-
-// Define the form data type for a logbook entry
-interface LogbookFormData {
-  date: string;
-  aircraft: string;
-  departure: string;
-  arrival: string;
-  route: string;
-  totalTime: string;
-  picTime: string;
-  sicTime: string;
-  instrumentTime: string;
-  nightTime: string;
-  crossCountryTime: string;
-  approaches: string;
-  landingsDay: string;
-  landingsNight: string;
-  remarks: string;
-  flightType: string;
-  conditions: string;
-}
+import { toast } from "@hamilton/ui/components/ui/toast";
+import {
+  LogbookCreateSchema,
+  LogbookFlightTypeEnum,
+} from "@hamilton/validators/lib/logbook";
 
 export default function AddLogbookEntryPage() {
+  const trpc = useTRPC();
   const router = useRouter();
-  const [formData, setFormData] = useState<LogbookFormData>({
-    date: new Date().toISOString().split("T")[0] || "",
-    aircraft: "",
-    departure: "",
-    arrival: "",
-    route: "",
-    totalTime: "",
-    picTime: "",
-    sicTime: "",
-    instrumentTime: "",
-    nightTime: "",
-    crossCountryTime: "",
-    approaches: "",
-    landingsDay: "",
-    landingsNight: "",
-    remarks: "",
-    flightType: "pic",
-    conditions: "day",
+  const queryClient = useQueryClient();
+  const form = useForm<LogbookCreate>({
+    resolver: zodResolver(LogbookCreateSchema as any),
+    defaultValues: {
+      date: new Date().toISOString().split("T")[0],
+      route: "",
+      aircraft: "",
+      duration: "",
+      tailNumber: "",
+      departure: { airport: "", time: "" },
+      arrival: { airport: "", time: "" },
+      flightTime: { total: "", pic: "", sic: "", solo: "", dual: "" },
+      conditions: {
+        day: "",
+        night: "",
+        actualInstrument: "",
+        simulatedInstrument: "",
+        crossCountry: "",
+      },
+      landings: { day: 0, night: 0 },
+      approaches: 0,
+      holds: 0,
+      remarks: "",
+      instructor: "",
+      flightType: LogbookFlightTypeEnum.enum.training,
+    },
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (field: keyof LogbookFormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      // Here you would call your API to save the logbook entry
-      console.log("Logbook entry data:", formData);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/dashboard/logbook");
-    } catch (error) {
-      console.error("Error saving logbook entry:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const createLogbookEntry = useMutation(
+    trpc.logbook.create.mutationOptions({
+      onSuccess: async () => {
+        form.reset();
+        await queryClient.invalidateQueries(trpc.logbook.pathFilter());
+        router.push("/dashboard/logbook");
+      },
+      onError: (err: any) => {
+        toast.error(
+          err.data?.code === "UNAUTHORIZED"
+            ? "You must be logged in to add a logbook entry"
+            : "Failed to add logbook entry",
+        );
+      },
+    }),
+  );
 
   return (
-    <div className="flex justify-center py-8">
-      <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Add Flight Log Entry</h2>
-            <Button variant="ghost" size="icon" onClick={() => router.back()}>
-              <X className="h-5 w-5" />
+    <div className="flex-1 p-4 pt-4 sm:p-8 sm:pt-6">
+      <Form {...form}>
+        <form
+          className="mx-auto w-full max-w-2xl space-y-8"
+          onSubmit={form.handleSubmit((data) =>
+            createLogbookEntry.mutate(data),
+          )}
+        >
+          {/* Section: Basic Info */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold">Add Flight Log Entry</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => router.back()}
+                  type="button"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="aircraft"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Aircraft" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="tailNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Tail Number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="route"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Route" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section: Departure/Arrival */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">
+                Departure & Arrival
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="departure.airport"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Departure Airport" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="departure.time"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="time"
+                          placeholder="Departure Time"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="arrival.airport"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Arrival Airport" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="arrival.time"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="time"
+                          placeholder="Arrival Time"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section: Flight Time */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">Flight Time</h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <FormField
+                  control={form.control}
+                  name="flightTime.total"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Total" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="flightTime.pic"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="PIC" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="flightTime.sic"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="SIC" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="flightTime.solo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Solo" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="flightTime.dual"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Dual" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section: Conditions */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">Conditions</h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <FormField
+                  control={form.control}
+                  name="conditions.day"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Day" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="conditions.night"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Night" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="conditions.actualInstrument"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Actual Instrument" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="conditions.simulatedInstrument"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Simulated Instrument" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="conditions.crossCountry"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Cross Country" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section: Landings, Approaches, Holds */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">
+                Landings, Approaches, Holds
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <FormField
+                  control={form.control}
+                  name="landings.day"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Landings (Day)"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="landings.night"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Landings (Night)"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="approaches"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Approaches"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="holds"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input type="number" placeholder="Holds" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section: Remarks, Instructor, Flight Type */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">
+                Remarks & Details
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="remarks"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea placeholder="Remarks" rows={2} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="instructor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Instructor (optional)" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="flightType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Flight Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(
+                            LogbookFlightTypeEnum.options ??
+                            Object.values(LogbookFlightTypeEnum)
+                          ).map((type: string) => (
+                            <SelectItem key={type} value={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Save/Cancel Buttons */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:space-x-3">
+            <Button
+              type="submit"
+              disabled={createLogbookEntry.isPending}
+              className="w-full sm:flex-1"
+            >
+              <Save className="mr-2 h-4 w-4" />
+              {createLogbookEntry.isPending ? "Saving..." : "Save Entry"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              className="w-full sm:flex-1"
+            >
+              <X className="mr-2 h-4 w-4" />
+              Cancel
             </Button>
           </div>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <Label>Date</Label>
-                <Input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => handleInputChange("date", e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <Label>Aircraft</Label>
-                <Input
-                  value={formData.aircraft}
-                  onChange={(e) =>
-                    handleInputChange("aircraft", e.target.value)
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <Label>Departure</Label>
-                <Input
-                  value={formData.departure}
-                  onChange={(e) =>
-                    handleInputChange("departure", e.target.value)
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <Label>Arrival</Label>
-                <Input
-                  value={formData.arrival}
-                  onChange={(e) => handleInputChange("arrival", e.target.value)}
-                  required
-                />
-              </div>
-              <div className="md:col-span-2">
-                <Label>Route</Label>
-                <Input
-                  value={formData.route}
-                  onChange={(e) => handleInputChange("route", e.target.value)}
-                />
-              </div>
-              <div>
-                <Label>Total Time</Label>
-                <Input
-                  value={formData.totalTime}
-                  onChange={(e) =>
-                    handleInputChange("totalTime", e.target.value)
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <Label>PIC Time</Label>
-                <Input
-                  value={formData.picTime}
-                  onChange={(e) => handleInputChange("picTime", e.target.value)}
-                />
-              </div>
-              <div>
-                <Label>SIC Time</Label>
-                <Input
-                  value={formData.sicTime}
-                  onChange={(e) => handleInputChange("sicTime", e.target.value)}
-                />
-              </div>
-              <div>
-                <Label>Instrument Time</Label>
-                <Input
-                  value={formData.instrumentTime}
-                  onChange={(e) =>
-                    handleInputChange("instrumentTime", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Label>Night Time</Label>
-                <Input
-                  value={formData.nightTime}
-                  onChange={(e) =>
-                    handleInputChange("nightTime", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Label>Cross Country Time</Label>
-                <Input
-                  value={formData.crossCountryTime}
-                  onChange={(e) =>
-                    handleInputChange("crossCountryTime", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Label>Approaches</Label>
-                <Input
-                  value={formData.approaches}
-                  onChange={(e) =>
-                    handleInputChange("approaches", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Label>Landings (Day)</Label>
-                <Input
-                  value={formData.landingsDay}
-                  onChange={(e) =>
-                    handleInputChange("landingsDay", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Label>Landings (Night)</Label>
-                <Input
-                  value={formData.landingsNight}
-                  onChange={(e) =>
-                    handleInputChange("landingsNight", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-            <div>
-              <Label>Remarks</Label>
-              <Textarea
-                value={formData.remarks}
-                onChange={(e) => handleInputChange("remarks", e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Flight Type</Label>
-                <Input
-                  value={formData.flightType}
-                  onChange={(e) =>
-                    handleInputChange("flightType", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Label>Conditions</Label>
-                <Input
-                  value={formData.conditions}
-                  onChange={(e) =>
-                    handleInputChange("conditions", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-2 pt-4">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => router.back()}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                <Save className="mr-2 h-4 w-4" />
-                {isSubmitting ? "Saving..." : "Save Entry"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+        </form>
+      </Form>
     </div>
   );
 }

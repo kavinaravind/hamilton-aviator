@@ -1,15 +1,24 @@
 "use client";
 
-import type { DutyFormData } from "@/lib/compliance/duty-log";
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { calculateDuration } from "@/lib/compliance/duty-log";
+import { useTRPC } from "@/lib/trpc/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Save, X } from "lucide-react";
+import { useForm } from "react-hook-form";
 
+import type { DutyLogCreate } from "@hamilton/validators/lib/compliance";
 import { Button } from "@hamilton/ui/components/ui/button";
 import { Card, CardContent, CardHeader } from "@hamilton/ui/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@hamilton/ui/components/ui/form";
 import { Input } from "@hamilton/ui/components/ui/input";
-import { Label } from "@hamilton/ui/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -18,184 +27,368 @@ import {
   SelectValue,
 } from "@hamilton/ui/components/ui/select";
 import { Textarea } from "@hamilton/ui/components/ui/textarea";
+import { toast } from "@hamilton/ui/components/ui/toast";
+import { DutyLogCreateSchema } from "@hamilton/validators/lib/compliance";
 
 export default function AddDutyEntryPage() {
+  const trpc = useTRPC();
+
   const router = useRouter();
-  const [formData, setFormData] = useState<DutyFormData>({
-    date: new Date().toISOString().split("T")[0] || "",
-    dutyType: "",
-    startTime: "",
-    endTime: "",
-    location: "",
-    description: "",
+  const queryClient = useQueryClient();
+  const form = useForm<DutyLogCreate>({
+    resolver: zodResolver(DutyLogCreateSchema),
+    defaultValues: {
+      type: undefined,
+      description: "",
+      startTime: "",
+      endTime: null,
+      duration: null,
+      status: "completed",
+      location: "",
+      crew: "",
+      aircraft: "",
+      flightNumber: "",
+      instructor: "",
+      trainingType: undefined,
+      notes: "",
+    },
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (field: keyof DutyFormData, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // Here you would call your API to save the duty entry
-      console.log("Duty entry data:", {
-        ...formData,
-        duration: calculateDuration(formData.startTime, formData.endTime),
-      });
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      router.push("/dashboard/compliance/duty-log");
-    } catch (error) {
-      console.error("Error saving duty entry:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleCancel = () => {
-    router.back();
-  };
-
-  const isFormValid =
-    formData.date &&
-    formData.dutyType &&
-    formData.startTime &&
-    formData.endTime &&
-    formData.location &&
-    formData.description;
+  const createDutyEntry = useMutation(
+    trpc.dutyLog.create.mutationOptions({
+      onSuccess: async () => {
+        form.reset();
+        await queryClient.invalidateQueries(trpc.dutyLog.pathFilter());
+        router.push("/dashboard/compliance/duty-log");
+      },
+      onError: (err: any) => {
+        toast.error(
+          err.data?.code === "UNAUTHORIZED"
+            ? "You must be logged in to add a duty entry"
+            : "Failed to add duty entry",
+        );
+      },
+    }),
+  );
 
   return (
     <div className="flex-1 p-4 pt-4 sm:p-8 sm:pt-6">
-      <form
-        onSubmit={handleSubmit}
-        className="mx-auto w-full max-w-2xl space-y-6"
-      >
-        <Card>
-          <CardHeader className="pb-0">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-                Add Duty Entry
-              </h1>
-              <p className="text-sm text-muted-foreground sm:text-base">
-                Record a new duty time entry for compliance tracking
-              </p>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="date"
-                value={formData.date}
-                onChange={(e) => handleInputChange("date", e.target.value)}
-                required
+      <Form {...form}>
+        <form
+          className="mx-auto w-full max-w-2xl space-y-8"
+          onSubmit={form.handleSubmit((data) => {
+            createDutyEntry.mutate(data);
+          })}
+        >
+          {/* Section: Duty Type */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">Duty Type</h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select duty type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="flight-duty">
+                            Flight Duty
+                          </SelectItem>
+                          <SelectItem value="standby">Standby</SelectItem>
+                          <SelectItem value="training">Training</SelectItem>
+                          <SelectItem value="maintenance">
+                            Maintenance
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="dutyType">Duty Type</Label>
-              <Select
-                value={formData.dutyType}
-                onValueChange={(value) => handleInputChange("dutyType", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select duty type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="flight">Flight Duty</SelectItem>
-                  <SelectItem value="ground">Ground Duty</SelectItem>
-                  <SelectItem value="training">Training</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="startTime">Start Time</Label>
-                <Input
-                  id="startTime"
-                  type="time"
-                  value={formData.startTime}
-                  onChange={(e) =>
-                    handleInputChange("startTime", e.target.value)
-                  }
-                  required
+            </CardContent>
+          </Card>
+
+          {/* Section: Basic Information */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">
+                Basic Information
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Enter duty description"
+                        rows={2}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="completed">Completed</SelectItem>
+                          <SelectItem value="active">Active</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Section: Time Information */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">
+                Time Information
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="startTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="datetime-local"
+                          {...field}
+                          value={field.value ?? ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="endTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="datetime-local"
+                          {...field}
+                          value={field.value ?? ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="endTime">End Time</Label>
-                <Input
-                  id="endTime"
-                  type="time"
-                  value={formData.endTime}
-                  onChange={(e) => handleInputChange("endTime", e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            {formData.startTime && formData.endTime && (
-              <div className="rounded-lg bg-muted p-3">
-                <p className="text-sm font-medium">
-                  Duration:{" "}
-                  {calculateDuration(formData.startTime, formData.endTime)}{" "}
-                  hours
-                </p>
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                placeholder="e.g., KLAX, Training Center, Home Office"
-                value={formData.location}
-                onChange={(e) => handleInputChange("location", e.target.value)}
-                required
+              {form.watch("startTime") && form.watch("endTime") && (
+                <div className="rounded-lg bg-muted p-3">
+                  <p className="text-sm font-medium">
+                    Duration:{" "}
+                    {calculateDuration(
+                      form.watch("startTime"),
+                      form.watch("endTime") || "",
+                    )}{" "}
+                    hours
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Section: Additional Information */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-bold text-gray-900">
+                Additional Information
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Location (optional)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                placeholder="Describe the duty activities..."
-                value={formData.description}
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
-                rows={3}
-                required
+              <FormField
+                control={form.control}
+                name="crew"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Crew (optional)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          </CardContent>
-        </Card>
-        <div className="flex flex-col gap-2 sm:flex-row sm:space-x-3">
-          <Button
-            type="submit"
-            disabled={!isFormValid || isSubmitting}
-            className="w-full sm:flex-1"
-          >
-            <Save className="mr-2 h-4 w-4" />
-            {isSubmitting ? "Saving..." : "Save Duty Entry"}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleCancel}
-            className="w-full sm:flex-1"
-          >
-            <X className="mr-2 h-4 w-4" />
-            Cancel
-          </Button>
-        </div>
-      </form>
+              <FormField
+                control={form.control}
+                name="aircraft"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Aircraft (optional)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="flightNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Flight Number (optional)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="instructor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Instructor (optional)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="trainingType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Select
+                        value={field.value ?? undefined}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value ?? undefined}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select training type (optional)" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="simulator">Simulator</SelectItem>
+                          <SelectItem value="checkride">Checkride</SelectItem>
+                          <SelectItem value="recurrent">Recurrent</SelectItem>
+                          <SelectItem value="initial">Initial</SelectItem>
+                          <SelectItem value="ground-school">
+                            Ground School
+                          </SelectItem>
+                          <SelectItem value="flight-review">
+                            Flight Review
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Additional notes or comments"
+                        rows={3}
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Save/Cancel Buttons */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:space-x-3">
+            <Button
+              type="submit"
+              disabled={createDutyEntry.isPending}
+              className="w-full sm:flex-1"
+            >
+              <Save className="mr-2 h-4 w-4" />
+              {createDutyEntry.isPending ? "Saving..." : "Save Duty"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              className="w-full sm:flex-1"
+            >
+              <X className="mr-2 h-4 w-4" />
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
