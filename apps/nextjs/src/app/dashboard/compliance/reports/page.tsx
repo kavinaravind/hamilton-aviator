@@ -1,19 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import {
-  formatDate,
   getReportCategoryColor,
   getReportIcon,
-  getStatusIcon,
-  getStatusVariant,
-  RecentReport,
-  ReportFilter,
-  ReportType,
 } from "@/lib/compliance/reports";
-import { AlertTriangle, Download, FileText, Search } from "lucide-react";
+import { useTRPC } from "@/lib/trpc/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { FileText, Search } from "lucide-react";
 
-import { Alert, AlertDescription } from "@hamilton/ui/components/ui/alert";
+import type { ReportType } from "@hamilton/validators/lib/compliance";
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
 import {
@@ -23,103 +19,17 @@ import {
   CardTitle,
 } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@hamilton/ui/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
 
-const reportTypes: ReportType[] = [
-  {
-    id: "faa-8710",
-    name: "FAA Form 8710-1",
-    description: "Airman Certificate and/or Rating Application",
-    category: "faa",
-    estimatedTime: "15 min",
-    lastGenerated: "2025-07-15",
-    icon: "file-text",
-  },
-  {
-    id: "logbook-export",
-    name: "Logbook Export",
-    description: "Complete flight time summary for insurance or applications",
-    category: "logbook",
-    estimatedTime: "5 min",
-    lastGenerated: "2025-08-01",
-    icon: "download",
-  },
-  {
-    id: "duty-compliance",
-    name: "Duty Time Compliance",
-    description: "Monthly duty time summary for regulatory compliance",
-    category: "compliance",
-    estimatedTime: "10 min",
-    lastGenerated: "2025-08-01",
-    icon: "clock",
-  },
-  {
-    id: "maintenance-summary",
-    name: "Maintenance Summary",
-    description: "Aircraft maintenance status and upcoming requirements",
-    category: "maintenance",
-    estimatedTime: "8 min",
-    icon: "wrench",
-  },
-];
-
-const recentReports: RecentReport[] = [
-  {
-    id: "1",
-    name: "Logbook Export - July 2025",
-    type: "Logbook Export",
-    generatedDate: "2025-08-01",
-    status: "completed",
-    fileSize: "2.3 MB",
-    downloadUrl: "/downloads/logbook-july-2025.pdf",
-  },
-  {
-    id: "2",
-    name: "Duty Compliance - July 2025",
-    type: "Duty Time Compliance",
-    generatedDate: "2025-08-01",
-    status: "completed",
-    fileSize: "1.1 MB",
-    downloadUrl: "/downloads/duty-compliance-july-2025.pdf",
-  },
-  {
-    id: "3",
-    name: "FAA Form 8710-1",
-    type: "FAA Form 8710-1",
-    generatedDate: "2025-07-15",
-    status: "processing",
-  },
-];
-
-const filterOptions: ReportFilter[] = [
-  { id: "all", label: "All Reports", count: reportTypes.length },
-  {
-    id: "faa",
-    label: "FAA Forms",
-    count: reportTypes.filter((r) => r.category === "faa").length,
-  },
-  {
-    id: "logbook",
-    label: "Logbook",
-    count: reportTypes.filter((r) => r.category === "logbook").length,
-  },
-  {
-    id: "compliance",
-    label: "Compliance",
-    count: reportTypes.filter((r) => r.category === "compliance").length,
-  },
-  {
-    id: "maintenance",
-    label: "Maintenance",
-    count: reportTypes.filter((r) => r.category === "maintenance").length,
-  },
-];
-
-interface ReportTypeCardProps {
-  reportType: ReportType;
-}
-
-function ReportTypeCard({ reportType }: ReportTypeCardProps) {
+function ReportTypeCard({ reportType }: { reportType: ReportType }) {
   const Icon = getReportIcon(reportType.icon);
 
   return (
@@ -133,7 +43,7 @@ function ReportTypeCard({ reportType }: ReportTypeCardProps) {
               <Icon className="h-4 w-4" />
             </div>
             <div>
-              <CardTitle className="text-lg">{reportType.name}</CardTitle>
+              <CardTitle className="text-lg">{reportType.title}</CardTitle>
               <Badge className={getReportCategoryColor(reportType.category)}>
                 {reportType.category.toUpperCase()}
               </Badge>
@@ -150,148 +60,165 @@ function ReportTypeCard({ reportType }: ReportTypeCardProps) {
             <p className="text-muted-foreground">Estimated Time</p>
             <p className="font-medium">{reportType.estimatedTime}</p>
           </div>
-          <div>
-            <p className="text-muted-foreground">Last Generated</p>
-            <p className="font-medium">
-              {reportType.lastGenerated
-                ? formatDate(reportType.lastGenerated)
-                : "Never"}
-            </p>
-          </div>
         </div>
 
         <div className="flex space-x-2 pt-2">
           <Button className="flex-1">Generate Report</Button>
-          <Button variant="outline" size="icon">
-            <FileText className="h-4 w-4" />
-          </Button>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function RecentReportRow({ report }: { report: RecentReport }) {
-  const StatusIcon = getStatusIcon(report.status);
-
-  return (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <div className="flex items-center space-x-3">
-        <StatusIcon className="h-5 w-5 text-muted-foreground" />
-        <div>
-          <p className="font-medium">{report.name}</p>
-          <p className="text-sm text-muted-foreground">
-            {formatDate(report.generatedDate)} • {report.fileSize}
-          </p>
-        </div>
-      </div>
-      <div className="flex items-center space-x-2">
-        <Badge variant={getStatusVariant(report.status)}>{report.status}</Badge>
-        {report.status === "completed" && (
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Download
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function ReportsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
 
-  const filteredReportTypes = reportTypes.filter((reportType) => {
+  const trpc = useTRPC();
+  const { data: reports = [] } = useSuspenseQuery(
+    trpc.report.all.queryOptions(),
+  );
+
+  const categories = [
+    { id: "all", label: "All" },
+    ...Array.from(new Set(reports.map((r: ReportType) => r.category)))
+      .filter((cat): cat is string => typeof cat === "string")
+      .map((cat) => ({
+        id: cat,
+        label: cat.charAt(0).toUpperCase() + cat.slice(1),
+      })),
+  ];
+
+  const filteredReports = reports.filter((report: ReportType) => {
     const matchesSearch =
-      reportType.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      reportType.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesFilter =
-      selectedFilter === "all" || reportType.category === selectedFilter;
-
-    return matchesSearch && matchesFilter;
+      report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      report.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || report.category === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
 
   return (
-    <div className="flex-1 space-y-6 p-8 pt-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
-          <p className="text-muted-foreground">
-            Generate regulatory forms and compliance reports
-          </p>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-muted-foreground">
+          Loading reports...
         </div>
-      </div>
-      <Alert>
-        <AlertTriangle className="h-4 w-4" />
-        <AlertDescription>
-          Reports are generated based on your current flight data and aircraft
-          information. Ensure your logbook and aircraft records are up to date
-          before generating official forms.
-        </AlertDescription>
-      </Alert>
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="relative max-w-sm flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search reports..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Tabs
-          value={selectedFilter}
-          onValueChange={setSelectedFilter}
-          className="w-auto"
-        >
-          <TabsList>
-            {filterOptions.map((filter) => (
-              <TabsTrigger
-                key={filter.id}
-                value={filter.id}
-                className="flex items-center space-x-2"
-              >
-                <span>{filter.label}</span>
-                <Badge variant="secondary" className="ml-2">
-                  {filter.count}
-                </Badge>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      </div>
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Available Reports</h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredReportTypes.map((reportType) => (
-            <ReportTypeCard key={reportType.id} reportType={reportType} />
-          ))}
-        </div>
-      </div>
-      <div className="space-y-4">
+      }
+    >
+      <div className="flex-1 space-y-6 p-8 pt-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Recent Reports</h2>
-          <Button variant="outline" size="sm">
-            View All
-          </Button>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
+            <p className="text-muted-foreground">
+              Generate regulatory forms and compliance reports
+            </p>
+          </div>
         </div>
-        <div className="space-y-2">
-          {recentReports.map((report) => (
-            <RecentReportRow key={report.id} report={report} />
-          ))}
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-4">
+          <div className="flex flex-1 items-end gap-3">
+            <div className="relative w-full max-w-xs">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search reports..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Tabs
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+              className="w-auto"
+            >
+              <TabsList>
+                {categories.map((cat) => (
+                  <TabsTrigger
+                    key={cat.id}
+                    value={cat.id}
+                    className="flex items-center space-x-2"
+                  >
+                    <span>{cat.label}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
+          <Tabs
+            value={viewMode}
+            onValueChange={(v) => setViewMode(v as "cards" | "table")}
+            className="w-auto"
+          >
+            <TabsList>
+              <TabsTrigger value="cards">Cards</TabsTrigger>
+              <TabsTrigger value="table">Table</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Available Reports</h2>
+          {viewMode === "cards" ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {filteredReports.map((report: ReportType) => (
+                <ReportTypeCard key={report.id} reportType={report} />
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Estimated Time</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredReports.map((report: ReportType) => (
+                    <TableRow key={report.id}>
+                      <TableCell className="font-medium">
+                        {report.title}
+                      </TableCell>
+                      <TableCell>{report.category}</TableCell>
+                      <TableCell>{report.description}</TableCell>
+                      <TableCell>{report.estimatedTime}</TableCell>
+                      <TableCell>
+                        <Button size="sm">Generate</Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
+          )}
+        </div>
+        {filteredReports.length === 0 && (
+          <div className="py-12 text-center">
+            <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+            <h3 className="mt-4 text-lg font-semibold">No reports found</h3>
+            <p className="text-muted-foreground">
+              Try adjusting your search or filter criteria
+            </p>
+          </div>
+        )}
+        <div className="mt-6 rounded-lg bg-blue-50 p-4">
+          <div className="flex items-start">
+            <FileText className="mt-1 h-5 w-5 text-blue-500" />
+            <div className="ml-3 flex-1">
+              <p className="mb-1 text-sm font-semibold text-blue-900">
+                Report Generation Tips
+              </p>
+              <p className="text-sm text-blue-700">
+                Ensure your logbook entries are up to date before generating
+                reports.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-      {filteredReportTypes.length === 0 && (
-        <div className="py-12 text-center">
-          <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
-          <h3 className="mt-4 text-lg font-semibold">No reports found</h3>
-          <p className="text-muted-foreground">
-            Try adjusting your search or filter criteria
-          </p>
-        </div>
-      )}
-    </div>
+    </Suspense>
   );
 }
