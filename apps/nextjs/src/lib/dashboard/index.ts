@@ -104,10 +104,6 @@ export const getEventTypeColor = (type: UpcomingItem["type"]): string => {
   return type === "checkride" ? "destructive" : "default";
 };
 
-export const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString();
-};
-
 // Logbook types
 export interface LogbookEntry {
   id: string;

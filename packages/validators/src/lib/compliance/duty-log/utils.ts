@@ -11,44 +11,6 @@ export const getDutyStatusText = (status: DutyLog["status"]): string => {
   }
 };
 
-export const calculateMonthlyDutyTime = (entries: DutyLog[]): string => {
-  const now = new Date();
-  const month = now.getMonth();
-  const year = now.getFullYear();
-  let totalMinutes = 0;
-  for (const entry of entries) {
-    if (!entry.endTime) continue;
-    const start = new Date(entry.startTime);
-    const end = new Date(entry.endTime);
-    if (start.getMonth() === month && start.getFullYear() === year) {
-      totalMinutes += Math.max(0, (end.getTime() - start.getTime()) / 60000);
-    }
-  }
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = Math.round(totalMinutes % 60);
-  return `${hours}h ${minutes}m`;
-};
-
-// Format a date string as YYYY-MM-DD
-export const formatDate = (dateStr: string): string => {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
-
-// Format a time string as HH:MM
-export const formatTime = (dateStr: string): string => {
-  const date = new Date(dateStr);
-  return date.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-};
-
 // Get color for a duty type
 export const getDutyTypeColor = (type: DutyLog["type"]): string => {
   switch (type) {
@@ -105,4 +67,22 @@ export const getDutyTypeText = (type: DutyLog["type"]): string => {
     default:
       return "Unknown";
   }
+};
+
+export const calculateMonthlyDutyTime = (entries: DutyLog[]): string => {
+  const now = new Date();
+  const month = now.getMonth();
+  const year = now.getFullYear();
+  let totalMinutes = 0;
+  for (const entry of entries) {
+    if (!entry.endTime) continue;
+    const start = new Date(entry.startTime);
+    const end = new Date(entry.endTime);
+    if (start.getMonth() === month && start.getFullYear() === year) {
+      totalMinutes += Math.max(0, (end.getTime() - start.getTime()) / 60000);
+    }
+  }
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = Math.round(totalMinutes % 60);
+  return `${hours}h ${minutes}m`;
 };

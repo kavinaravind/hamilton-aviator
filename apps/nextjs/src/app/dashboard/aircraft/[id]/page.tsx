@@ -3,7 +3,6 @@
 import React, { Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTRPC } from "@/lib/trpc/react";
-import { formatDate } from "@/lib/util";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { AlertTriangle } from "lucide-react";
 
@@ -13,6 +12,7 @@ import {
   getStatusColor,
   getStatusText,
 } from "@hamilton/validators/lib/aircraft";
+import { formatDate } from "@hamilton/validators/shared/date";
 
 function AircraftDetailsContent() {
   const params = useParams();

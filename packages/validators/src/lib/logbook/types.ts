@@ -58,3 +58,9 @@ export const LogbookCreateSchema = LogbookSchema.omit({
   id: true,
 });
 export type LogbookCreate = z.infer<typeof LogbookCreateSchema>;
+
+export interface LogbookFilter {
+  id: string;
+  label: string;
+  count: number;
+}

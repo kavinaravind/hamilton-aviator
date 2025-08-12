@@ -11,7 +11,7 @@ import type {
 } from "@/lib/dashboard";
 import React, { useState } from "react";
 import Link from "next/link";
-import { formatDate, getAlertVariant } from "@/lib/dashboard";
+import { getAlertVariant } from "@/lib/dashboard";
 import {
   AlertTriangle,
   BookOpen,
@@ -26,6 +26,7 @@ import {
 
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
+import { formatDate } from "@hamilton/validators/shared/date";
 
 const flightStats: FlightStats = {
   totalTime: "1,247.3",
