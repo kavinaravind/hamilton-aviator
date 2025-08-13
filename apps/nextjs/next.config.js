@@ -1,7 +1,7 @@
+import path from "node:path";
 import { createJiti } from "jiti";
 
 const jiti = createJiti(import.meta.url);
-
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
 await jiti.import("./src/env");
 
@@ -19,6 +19,13 @@ const config = {
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+
+  /** https://nextjs.org/docs/pages/api-reference/config/next-config-js/output#automatically-copying-traced-files */
+  output: "standalone",
+  outputFileTracingRoot: path.join(
+    path.dirname(new URL(import.meta.url).pathname),
+    "../../",
+  ),
 };
 
 export default config;
