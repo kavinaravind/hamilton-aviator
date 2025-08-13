@@ -2,6 +2,7 @@ import type { BetterAuthOptions } from "better-auth";
 import { expo } from "@better-auth/expo";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { nextCookies } from "better-auth/next-js";
 import { oAuthProxy } from "better-auth/plugins";
 
 import { db } from "@hamilton/db/lib/client";
@@ -39,6 +40,7 @@ export function initAuth(options: InitAuthOptions) {
         productionURL: options.productionUrl,
       }),
       expo(),
+      nextCookies(),
     ],
     socialProviders: {
       google: {

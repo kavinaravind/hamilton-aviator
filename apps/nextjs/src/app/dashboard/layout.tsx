@@ -50,7 +50,7 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
         </header>
         <Suspense
           fallback={
-            <div className="flex h-96 items-center justify-center">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/60">
               <span className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-primary" />
             </div>
           }
