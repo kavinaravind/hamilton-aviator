@@ -48,15 +48,7 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
             <DynamicBreadcrumb />
           </div>
         </header>
-        <Suspense
-          fallback={
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/60">
-              <span className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-primary" />
-            </div>
-          }
-        >
-          <HydrateClient>{children}</HydrateClient>
-        </Suspense>
+        <HydrateClient>{children}</HydrateClient>
       </SidebarInset>
     </SidebarProvider>
   );

@@ -1,53 +1,32 @@
-import React from "react";
+import React, { Suspense, useState } from "react";
 import { useTRPC } from "@/lib/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Calendar, Clock, Plane, User } from "lucide-react";
 
-interface StatCardProps {
-  title: string;
-  value: string;
-  subtitle?: string;
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-}
+import { StatCard } from "@hamilton/ui/components/app/stat-card";
+import { LoadingSkeleton } from "@hamilton/ui/components/skeleton/skeleton";
+import { Button } from "@hamilton/ui/components/ui/button";
+import { Period } from "@hamilton/validators/lib/dashboard";
 
-export function StatCard({
-  title,
-  value,
-  subtitle,
-  icon: Icon,
-  color,
-}: StatCardProps) {
-  return (
-    <div className="rounded-lg border bg-card p-6 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className="text-2xl font-bold">{value}</p>
-          {subtitle && (
-            <p className="text-xs text-muted-foreground">{subtitle}</p>
-          )}
-        </div>
-        <div className={`rounded-full p-2 ${color}`}>
-          <Icon className="h-5 w-5" />
-        </div>
-      </div>
-    </div>
-  );
-}
+type FlightStatsPeriod = "week" | "month" | "year";
 
-interface FlightStats {
-  period: "week" | "month" | "year";
-}
+const periods: Period[] = [
+  { id: "week", label: "7 Days" },
+  { id: "month", label: "30 Days" },
+  { id: "year", label: "1 Year" },
+];
 
-export function FlightStats({ period }: FlightStats) {
+export function FlightStats() {
   const trpc = useTRPC();
-  const { data: flightStats } = useSuspenseQuery(
-    trpc.dashboard.flightStatistics.queryOptions({ period }),
-  );
-  return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Flight Statistics</h2>
+
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<FlightStatsPeriod>("week");
+
+  function StatsContent() {
+    const { data: flightStats } = useSuspenseQuery(
+      trpc.dashboard.flightStatistics.queryOptions({ period: selectedPeriod }),
+    );
+    return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Time"
@@ -78,6 +57,29 @@ export function FlightStats({ period }: FlightStats) {
           color="bg-purple-100 text-purple-600"
         />
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="flex space-x-2">
+        {periods.map((period) => (
+          <Button
+            key={period.id}
+            variant={selectedPeriod === period.id ? "default" : "outline"}
+            size="sm"
+            onClick={() => setSelectedPeriod(period.id as FlightStatsPeriod)}
+          >
+            {period.label}
+          </Button>
+        ))}
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Flight Statistics</h2>
+        <Suspense fallback={<LoadingSkeleton />}>
+          <StatsContent />
+        </Suspense>
+      </div>
+    </>
   );
 }
