@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { PropsWithChildren } from "react";
-import React, { Suspense } from "react";
+import React from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
@@ -48,7 +48,7 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
             <DynamicBreadcrumb />
           </div>
         </header>
-        <HydrateClient>{children}</HydrateClient>
+        <HydrateClient>{children} </HydrateClient>
       </SidebarInset>
     </SidebarProvider>
   );

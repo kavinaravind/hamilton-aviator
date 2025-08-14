@@ -1,3 +1,5 @@
+"use client";
+
 import React, { Suspense, useState } from "react";
 import { useTRPC } from "@/lib/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
