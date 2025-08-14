@@ -4,16 +4,17 @@ import { z } from "zod/v4";
 export function authEnv() {
   return createEnv({
     server: {
-      AUTH_EXPO_ORIGIN: z.string(),
-      AUTH_GOOGLE_ID: z.string().min(1),
-      AUTH_GOOGLE_SECRET: z.string().min(1),
-      AUTH_GITHUB_ID: z.string().min(1),
-      AUTH_GITHUB_SECRET: z.string().min(1),
+      NODE_ENV: z.enum(["development", "production"]).optional(),
+
       AUTH_SECRET:
         process.env.NODE_ENV === "production"
           ? z.string().min(1)
           : z.string().min(1).optional(),
-      NODE_ENV: z.enum(["development", "production"]).optional(),
+
+      AUTH_GOOGLE_ID: z.string().min(1),
+      AUTH_GOOGLE_SECRET: z.string().min(1),
+      AUTH_GITHUB_ID: z.string().min(1),
+      AUTH_GITHUB_SECRET: z.string().min(1),
     },
     experimental__runtimeEnv: {},
     skipValidation:

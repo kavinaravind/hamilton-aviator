@@ -62,8 +62,17 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 }
 
 const getBaseUrl = () => {
-  if (typeof window !== "undefined") return window.location.origin;
-  if (env.VERCEL_URL) return `https://${env.VERCEL_URL}`;
-  // eslint-disable-next-line no-restricted-properties
-  return `http://localhost:${process.env.PORT ?? 3000}`;
+  // If running in the browser, use the current window location
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+
+  // If BASE_URL is set in the environment, use it
+  if (env.BASE_URL) {
+    return env.BASE_URL;
+  }
+
+  // Otherwise, default to localhost with the current port or 3000
+  const port = process.env.PORT ?? 3000;
+  return `http://localhost:${port}`;
 };

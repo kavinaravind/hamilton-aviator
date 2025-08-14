@@ -43,21 +43,14 @@
     }
   },
   "globalEnv": [
+    "BASE_URL",
     "POSTGRES_URL",
-    "AUTH_EXPO_ORIGIN",
+    "AUTH_SECRET",
     "AUTH_GOOGLE_ID",
     "AUTH_GOOGLE_SECRET",
     "AUTH_GITHUB_ID",
     "AUTH_GITHUB_SECRET",
-    "AUTH_SECRET",
     "PORT"
   ],
-  "globalPassThroughEnv": [
-    "NODE_ENV",
-    "CI",
-    "VERCEL",
-    "VERCEL_ENV",
-    "VERCEL_URL",
-    "npm_lifecycle_event"
-  ]
+  "globalPassThroughEnv": ["NODE_ENV", "CI", "npm_lifecycle_event"]
 }

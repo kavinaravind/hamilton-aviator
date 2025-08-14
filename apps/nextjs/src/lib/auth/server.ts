@@ -8,16 +8,10 @@ import type { InitAuthOptions } from "@hamilton/auth";
 import { initAuth } from "@hamilton/auth";
 
 let baseUrl: string;
-switch (env.VERCEL_ENV) {
-  case "production":
-    baseUrl = `https://${env.VERCEL_PROJECT_PRODUCTION_URL}`;
-    break;
-  case "preview":
-    baseUrl = `https://${env.VERCEL_URL}`;
-    break;
-  default:
-    baseUrl = "http://localhost:3000";
-    break;
+if (env.BASE_URL) {
+  baseUrl = env.BASE_URL;
+} else {
+  baseUrl = `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
 const config: InitAuthOptions = {
@@ -34,12 +28,7 @@ const config: InitAuthOptions = {
       clientSecret: env.AUTH_GITHUB_SECRET,
     },
   },
-  trustedOrigins: [
-    baseUrl,
-    env.AUTH_EXPO_ORIGIN,
-    "expo://", // Allow Expo deep links
-    "expo:///", // Temporary fix for malformed URL
-  ],
+  trustedOrigins: ["expo://"],
 };
 
 export const auth = initAuth(config);
