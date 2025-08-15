@@ -105,28 +105,15 @@ function AircraftCard({ aircraft }: { aircraft: Aircraft }) {
 export default function AircraftPage() {
   const trpc = useTRPC();
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
-  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
+  function AircraftData() {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedFilter, setSelectedFilter] = useState<string>("all");
+    const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
 
-  function AircraftData({
-    searchQuery,
-    selectedFilter,
-    setSearchQuery,
-    setSelectedFilter,
-    viewMode,
-    setViewMode,
-  }: {
-    searchQuery: string;
-    selectedFilter: string;
-    setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
-    setSelectedFilter: React.Dispatch<React.SetStateAction<string>>;
-    viewMode: "cards" | "table";
-    setViewMode: React.Dispatch<React.SetStateAction<"cards" | "table">>;
-  }) {
     const { data: aircrafts } = useSuspenseQuery(
       trpc.aircraft.all.queryOptions(),
     );
+
     const filterOptions = getFilterOptions(aircrafts);
     const filteredAircraft = aircrafts.filter((aircraft) => {
       const matchesSearch =
@@ -296,14 +283,7 @@ export default function AircraftPage() {
         </div>
       </div>
       <Suspense fallback={<LoadingSkeleton />}>
-        <AircraftData
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectedFilter={selectedFilter}
-          setSelectedFilter={setSelectedFilter}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-        />
+        <AircraftData />
       </Suspense>
     </div>
   );

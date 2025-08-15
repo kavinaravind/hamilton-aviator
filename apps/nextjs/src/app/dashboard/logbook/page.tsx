@@ -7,6 +7,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Plane, Plus, Search } from "lucide-react";
 
 import type { Logbook } from "@hamilton/validators/lib/logbook";
+import { LoadingSkeleton } from "@hamilton/ui/components/skeleton/skeleton";
 import { Button } from "@hamilton/ui/components/ui/button";
 import {
   Card,
@@ -28,80 +29,56 @@ import { formatDate } from "@hamilton/validators/shared/date";
 
 function LogEntryCard({ entry }: { entry: Logbook }) {
   return (
-    <Card className="transition-shadow hover:shadow-md">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{entry.route}</CardTitle>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {formatDate(entry.date)} • {entry.aircraft} ({entry.tailNumber})
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <p className="text-muted-foreground">Duration</p>
-            <p className="font-medium">{entry.duration}h</p>
+    <Link href={`/dashboard/logbook/${entry.id}`} className="flex-1">
+      <Card className="transition-shadow hover:shadow-md">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">{entry.route}</CardTitle>
           </div>
-        </div>
-        <div className="flex pt-2">
-          <Link href={`/dashboard/logbook/${entry.id}`} className="flex-1">
-            <Button variant="outline" size="sm" className="w-full">
-              View Details
-            </Button>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+          <p className="text-sm text-muted-foreground">
+            {formatDate(entry.date)} • {entry.aircraft} ({entry.tailNumber})
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-muted-foreground">Duration</p>
+              <p className="font-medium capitalize">{entry.duration}h</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 
 export default function LogbookPage() {
   const trpc = useTRPC();
-  const { data: flights } = useSuspenseQuery(trpc.logbook.all.queryOptions());
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
+  function LogbookData() {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
 
-  const filteredEntries = flights.filter((entry) => {
-    const matchesSearch =
-      entry.route.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entry.aircraft.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entry.tailNumber.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
+    const { data: flights } = useSuspenseQuery(trpc.logbook.all.queryOptions());
 
-  // Calculate totals (only duration for new type)
-  const totals = filteredEntries.reduce(
-    (acc, entry) => ({
-      duration: acc.duration + parseFloat(entry.duration),
-    }),
-    { duration: 0 },
-  );
+    const filteredEntries = flights.filter((entry) => {
+      const matchesSearch =
+        entry.route.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        entry.aircraft.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        entry.tailNumber.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesSearch;
+    });
 
-  return (
-    <Suspense
-      fallback={
-        <div className="p-8 text-center text-muted-foreground">
-          Loading aircraft...
-        </div>
-      }
-    >
-      <div className="flex-1 space-y-6 p-8 pt-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">My Logbook</h1>
-            <p className="text-muted-foreground">
-              Track your flight hours and experience
-            </p>
-          </div>
-          <Link href="/dashboard/logbook/add">
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Flight
-            </Button>
-          </Link>
-        </div>
+    // Calculate totals (only duration for new type)
+    const totals = filteredEntries.reduce(
+      (acc, entry) => ({
+        duration: acc.duration + parseFloat(entry.duration),
+      }),
+      { duration: 0 },
+    );
+
+    return (
+      <>
         <div className="grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
@@ -154,25 +131,23 @@ export default function LogbookPage() {
                   <TableHead>Tail #</TableHead>
                   <TableHead>Route</TableHead>
                   <TableHead>Duration</TableHead>
-                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredEntries.map((entry) => (
-                  <TableRow key={entry.id}>
-                    <TableCell>{formatDate(entry.date)}</TableCell>
-                    <TableCell>{entry.aircraft}</TableCell>
-                    <TableCell>{entry.tailNumber}</TableCell>
-                    <TableCell>{entry.route}</TableCell>
-                    <TableCell>{entry.duration}h</TableCell>
-                    <TableCell>
-                      <Link href={`/dashboard/logbook/${entry.id}`}>
-                        <Button variant="ghost" size="sm">
-                          View
-                        </Button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
+                  <Link
+                    href={`/dashboard/logbook/${entry.id}`}
+                    key={entry.id}
+                    className="contents"
+                  >
+                    <TableRow className="cursor-pointer transition-colors hover:bg-accent">
+                      <TableCell>{formatDate(entry.date)}</TableCell>
+                      <TableCell>{entry.aircraft}</TableCell>
+                      <TableCell>{entry.tailNumber}</TableCell>
+                      <TableCell>{entry.route}</TableCell>
+                      <TableCell>{entry.duration}h</TableCell>
+                    </TableRow>
+                  </Link>
                 ))}
               </TableBody>
             </Table>
@@ -197,7 +172,31 @@ export default function LogbookPage() {
             )}
           </div>
         )}
+      </>
+    );
+  }
+
+  return (
+    <div className="flex-1 space-y-6 p-4 pt-4 sm:p-8 sm:pt-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            My Logbook
+          </h1>
+          <p className="text-sm text-muted-foreground sm:text-base">
+            Track your flight hours and experience
+          </p>
+        </div>
+        <Link href="/dashboard/logbook/add">
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Flight
+          </Button>
+        </Link>
       </div>
-    </Suspense>
+      <Suspense fallback={<LoadingSkeleton />}>
+        <LogbookData />
+      </Suspense>
+    </div>
   );
 }

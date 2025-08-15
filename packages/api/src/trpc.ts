@@ -34,18 +34,21 @@ export const createTRPCContext = async (opts: {
   const session = await authApi.getSession({
     headers: opts.headers,
   });
+
   return {
     authApi,
     session,
     db,
   };
 };
+
 /**
  * 2. INITIALIZATION
  *
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
+
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter: ({ shape, error }) => ({

@@ -12,8 +12,6 @@ export function MaintenanceAlerts() {
     error,
   } = useQuery(trpc.dashboard.maintenanceAlerts.queryOptions());
 
-  console.log(maintenanceAlerts);
-
   return (
     <View className="mb-4">
       <View className="mb-3 flex-row items-center justify-between">
