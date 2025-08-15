@@ -7,6 +7,7 @@ import { AppSidebar } from "@/components/navigation/app-sidebar";
 import { DynamicBreadcrumb } from "@/components/navigation/dynamic-breadcrumb";
 import { getSession } from "@/lib/auth/server";
 import { HydrateClient } from "@/lib/trpc/server";
+import { ClientAuthProvider } from "@/providers/client-auth-provider";
 
 import { Separator } from "@hamilton/ui/components/ui/separator";
 import {
@@ -48,7 +49,9 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
             <DynamicBreadcrumb />
           </div>
         </header>
-        <HydrateClient>{children} </HydrateClient>
+        <ClientAuthProvider>
+          <HydrateClient>{children}</HydrateClient>
+        </ClientAuthProvider>
       </SidebarInset>
     </SidebarProvider>
   );
