@@ -72,7 +72,7 @@ export default function AddDutyEntryPage() {
   );
 
   return (
-    <div className="flex-1 p-4 pt-4 sm:p-8 sm:pt-6">
+    <div className="flex-1 bg-white p-4 pt-4 dark:bg-gray-950 sm:p-8 sm:pt-6">
       <Form {...form}>
         <form
           className="mx-auto w-full max-w-2xl space-y-8"
@@ -81,11 +81,13 @@ export default function AddDutyEntryPage() {
           })}
         >
           {/* Section: Duty Type */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">Duty Type</h2>
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                Duty Type
+              </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <FormField
                 control={form.control}
                 name="type"
@@ -120,13 +122,13 @@ export default function AddDutyEntryPage() {
           </Card>
 
           {/* Section: Basic Information */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
                 Basic Information
               </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <FormField
                 control={form.control}
                 name="description"
@@ -171,13 +173,13 @@ export default function AddDutyEntryPage() {
           </Card>
 
           {/* Section: Time Information */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
                 Time Information
               </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -213,8 +215,8 @@ export default function AddDutyEntryPage() {
                 />
               </div>
               {form.watch("startTime") && form.watch("endTime") && (
-                <div className="rounded-lg bg-muted p-3">
-                  <p className="text-sm font-medium">
+                <div className="rounded-lg bg-muted p-3 dark:bg-gray-800">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     Duration:{" "}
                     {calculateDuration(
                       form.watch("startTime"),
@@ -228,13 +230,13 @@ export default function AddDutyEntryPage() {
           </Card>
 
           {/* Section: Additional Information */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
                 Additional Information
               </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <FormField
                 control={form.control}
                 name="location"
@@ -368,23 +370,23 @@ export default function AddDutyEntryPage() {
           </Card>
 
           {/* Save/Cancel Buttons */}
-          <div className="flex flex-col gap-2 sm:flex-row sm:space-x-3">
-            <Button
-              type="submit"
-              disabled={createDutyEntry.isPending}
-              className="w-full sm:flex-1"
-            >
-              <Save className="mr-2 h-4 w-4" />
-              {createDutyEntry.isPending ? "Saving..." : "Save Duty"}
-            </Button>
+          <div className="mt-4 flex justify-end space-x-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => router.back()}
-              className="w-full sm:flex-1"
+              size="sm"
+              className="px-3"
             >
-              <X className="mr-2 h-4 w-4" />
               Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={createDutyEntry.isPending}
+              size="sm"
+              className="px-3"
+            >
+              {createDutyEntry.isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>

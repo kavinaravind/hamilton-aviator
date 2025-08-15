@@ -81,7 +81,7 @@ export default function AddLogbookEntryPage() {
   );
 
   return (
-    <div className="flex-1 p-4 pt-4 sm:p-8 sm:pt-6">
+    <div className="flex-1 bg-white p-4 pt-4 dark:bg-gray-950 sm:p-8 sm:pt-6">
       <Form {...form}>
         <form
           className="mx-auto w-full max-w-2xl space-y-8"
@@ -90,10 +90,12 @@ export default function AddLogbookEntryPage() {
           )}
         >
           {/* Section: Basic Info */}
-          <Card>
-            <CardHeader>
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold">Add Flight Log Entry</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                  Add Flight Log Entry
+                </h2>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -104,7 +106,7 @@ export default function AddLogbookEntryPage() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -124,7 +126,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Aircraft" {...field} />
+                        <Input placeholder="Aircraft (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -136,7 +138,10 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Tail Number" {...field} />
+                        <Input
+                          placeholder="Tail Number (optional)"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -148,7 +153,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Route" {...field} />
+                        <Input placeholder="Route (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -159,13 +164,13 @@ export default function AddLogbookEntryPage() {
           </Card>
 
           {/* Section: Departure/Arrival */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
                 Departure & Arrival
               </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -173,7 +178,10 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Departure Airport" {...field} />
+                        <Input
+                          placeholder="Departure Airport (optional)"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -187,7 +195,7 @@ export default function AddLogbookEntryPage() {
                       <FormControl>
                         <Input
                           type="time"
-                          placeholder="Departure Time"
+                          placeholder="Departure Time (optional)"
                           {...field}
                         />
                       </FormControl>
@@ -201,7 +209,10 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Arrival Airport" {...field} />
+                        <Input
+                          placeholder="Arrival Airport (optional)"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -215,7 +226,7 @@ export default function AddLogbookEntryPage() {
                       <FormControl>
                         <Input
                           type="time"
-                          placeholder="Arrival Time"
+                          placeholder="Arrival Time (optional)"
                           {...field}
                         />
                       </FormControl>
@@ -228,11 +239,13 @@ export default function AddLogbookEntryPage() {
           </Card>
 
           {/* Section: Flight Time */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">Flight Time</h2>
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                Flight Time
+              </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <FormField
                   control={form.control}
@@ -240,7 +253,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Total" {...field} />
+                        <Input placeholder="Total (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -252,7 +265,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="PIC" {...field} />
+                        <Input placeholder="PIC (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -264,7 +277,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="SIC" {...field} />
+                        <Input placeholder="SIC (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -276,7 +289,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Solo" {...field} />
+                        <Input placeholder="Solo (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -288,7 +301,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Dual" {...field} />
+                        <Input placeholder="Dual (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -299,11 +312,13 @@ export default function AddLogbookEntryPage() {
           </Card>
 
           {/* Section: Conditions */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">Conditions</h2>
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                Conditions
+              </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <FormField
                   control={form.control}
@@ -311,7 +326,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Day" {...field} />
+                        <Input placeholder="Day (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -323,7 +338,7 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Night" {...field} />
+                        <Input placeholder="Night (optional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -335,7 +350,10 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Actual Instrument" {...field} />
+                        <Input
+                          placeholder="Actual Instrument (optional)"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -347,7 +365,10 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Simulated Instrument" {...field} />
+                        <Input
+                          placeholder="Simulated Instrument (optional)"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -359,7 +380,10 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Cross Country" {...field} />
+                        <Input
+                          placeholder="Cross Country (optional)"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -370,13 +394,13 @@ export default function AddLogbookEntryPage() {
           </Card>
 
           {/* Section: Landings, Approaches, Holds */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
                 Landings, Approaches, Holds
               </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <FormField
                   control={form.control}
@@ -386,7 +410,7 @@ export default function AddLogbookEntryPage() {
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Landings (Day)"
+                          placeholder="Landings (Day) (optional)"
                           {...field}
                         />
                       </FormControl>
@@ -402,7 +426,7 @@ export default function AddLogbookEntryPage() {
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Landings (Night)"
+                          placeholder="Landings (Night) (optional)"
                           {...field}
                         />
                       </FormControl>
@@ -418,7 +442,7 @@ export default function AddLogbookEntryPage() {
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Approaches"
+                          placeholder="Approaches (optional)"
                           {...field}
                         />
                       </FormControl>
@@ -432,7 +456,11 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input type="number" placeholder="Holds" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="Holds (optional)"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -443,20 +471,24 @@ export default function AddLogbookEntryPage() {
           </Card>
 
           {/* Section: Remarks, Instructor, Flight Type */}
-          <Card>
-            <CardHeader>
-              <h2 className="text-lg font-bold text-gray-900">
+          <Card className="rounded-xl bg-white dark:bg-gray-900">
+            <CardHeader className="rounded-t-xl bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
                 Remarks & Details
               </h2>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 rounded-b-xl pt-6">
               <FormField
                 control={form.control}
                 name="remarks"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Textarea placeholder="Remarks" rows={2} {...field} />
+                      <Textarea
+                        placeholder="Remarks (optional)"
+                        rows={2}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -486,7 +518,7 @@ export default function AddLogbookEntryPage() {
                         defaultValue={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Flight Type" />
+                          <SelectValue placeholder="Flight Type (optional)" />
                         </SelectTrigger>
                         <SelectContent>
                           {(
@@ -508,23 +540,23 @@ export default function AddLogbookEntryPage() {
           </Card>
 
           {/* Save/Cancel Buttons */}
-          <div className="flex flex-col gap-2 sm:flex-row sm:space-x-3">
-            <Button
-              type="submit"
-              disabled={createLogbookEntry.isPending}
-              className="w-full sm:flex-1"
-            >
-              <Save className="mr-2 h-4 w-4" />
-              {createLogbookEntry.isPending ? "Saving..." : "Save Entry"}
-            </Button>
+          <div className="mt-4 flex justify-end space-x-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => router.back()}
-              className="w-full sm:flex-1"
+              size="sm"
+              className="px-3"
             >
-              <X className="mr-2 h-4 w-4" />
               Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={createLogbookEntry.isPending}
+              size="sm"
+              className="px-3"
+            >
+              {createLogbookEntry.isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>

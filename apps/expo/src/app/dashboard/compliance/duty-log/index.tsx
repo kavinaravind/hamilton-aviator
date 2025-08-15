@@ -15,12 +15,11 @@ import { useQuery } from "@tanstack/react-query";
 import type { DutyLog } from "@hamilton/validators/lib/compliance";
 import {
   calculateMonthlyDutyTime,
-  formatDate,
-  formatTime,
   getDutyTypeColor,
   getDutyTypeIcon,
   getDutyTypeText,
 } from "@hamilton/validators/lib/compliance";
+import { formatDate, formatTime } from "@hamilton/validators/shared/date";
 
 const renderDutyLogEntry = ({ item }: { item: DutyLog }) => (
   <Link href={`/dashboard/compliance/duty-log/${item.id}`} asChild>

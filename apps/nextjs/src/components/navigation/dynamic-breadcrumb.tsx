@@ -26,6 +26,11 @@ const routeMap: Record<string, { title: string; href?: string }[]> = {
     { title: "Hamilton Aviator", href: "/dashboard" },
     { title: "Logbook" },
   ],
+  "/dashboard/logbook/add": [
+    { title: "Hamilton Aviator", href: "/dashboard" },
+    { title: "Logbook", href: "/dashboard/logbook" },
+    { title: "Add Entry" },
+  ],
   "/dashboard/compliance/duty-log": [
     { title: "Hamilton Aviator", href: "/dashboard" },
     { title: "Compliance" },
@@ -37,7 +42,7 @@ const routeMap: Record<string, { title: string; href?: string }[]> = {
     { title: "Duty Log", href: "/dashboard/compliance/duty-log" },
     { title: "Add Entry" },
   ],
-  "/dashboard/compliance/report": [
+  "/dashboard/compliance/reports": [
     { title: "Hamilton Aviator", href: "/dashboard" },
     { title: "Compliance" },
     { title: "Reports" },

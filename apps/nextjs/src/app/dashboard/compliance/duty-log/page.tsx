@@ -13,6 +13,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Plus, Search, Timer } from "lucide-react";
 
 import type { DutyLog } from "@hamilton/validators/lib/compliance";
+import { LoadingSkeleton } from "@hamilton/ui/components/skeleton/skeleton";
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
 import {
@@ -35,175 +36,155 @@ import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
 function DutyEntryCard({ entry }: { entry: DutyLog }) {
   const Icon = getDutyTypeIcon(entry.type);
   return (
-    <Card className="transition-shadow hover:shadow-md">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className={`rounded-full p-2 ${getDutyTypeColor(entry.type)}`}>
-              <Icon className="h-4 w-4" />
+    <Link
+      href={`/dashboard/compliance/duty-log/${entry.id}`}
+      className="flex-1"
+    >
+      <Card className="transition-shadow hover:shadow-md">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div
+                className={`rounded-full p-2 ${getDutyTypeColor(entry.type)}`}
+              >
+                <Icon className="h-4 w-4" />
+              </div>
+              <div>
+                <CardTitle className="text-lg capitalize">
+                  {entry.type.replace("-duty", "")} Duty
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  {formatDate(entry.startTime)}
+                  {entry.location ? ` • ${entry.location}` : ""}
+                </p>
+              </div>
+            </div>
+            <Badge variant={getStatusVariant(entry.status)}>
+              {entry.status}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-muted-foreground">Start Time</p>
+              <p className="font-medium">{entry.startTime.slice(11, 16)}</p>
             </div>
             <div>
-              <CardTitle className="text-lg capitalize">
-                {entry.type.replace("-duty", "")} Duty
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                {formatDate(entry.startTime)}
-                {entry.location ? ` • ${entry.location}` : ""}
+              <p className="text-muted-foreground">End Time</p>
+              <p className="font-medium">
+                {entry.endTime ? entry.endTime.slice(11, 16) : "—"}
               </p>
             </div>
+            <div>
+              <p className="text-muted-foreground">Duration</p>
+              <p className="font-medium">
+                {entry.duration ? `${entry.duration}h` : "—"}
+              </p>
+            </div>
+            <div>
+              <p className="text-muted-foreground">Status</p>
+              <p className="font-medium capitalize">{entry.status}</p>
+            </div>
           </div>
-          <Badge variant={getStatusVariant(entry.status)}>{entry.status}</Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <p className="text-muted-foreground">Start Time</p>
-            <p className="font-medium">{entry.startTime.slice(11, 16)}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">End Time</p>
-            <p className="font-medium">
-              {entry.endTime ? entry.endTime.slice(11, 16) : "—"}
-            </p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Duration</p>
-            <p className="font-medium">
-              {entry.duration ? `${entry.duration}h` : "—"}
-            </p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Status</p>
-            <p className="font-medium capitalize">{entry.status}</p>
-          </div>
-        </div>
-        {entry.description && (
-          <div className="rounded-lg bg-muted p-3">
-            <p className="text-sm text-muted-foreground">Description</p>
-            <p className="text-sm">{entry.description}</p>
-          </div>
-        )}
-        <div className="flex pt-2">
-          <Link
-            href={`/dashboard/compliance/duty-log/${entry.id}`}
-            className="flex-1"
-          >
-            <Button variant="outline" size="sm" className="w-full">
-              View Details
-            </Button>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+          {entry.description && (
+            <div className="rounded-lg bg-muted p-3">
+              <p className="text-sm text-muted-foreground">Description</p>
+              <p className="text-sm">{entry.description}</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 
-export default function DutyLogPageContent() {
+export default function DutyLogPage() {
   const trpc = useTRPC();
-  const { data: duties } = useSuspenseQuery(trpc.dutyLog.all.queryOptions());
-  const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
 
-  // Filter options (explicitly list all types for consistent order and labeling)
-  const dutyTypes = [
-    { id: "flight-duty", label: "Flight" },
-    { id: "training", label: "Training" },
-    { id: "standby", label: "Standby" },
-    { id: "maintenance", label: "Maintenance" },
-  ];
-  const filterOptions = [
-    { id: "all", label: "All Duties", count: duties.length },
-    ...dutyTypes.map((type) => ({
-      id: type.id,
-      label: type.label,
-      count: duties.filter((e: DutyLog) => e.type === type.id).length,
-    })),
-  ];
+  function DutyLogData() {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
+    const [selectedFilter, setSelectedFilter] = useState<string>("all");
 
-  const filteredEntries = duties.filter((entry: DutyLog) => {
-    const matchesSearch =
-      (entry.description?.toLowerCase().includes(searchQuery.toLowerCase()) ??
-        false) ||
-      (entry.location?.toLowerCase().includes(searchQuery.toLowerCase()) ??
-        false) ||
-      entry.type.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter =
-      selectedFilter === "all" || entry.type === selectedFilter;
-    return matchesSearch && matchesFilter;
-  });
+    const { data: duties } = useSuspenseQuery(trpc.dutyLog.all.queryOptions());
 
-  // Calculate totals for current month
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-  const monthlyEntries = duties.filter((entry: DutyLog) => {
-    const entryDate = new Date(entry.startTime);
+    const dutyTypes = [
+      { id: "flight-duty", label: "Flight" },
+      { id: "training", label: "Training" },
+      { id: "standby", label: "Standby" },
+      { id: "maintenance", label: "Maintenance" },
+    ];
+    const filterOptions = [
+      { id: "all", label: "All Duties", count: duties.length },
+      ...dutyTypes.map((type) => ({
+        id: type.id,
+        label: type.label,
+        count: duties.filter((e: DutyLog) => e.type === type.id).length,
+      })),
+    ];
+
+    const filteredEntries = duties.filter((entry: DutyLog) => {
+      const matchesSearch =
+        (entry.description?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false) ||
+        (entry.location?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false) ||
+        entry.type.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesFilter =
+        selectedFilter === "all" || entry.type === selectedFilter;
+      return matchesSearch && matchesFilter;
+    });
+
+    // Calculate totals for current month
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    const monthlyEntries = duties.filter((entry: DutyLog) => {
+      const entryDate = new Date(entry.startTime);
+      return (
+        entryDate.getMonth() === currentMonth &&
+        entryDate.getFullYear() === currentYear
+      );
+    });
+    const totals = {
+      totalHours: monthlyEntries.reduce(
+        (acc: number, entry: DutyLog) =>
+          acc + (parseFloat(entry.duration ?? "0") || 0),
+        0,
+      ),
+      flightHours: monthlyEntries
+        .filter((e: DutyLog) => e.type === "flight-duty")
+        .reduce(
+          (acc: number, entry: DutyLog) =>
+            acc + (parseFloat(entry.duration ?? "0") || 0),
+          0,
+        ),
+      trainingHours: monthlyEntries
+        .filter((e: DutyLog) => e.type === "training")
+        .reduce(
+          (acc: number, entry: DutyLog) =>
+            acc + (parseFloat(entry.duration ?? "0") || 0),
+          0,
+        ),
+      standbyHours: monthlyEntries
+        .filter((e: DutyLog) => e.type === "standby")
+        .reduce(
+          (acc: number, entry: DutyLog) =>
+            acc + (parseFloat(entry.duration ?? "0") || 0),
+          0,
+        ),
+      maintenanceHours: monthlyEntries
+        .filter((e: DutyLog) => e.type === "maintenance")
+        .reduce(
+          (acc: number, entry: DutyLog) =>
+            acc + (parseFloat(entry.duration ?? "0") || 0),
+          0,
+        ),
+    };
+
     return (
-      entryDate.getMonth() === currentMonth &&
-      entryDate.getFullYear() === currentYear
-    );
-  });
-  const totals = {
-    totalHours: monthlyEntries.reduce(
-      (acc: number, entry: DutyLog) =>
-        acc + (parseFloat(entry.duration ?? "0") || 0),
-      0,
-    ),
-    flightHours: monthlyEntries
-      .filter((e: DutyLog) => e.type === "flight-duty")
-      .reduce(
-        (acc: number, entry: DutyLog) =>
-          acc + (parseFloat(entry.duration ?? "0") || 0),
-        0,
-      ),
-    trainingHours: monthlyEntries
-      .filter((e: DutyLog) => e.type === "training")
-      .reduce(
-        (acc: number, entry: DutyLog) =>
-          acc + (parseFloat(entry.duration ?? "0") || 0),
-        0,
-      ),
-    standbyHours: monthlyEntries
-      .filter((e: DutyLog) => e.type === "standby")
-      .reduce(
-        (acc: number, entry: DutyLog) =>
-          acc + (parseFloat(entry.duration ?? "0") || 0),
-        0,
-      ),
-    maintenanceHours: monthlyEntries
-      .filter((e: DutyLog) => e.type === "maintenance")
-      .reduce(
-        (acc: number, entry: DutyLog) =>
-          acc + (parseFloat(entry.duration ?? "0") || 0),
-        0,
-      ),
-  };
-
-  return (
-    <Suspense
-      fallback={
-        <div className="p-8 text-center text-muted-foreground">
-          Loading duty logs...
-        </div>
-      }
-    >
-      <div className="flex-1 space-y-6 p-8 pt-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Duty Log</h1>
-            <p className="text-muted-foreground">
-              Track your duty time and compliance requirements
-            </p>
-          </div>
-          <Link href="/dashboard/compliance/duty-log/add">
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Duty Entry
-            </Button>
-          </Link>
-        </div>
+      <>
         <div className="grid gap-4 md:grid-cols-5">
           <Card>
             <CardHeader className="pb-2">
@@ -329,37 +310,35 @@ export default function DutyLogPageContent() {
                   <TableHead>End</TableHead>
                   <TableHead>Duration</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredEntries.map((entry: DutyLog) => (
-                  <TableRow key={entry.id}>
-                    <TableCell>{formatDate(entry.startTime)}</TableCell>
-                    <TableCell className="capitalize">
-                      {entry.type.replace("-duty", "")}
-                    </TableCell>
-                    <TableCell>{entry.location || "—"}</TableCell>
-                    <TableCell>{entry.startTime.slice(11, 16)}</TableCell>
-                    <TableCell>
-                      {entry.endTime ? entry.endTime.slice(11, 16) : "—"}
-                    </TableCell>
-                    <TableCell>
-                      {entry.duration ? `${entry.duration}h` : "—"}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={getStatusVariant(entry.status)}>
-                        {entry.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Link href={`/dashboard/compliance/duty-log/${entry.id}`}>
-                        <Button variant="ghost" size="sm">
-                          View
-                        </Button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
+                  <Link
+                    key={entry.id}
+                    href={`/dashboard/compliance/duty-log/${entry.id}`}
+                    className="contents"
+                  >
+                    <TableRow className="cursor-pointer transition-colors hover:bg-accent">
+                      <TableCell>{formatDate(entry.startTime)}</TableCell>
+                      <TableCell className="capitalize">
+                        {entry.type.replace("-duty", "")}
+                      </TableCell>
+                      <TableCell>{entry.location || "—"}</TableCell>
+                      <TableCell>{entry.startTime.slice(11, 16)}</TableCell>
+                      <TableCell>
+                        {entry.endTime ? entry.endTime.slice(11, 16) : "—"}
+                      </TableCell>
+                      <TableCell>
+                        {entry.duration ? `${entry.duration}h` : "—"}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={getStatusVariant(entry.status)}>
+                          {entry.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  </Link>
                 ))}
               </TableBody>
             </Table>
@@ -389,7 +368,31 @@ export default function DutyLogPageContent() {
             )}
           </div>
         )}
+      </>
+    );
+  }
+
+  return (
+    <div className="flex-1 space-y-6 p-4 pt-4 sm:p-8 sm:pt-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Duty Log
+          </h1>
+          <p className="text-sm text-muted-foreground sm:text-base">
+            Track your duty time and compliance requirements
+          </p>
+        </div>
+        <Link href="/dashboard/compliance/duty-log/add">
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Duty Entry
+          </Button>
+        </Link>
       </div>
-    </Suspense>
+      <Suspense fallback={<LoadingSkeleton />}>
+        <DutyLogData />
+      </Suspense>
+    </div>
   );
 }

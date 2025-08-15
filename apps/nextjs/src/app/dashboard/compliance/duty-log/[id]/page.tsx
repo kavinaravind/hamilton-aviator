@@ -25,14 +25,11 @@ function DutyLogDetailContent({
 
   if (!entry) {
     return (
-      <div className="flex h-96 flex-col items-center justify-center bg-gray-50 text-center">
-        <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
-        <h2 className="mt-4 text-xl font-bold text-gray-900">
-          Duty Log Not Found
-        </h2>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center">
+        <AlertCircle className="h-16 w-16 text-red-500" />
+        <h2 className="mt-4 text-2xl font-bold">Duty Log Not Found</h2>
         <p className="mt-2 text-gray-600">
-          The duty log you're looking for doesn't exist or may have been
-          deleted.
+          The duty log you're looking for doesn't exist or has been removed.
         </p>
         <Button className="mt-6" onClick={() => router.back()}>
           Go Back
@@ -42,95 +39,127 @@ function DutyLogDetailContent({
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <div className="mx-auto max-w-5xl">
-        {" "}
-        <Card className="p-6 shadow">
-          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold capitalize text-gray-900">
-                {entry.type.replace("-duty", "")} Duty
-              </h1>
-              <p className="mt-1 text-gray-600">{entry.description}</p>
-            </div>
-            <div className="flex flex-col items-end gap-2">
-              <Badge
-                variant={entry.status === "completed" ? "default" : "secondary"}
-              >
-                {entry.status}
-              </Badge>
-              {entry.location && (
-                <span className="text-sm text-gray-500">
-                  Location: {entry.location}
-                </span>
-              )}
-            </div>
+    <div className="p-4 pt-4 sm:p-8 sm:pt-6">
+      <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-900 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-4xl font-extrabold capitalize tracking-tight text-gray-900 drop-shadow-sm dark:text-white">
+            {entry.type.replace("-duty", "")} Duty
+          </h1>
+          <p className="mt-1 text-lg font-medium text-gray-500 dark:text-gray-300">
+            {entry.description}
+          </p>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">
+              {entry.duration || "—"}
+            </span>
+            <Badge
+              variant={entry.status === "completed" ? "default" : "secondary"}
+            >
+              {entry.status}
+            </Badge>
           </div>
-          <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <div className="text-sm text-gray-500">Start Time</div>
-              <div className="font-medium text-gray-900">{entry.startTime}</div>
+          {entry.location && (
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Location: {entry.location}
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-blue-900 dark:text-blue-200">
+            <span className="inline-block h-2 w-2 rounded-full bg-blue-400" />{" "}
+            Duty Info
+          </h2>
+          <div className="space-y-3">
+            <div className="flex flex-row items-center justify-between">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Start Time
+              </span>
+              <span className="text-base text-gray-900 dark:text-gray-100">
+                {entry.startTime}
+              </span>
             </div>
-            <div>
-              <div className="text-sm text-gray-500">End Time</div>
-              <div className="font-medium text-gray-900">
+            <div className="flex flex-row items-center justify-between">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                End Time
+              </span>
+              <span className="text-base text-gray-900 dark:text-gray-100">
                 {entry.endTime || "—"}
-              </div>
+              </span>
             </div>
-            <div>
-              <div className="text-sm text-gray-500">Duration</div>
-              <div className="font-medium text-gray-900">
-                {entry.duration || "—"}
-              </div>
-            </div>
-            {entry.crew && (
-              <div>
-                <div className="text-sm text-gray-500">Crew</div>
-                <div className="font-medium text-gray-900">{entry.crew}</div>
+            {entry.flightNumber && (
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Flight Number
+                </span>
+                <span className="text-base text-gray-900 dark:text-gray-100">
+                  {entry.flightNumber}
+                </span>
               </div>
             )}
             {entry.aircraft && (
-              <div>
-                <div className="text-sm text-gray-500">Aircraft</div>
-                <div className="font-medium text-gray-900">
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Aircraft
+                </span>
+                <span className="text-base text-gray-900 dark:text-gray-100">
                   {entry.aircraft}
-                </div>
+                </span>
               </div>
             )}
-            {entry.flightNumber && (
-              <div>
-                <div className="text-sm text-gray-500">Flight Number</div>
-                <div className="font-medium text-gray-900">
-                  {entry.flightNumber}
-                </div>
-              </div>
-            )}
-            {entry.instructor && (
-              <div>
-                <div className="text-sm text-gray-500">Instructor</div>
-                <div className="font-medium text-gray-900">
-                  {entry.instructor}
-                </div>
-              </div>
-            )}
-            {entry.trainingType && (
-              <div>
-                <div className="text-sm text-gray-500">Training Type</div>
-                <div className="font-medium text-gray-900">
-                  {entry.trainingType}
-                </div>
+            {entry.crew && (
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Crew
+                </span>
+                <span className="text-base text-gray-900 dark:text-gray-100">
+                  {entry.crew}
+                </span>
               </div>
             )}
           </div>
-          {entry.notes && (
-            <div className="mt-4">
-              <div className="mb-1 text-sm text-gray-500">Notes</div>
-              <div className="whitespace-pre-line rounded bg-gray-50 p-3 text-gray-800">
-                {entry.notes}
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-gray-900 dark:text-gray-200">
+            <span className="inline-block h-2 w-2 rounded-full bg-yellow-400" />{" "}
+            Details
+          </h2>
+          <div className="space-y-3">
+            {entry.trainingType && (
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Training Type
+                </span>
+                <span className="text-base text-gray-900 dark:text-gray-100">
+                  {entry.trainingType}
+                </span>
               </div>
-            </div>
-          )}
-        </Card>
+            )}
+            {entry.instructor && (
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Instructor
+                </span>
+                <span className="text-base text-gray-900 dark:text-gray-100">
+                  {entry.instructor}
+                </span>
+              </div>
+            )}
+            {entry.notes && (
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Notes
+                </span>
+                <span className="whitespace-pre-line text-base text-gray-900 dark:text-gray-100">
+                  {entry.notes}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -141,7 +170,13 @@ export default function DutyLogDetailsPage() {
   const router = useRouter();
   const id = params?.id as string;
   return (
-    <Suspense fallback={<LoadingSkeleton />}>
+    <Suspense
+      fallback={
+        <div className="p-4 pt-4 sm:p-8 sm:pt-6">
+          <LoadingSkeleton />
+        </div>
+      }
+    >
       <DutyLogDetailContent id={id} router={router} />
     </Suspense>
   );
