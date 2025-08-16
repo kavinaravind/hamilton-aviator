@@ -39,124 +39,147 @@ function DutyLogDetailContent({
 
   return (
     <div className="p-4 pt-4 sm:p-8 sm:pt-6">
-      <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-900 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-4xl font-extrabold capitalize tracking-tight text-gray-900 drop-shadow-sm dark:text-white">
-            {entry.type.replace("-duty", "")} Duty
-          </h1>
-          <p className="mt-1 text-lg font-medium text-gray-500 dark:text-gray-300">
-            {entry.description}
-          </p>
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">
-              {entry.duration || "—"}
-            </span>
-            <Badge
-              variant={entry.status === "completed" ? "default" : "secondary"}
-            >
-              {entry.status}
-            </Badge>
+      <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-4xl font-extrabold capitalize tracking-tight text-gray-900 drop-shadow-sm dark:text-white">
+              {entry.type.replace("-duty", "")} Duty
+            </h1>
+            <p className="mt-1 text-lg font-medium text-gray-500 dark:text-gray-300">
+              {entry.description}
+            </p>
+            <p className="mt-1 text-base text-gray-400 dark:text-gray-400">
+              {entry.startTime
+                ? new Date(entry.startTime).toLocaleString(undefined, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : ""}
+            </p>
           </div>
-          {entry.location && (
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              Location: {entry.location}
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900">
-          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-blue-900 dark:text-blue-200">
-            <span className="inline-block h-2 w-2 rounded-full bg-blue-400" />{" "}
-            Duty Info
-          </h2>
-          <div className="space-y-3">
-            <div className="flex flex-row items-center justify-between">
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Start Time
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">
+                {entry.duration || "—"}
               </span>
-              <span className="text-base text-gray-900 dark:text-gray-100">
-                {entry.startTime}
-              </span>
+              <Badge
+                variant={entry.status === "completed" ? "default" : "secondary"}
+              >
+                {entry.status}
+              </Badge>
             </div>
-            <div className="flex flex-row items-center justify-between">
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                End Time
+            {entry.location && (
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                Location: {entry.location}
               </span>
-              <span className="text-base text-gray-900 dark:text-gray-100">
-                {entry.endTime || "—"}
-              </span>
-            </div>
-            {entry.flightNumber && (
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Flight Number
-                </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
-                  {entry.flightNumber}
-                </span>
-              </div>
-            )}
-            {entry.aircraft && (
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Aircraft
-                </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
-                  {entry.aircraft}
-                </span>
-              </div>
-            )}
-            {entry.crew && (
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Crew
-                </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
-                  {entry.crew}
-                </span>
-              </div>
             )}
           </div>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900">
-          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-gray-900 dark:text-gray-200">
-            <span className="inline-block h-2 w-2 rounded-full bg-yellow-400" />{" "}
-            Details
-          </h2>
-          <div className="space-y-3">
-            {entry.trainingType && (
+        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900">
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-blue-900 dark:text-blue-200">
+              <span className="inline-block h-2 w-2 rounded-full bg-blue-400" />{" "}
+              Duty Info
+            </h2>
+            <div className="space-y-3">
               <div className="flex flex-row items-center justify-between">
                 <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Training Type
+                  Start Time
                 </span>
                 <span className="text-base text-gray-900 dark:text-gray-100">
-                  {entry.trainingType}
+                  {entry.startTime
+                    ? new Date(entry.startTime).toLocaleString(undefined, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "—"}
                 </span>
               </div>
-            )}
-            {entry.instructor && (
               <div className="flex flex-row items-center justify-between">
                 <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Instructor
+                  End Time
                 </span>
                 <span className="text-base text-gray-900 dark:text-gray-100">
-                  {entry.instructor}
+                  {entry.endTime
+                    ? new Date(entry.endTime).toLocaleString(undefined, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "—"}
                 </span>
               </div>
-            )}
-            {entry.notes && (
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Notes
-                </span>
-                <span className="whitespace-pre-line text-base text-gray-900 dark:text-gray-100">
-                  {entry.notes}
-                </span>
-              </div>
-            )}
+              {entry.flightNumber && (
+                <div className="flex flex-row items-center justify-between">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Flight Number
+                  </span>
+                  <span className="text-base text-gray-900 dark:text-gray-100">
+                    {entry.flightNumber}
+                  </span>
+                </div>
+              )}
+              {entry.aircraft && (
+                <div className="flex flex-row items-center justify-between">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Aircraft
+                  </span>
+                  <span className="text-base text-gray-900 dark:text-gray-100">
+                    {entry.aircraft}
+                  </span>
+                </div>
+              )}
+              {entry.crew && (
+                <div className="flex flex-row items-center justify-between">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Crew
+                  </span>
+                  <span className="text-base text-gray-900 dark:text-gray-100">
+                    {entry.crew}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900">
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-yellow-900 dark:text-yellow-200">
+              <span className="inline-block h-2 w-2 rounded-full bg-yellow-400" />{" "}
+              Details
+            </h2>
+            <div className="space-y-3">
+              {entry.trainingType && (
+                <div className="flex flex-row items-center justify-between">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Training Type
+                  </span>
+                  <span className="text-base text-gray-900 dark:text-gray-100">
+                    {entry.trainingType}
+                  </span>
+                </div>
+              )}
+              {entry.instructor && (
+                <div className="flex flex-row items-center justify-between">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Instructor
+                  </span>
+                  <span className="text-base text-gray-900 dark:text-gray-100">
+                    {entry.instructor}
+                  </span>
+                </div>
+              )}
+              {entry.notes && (
+                <div className="flex flex-row items-center justify-between">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Notes
+                  </span>
+                  <span className="whitespace-pre-line text-base text-gray-900 dark:text-gray-100">
+                    {entry.notes}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

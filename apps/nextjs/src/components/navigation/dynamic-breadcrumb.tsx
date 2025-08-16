@@ -24,7 +24,7 @@ const routeMap: Record<string, { title: string; href?: string }[]> = {
   ],
   "/dashboard/logbook": [
     { title: "Hamilton Aviator", href: "/dashboard" },
-    { title: "Logbook" },
+    { title: "Logbook", href: "/dashboard/logbook" },
   ],
   "/dashboard/logbook/add": [
     { title: "Hamilton Aviator", href: "/dashboard" },
@@ -52,27 +52,55 @@ const routeMap: Record<string, { title: string; href?: string }[]> = {
 export function DynamicBreadcrumb() {
   const pathname = usePathname();
 
-  // Get breadcrumb items for current path
-  const breadcrumbItems = routeMap[pathname] || [
-    { title: "Hamilton Aviator", href: "/dashboard" },
-    { title: "Dashboard" },
-  ];
+  let breadcrumbItems: { title: string; href?: string }[];
+  if (/^\/dashboard\/logbook\/[\w-]+$/.test(pathname)) {
+    breadcrumbItems = [
+      { title: "Hamilton Aviator", href: "/dashboard" },
+      { title: "Logbook", href: "/dashboard/logbook" },
+      { title: "Entry" },
+    ];
+  } else if (/^\/dashboard\/compliance\/duty-log\/[\w-]+$/.test(pathname)) {
+    breadcrumbItems = [
+      { title: "Hamilton Aviator", href: "/dashboard" },
+      { title: "Compliance" },
+      { title: "Duty Log", href: "/dashboard/compliance/duty-log" },
+      { title: "Entry" },
+    ];
+  } else {
+    breadcrumbItems = routeMap[pathname] || [
+      { title: "Hamilton Aviator", href: "/dashboard" },
+      { title: "Dashboard" },
+    ];
+  }
 
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {breadcrumbItems.map((item, index) => (
-          <React.Fragment key={index}>
-            {index > 0 && <BreadcrumbSeparator className="hidden md:block" />}
-            <BreadcrumbItem className={index === 0 ? "hidden md:block" : ""}>
-              {item.href ? (
-                <BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
-              ) : (
-                <BreadcrumbPage>{item.title}</BreadcrumbPage>
-              )}
-            </BreadcrumbItem>
-          </React.Fragment>
-        ))}
+        {breadcrumbItems.map((item, index) => {
+          return (
+            <React.Fragment key={index}>
+              {index > 0 &&
+                (breadcrumbItems.length === 4 && index === 1 ? (
+                  <BreadcrumbSeparator className="hidden md:inline-block" />
+                ) : (
+                  <BreadcrumbSeparator />
+                ))}
+              <BreadcrumbItem
+                className={
+                  breadcrumbItems.length === 4 && index === 0
+                    ? "hidden md:inline-block"
+                    : ""
+                }
+              >
+                {item.href ? (
+                  <BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage>{item.title}</BreadcrumbPage>
+                )}
+              </BreadcrumbItem>
+            </React.Fragment>
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   );

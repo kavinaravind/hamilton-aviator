@@ -33,11 +33,11 @@ export function RecentFlights() {
                 <p className="text-xs text-muted-foreground">
                   {formatDate(flight.date)}
                 </p>
-              </div>
-              <div className="text-right">
                 <p className="text-sm font-bold text-blue-600">
                   {flight.duration}h
                 </p>
+              </div>
+              <div className="flex items-center text-right">
                 <ChevronRight className="h-3 w-3 text-muted-foreground" />
               </div>
             </div>

@@ -35,7 +35,7 @@ export function NavMain({
     }[];
   }[];
 }) {
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, state, setOpen } = useSidebar();
 
   // If no items, render a simple menu item
   if (items.length === 0) {
@@ -78,13 +78,21 @@ export function NavMain({
           return (
             <Collapsible
               key={item.title}
-              asChild
               defaultOpen={item.items.length > 0}
               className="group/collapsible"
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip={item.title}>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    onClick={(e) => {
+                      if (state === "collapsed") {
+                        setOpen(true);
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }
+                    }}
+                  >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />

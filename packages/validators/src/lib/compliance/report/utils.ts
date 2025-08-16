@@ -17,11 +17,11 @@ export function getReportCategoryColor(category: string): string {
 
 export const getReportIcon = (iconName: string) => {
   switch (iconName) {
-    case "file-text":
-      return FileText;
-    case "download":
+    case "document-text":
       return Download;
-    case "clock":
+    case "book":
+      return FileText;
+    case "time":
       return Clock;
     default:
       return FileText;

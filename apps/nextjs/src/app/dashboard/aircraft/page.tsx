@@ -19,6 +19,14 @@ import {
   CardTitle,
 } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
+import { ScrollArea, ScrollBar } from "@hamilton/ui/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@hamilton/ui/components/ui/select";
 import {
   Table,
   TableBody,
@@ -133,8 +141,8 @@ export default function AircraftPage() {
 
     return (
       <>
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="relative w-full flex-1 sm:max-w-sm">
+        <div className="flex w-full flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="relative max-w-md flex-1">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search aircraft..."
@@ -143,43 +151,60 @@ export default function AircraftPage() {
               className="w-full pl-10"
             />
           </div>
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:space-x-2">
-            <Tabs
-              value={selectedFilter}
-              onValueChange={setSelectedFilter}
-              className="w-full sm:w-auto"
-            >
-              <TabsList className="flex w-full flex-row flex-wrap gap-1 sm:w-auto">
-                {filterOptions.map((filter) => (
-                  <TabsTrigger
-                    key={filter.id}
-                    value={filter.id}
-                    className="flex min-w-[100px] flex-1 items-center space-x-2 sm:min-w-0"
-                  >
-                    <span>{filter.label}</span>
-                    <Badge variant="secondary" className="ml-2">
-                      {filter.count}
-                    </Badge>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
+          <div className="flex w-full min-w-0 flex-col gap-2 lg:w-auto lg:flex-row lg:items-center lg:space-x-2">
+            <div className="block w-full lg:hidden">
+              <Select
+                value={selectedFilter}
+                onValueChange={setSelectedFilter}
+                defaultValue={selectedFilter}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duty type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filterOptions.map((filter) => (
+                    <SelectItem key={filter.id} value={filter.id}>
+                      <span className="flex w-full items-center justify-between">
+                        <span>{filter.label}</span>
+                        <Badge variant="secondary" className="ml-2">
+                          {filter.count}
+                        </Badge>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden w-full lg:block lg:w-auto">
+              <Tabs
+                value={selectedFilter}
+                onValueChange={setSelectedFilter}
+                className="w-full lg:w-auto"
+              >
+                <TabsList className="flex w-full">
+                  {filterOptions.map((filter) => (
+                    <TabsTrigger
+                      key={filter.id}
+                      value={filter.id}
+                      className="flex w-full flex-1 items-center justify-center space-x-1"
+                    >
+                      <span>{filter.label}</span>
+                      <Badge variant="secondary">{filter.count}</Badge>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
             <Tabs
               value={viewMode}
               onValueChange={(value) => setViewMode(value as "cards" | "table")}
-              className="w-full sm:w-auto"
+              className="w-full lg:w-auto"
             >
-              <TabsList className="flex w-full flex-row gap-1 sm:w-auto">
-                <TabsTrigger
-                  value="cards"
-                  className="min-w-[80px] flex-1 sm:min-w-0"
-                >
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="cards" className="w-full">
                   Cards
                 </TabsTrigger>
-                <TabsTrigger
-                  value="table"
-                  className="min-w-[80px] flex-1 sm:min-w-0"
-                >
+                <TabsTrigger value="table" className="w-full">
                   Table
                 </TabsTrigger>
               </TabsList>
@@ -195,8 +220,8 @@ export default function AircraftPage() {
             ))}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-lg">
-            <Card>
+          <Card className="flex">
+            <ScrollArea className="w-1 flex-1">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -252,8 +277,9 @@ export default function AircraftPage() {
                   })}
                 </TableBody>
               </Table>
-            </Card>
-          </div>
+              <ScrollBar orientation="horizontal" className="w-full" />
+            </ScrollArea>
+          </Card>
         )}
         {filteredAircraft.length === 0 && (
           <div className="py-12 text-center">

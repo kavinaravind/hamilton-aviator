@@ -18,6 +18,13 @@ import {
 } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@hamilton/ui/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -34,44 +41,39 @@ import {
 function ReportTypeCard({ reportType }: { reportType: ReportType }) {
   const Icon = getReportIcon(reportType.icon);
   return (
-    <Link
-      href={`/dashboard/compliance/reports/${reportType.id}`}
-      className="flex-1"
-    >
-      <Card className="transition-shadow hover:shadow-md">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div
-                className={`rounded-full p-2 ${getReportCategoryColor(reportType.category)}`}
-              >
-                <Icon className="h-4 w-4" />
-              </div>
-              <div>
-                <CardTitle className="text-lg">{reportType.title}</CardTitle>
-                <Badge className={getReportCategoryColor(reportType.category)}>
-                  {reportType.category.toUpperCase()}
-                </Badge>
-              </div>
+    <Card className="flex-1 transition-shadow hover:shadow-md">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div
+              className={`rounded-full p-2 ${getReportCategoryColor(reportType.category)}`}
+            >
+              <Icon className="h-4 w-4" />
             </div>
-          </div>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {reportType.description}
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-muted-foreground">Estimated Time</p>
-              <p className="font-medium">{reportType.estimatedTime}</p>
+              <CardTitle className="text-lg">{reportType.title}</CardTitle>
+              <Badge className={getReportCategoryColor(reportType.category)}>
+                {reportType.category.toUpperCase()}
+              </Badge>
             </div>
           </div>
-          <div className="flex space-x-2 pt-2">
-            <Button className="flex-1">Generate Report</Button>
+        </div>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {reportType.description}
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className="text-muted-foreground">Estimated Time</p>
+            <p className="font-medium">{reportType.estimatedTime}</p>
           </div>
-        </CardContent>
-      </Card>
-    </Link>
+        </div>
+        <div className="flex space-x-2 pt-2">
+          <Button className="flex-1">Generate Report</Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -89,7 +91,7 @@ export default function ReportsPage() {
 
     // Categories for filtering
     const categories = [
-      { id: "all", label: "All Reports", count: reports.length },
+      { id: "all", label: "All", count: reports.length },
       ...Array.from(new Set(reports.map((r: ReportType) => r.category)))
         .filter((cat): cat is string => typeof cat === "string")
         .map((cat) => ({
@@ -110,8 +112,8 @@ export default function ReportsPage() {
 
     return (
       <>
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="relative max-w-sm flex-1">
+        <div className="flex w-full flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="relative max-w-md flex-1">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search reports..."
@@ -120,34 +122,62 @@ export default function ReportsPage() {
               className="pl-10"
             />
           </div>
-          <div className="flex items-center space-x-2">
-            <Tabs
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-              className="w-auto"
-            >
-              <TabsList>
-                {categories.map((cat) => (
-                  <TabsTrigger
-                    key={cat.id}
-                    value={cat.id}
-                    className="flex items-center space-x-2"
-                  >
-                    <span>{cat.label}</span>
-                    <Badge variant="secondary" className="ml-2">
-                      {cat.count}
-                    </Badge>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
+          <div className="flex w-full min-w-0 flex-col gap-2 xl:w-auto xl:flex-row xl:items-center xl:space-x-2">
+            <div className="block w-full xl:hidden">
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+                defaultValue={selectedCategory}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duty type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      <span className="flex w-full items-center justify-between">
+                        <span>{cat.label}</span>
+                        <Badge variant="secondary" className="ml-2">
+                          {cat.count}
+                        </Badge>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden w-full xl:block xl:w-auto">
+              <Tabs
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+                className="w-full xl:w-auto"
+              >
+                <TabsList className="flex w-full">
+                  {categories.map((cat) => (
+                    <TabsTrigger
+                      key={cat.id}
+                      value={cat.id}
+                      className="flex w-full flex-1 items-center justify-center space-x-1"
+                    >
+                      <span>{cat.label}</span>
+                      <Badge variant="secondary">{cat.count}</Badge>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
             <Tabs
               value={viewMode}
               onValueChange={(value) => setViewMode(value as "cards" | "table")}
+              className="w-full xl:w-auto"
             >
-              <TabsList>
-                <TabsTrigger value="cards">Cards</TabsTrigger>
-                <TabsTrigger value="table">Table</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="cards" className="w-full">
+                  Cards
+                </TabsTrigger>
+                <TabsTrigger value="table" className="w-full">
+                  Table
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -199,17 +229,6 @@ export default function ReportsPage() {
                 ? "Try adjusting your search or filter criteria"
                 : "Get started by generating your first report"}
             </p>
-            {!searchQuery && selectedCategory === "all" && (
-              <Link
-                href="/dashboard/compliance/reports/add"
-                className="mt-4 inline-block"
-              >
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Report
-                </Button>
-              </Link>
-            )}
           </div>
         )}
       </>
@@ -227,12 +246,6 @@ export default function ReportsPage() {
             Generate regulatory forms and compliance reports
           </p>
         </div>
-        <Link href="/dashboard/compliance/reports/add">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Report
-          </Button>
-        </Link>
       </div>
       <Suspense fallback={<LoadingSkeleton />}>
         <ReportsData />
