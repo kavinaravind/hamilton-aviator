@@ -17,6 +17,14 @@ import {
   CardTitle,
 } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
+import { ScrollArea, ScrollBar } from "@hamilton/ui/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@hamilton/ui/components/ui/select";
 import {
   Table,
   TableBody,
@@ -116,7 +124,7 @@ export default function DutyLogPage() {
       { id: "maintenance", label: "Maintenance" },
     ];
     const filterOptions = [
-      { id: "all", label: "All Duties", count: duties.length },
+      { id: "all", label: "All", count: duties.length },
       ...dutyTypes.map((type) => ({
         id: type.id,
         label: type.label,
@@ -250,8 +258,8 @@ export default function DutyLogPage() {
             </CardContent>
           </Card>
         </div>
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="relative max-w-sm flex-1">
+        <div className="flex w-full flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="relative max-w-md flex-1">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search duty entries..."
@@ -260,34 +268,62 @@ export default function DutyLogPage() {
               className="pl-10"
             />
           </div>
-          <div className="flex items-center space-x-2">
-            <Tabs
-              value={selectedFilter}
-              onValueChange={setSelectedFilter}
-              className="w-auto"
-            >
-              <TabsList>
-                {filterOptions.map((filter) => (
-                  <TabsTrigger
-                    key={filter.id}
-                    value={filter.id}
-                    className="flex items-center space-x-2"
-                  >
-                    <span>{filter.label}</span>
-                    <Badge variant="secondary" className="ml-2">
-                      {filter.count}
-                    </Badge>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
+          <div className="flex w-full min-w-0 flex-col gap-2 xl:w-auto xl:flex-row xl:items-center xl:space-x-2">
+            <div className="block w-full xl:hidden">
+              <Select
+                value={selectedFilter}
+                onValueChange={setSelectedFilter}
+                defaultValue={selectedFilter}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duty type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filterOptions.map((filter) => (
+                    <SelectItem key={filter.id} value={filter.id}>
+                      <span className="flex w-full items-center justify-between">
+                        <span>{filter.label}</span>
+                        <Badge variant="secondary" className="ml-2">
+                          {filter.count}
+                        </Badge>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden w-full xl:block xl:w-auto">
+              <Tabs
+                value={selectedFilter}
+                onValueChange={setSelectedFilter}
+                className="w-full xl:w-auto"
+              >
+                <TabsList className="flex w-full">
+                  {filterOptions.map((filter) => (
+                    <TabsTrigger
+                      key={filter.id}
+                      value={filter.id}
+                      className="flex w-full flex-1 items-center justify-center space-x-1"
+                    >
+                      <span>{filter.label}</span>
+                      <Badge variant="secondary">{filter.count}</Badge>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
             <Tabs
               value={viewMode}
               onValueChange={(value) => setViewMode(value as "cards" | "table")}
+              className="w-full xl:w-auto"
             >
-              <TabsList>
-                <TabsTrigger value="cards">Cards</TabsTrigger>
-                <TabsTrigger value="table">Table</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="cards" className="w-full">
+                  Cards
+                </TabsTrigger>
+                <TabsTrigger value="table" className="w-full">
+                  Table
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -299,49 +335,52 @@ export default function DutyLogPage() {
             ))}
           </div>
         ) : (
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Start</TableHead>
-                  <TableHead>End</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredEntries.map((entry: DutyLog) => (
-                  <Link
-                    key={entry.id}
-                    href={`/dashboard/compliance/duty-log/${entry.id}`}
-                    className="contents"
-                  >
-                    <TableRow className="cursor-pointer transition-colors hover:bg-accent">
-                      <TableCell>{formatDate(entry.startTime)}</TableCell>
-                      <TableCell className="capitalize">
-                        {entry.type.replace("-duty", "")}
-                      </TableCell>
-                      <TableCell>{entry.location || "—"}</TableCell>
-                      <TableCell>{entry.startTime.slice(11, 16)}</TableCell>
-                      <TableCell>
-                        {entry.endTime ? entry.endTime.slice(11, 16) : "—"}
-                      </TableCell>
-                      <TableCell>
-                        {entry.duration ? `${entry.duration}h` : "—"}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusVariant(entry.status)}>
-                          {entry.status}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  </Link>
-                ))}
-              </TableBody>
-            </Table>
+          <Card className="flex">
+            <ScrollArea className="w-1 flex-1">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Start</TableHead>
+                    <TableHead>End</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredEntries.map((entry: DutyLog) => (
+                    <Link
+                      key={entry.id}
+                      href={`/dashboard/compliance/duty-log/${entry.id}`}
+                      className="contents"
+                    >
+                      <TableRow className="cursor-pointer transition-colors hover:bg-accent">
+                        <TableCell>{formatDate(entry.startTime)}</TableCell>
+                        <TableCell className="capitalize">
+                          {entry.type.replace("-duty", "")}
+                        </TableCell>
+                        <TableCell>{entry.location || "—"}</TableCell>
+                        <TableCell>{entry.startTime.slice(11, 16)}</TableCell>
+                        <TableCell>
+                          {entry.endTime ? entry.endTime.slice(11, 16) : "—"}
+                        </TableCell>
+                        <TableCell>
+                          {entry.duration ? `${entry.duration}h` : "—"}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusVariant(entry.status)}>
+                            {entry.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    </Link>
+                  ))}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" className="w-full" />
+            </ScrollArea>
           </Card>
         )}
         {filteredEntries.length === 0 && (
