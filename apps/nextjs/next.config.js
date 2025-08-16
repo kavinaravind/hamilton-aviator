@@ -16,6 +16,9 @@ const config = {
     "@hamilton/validators",
   ],
 
+  /** Packages that should be treated as external to the server */
+  serverExternalPackages: ["pdfkit"],
+
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },

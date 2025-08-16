@@ -23,6 +23,7 @@
     "@hamilton/db": "workspace:*",
     "@hamilton/validators": "workspace:*",
     "@trpc/server": "catalog:",
+    "pdfkit": "^0.17.1",
     "superjson": "2.2.2",
     "zod": "catalog:"
   },
@@ -30,6 +31,7 @@
     "@hamilton/eslint-config": "workspace:*",
     "@hamilton/prettier-config": "workspace:*",
     "@hamilton/tsconfig": "workspace:*",
+    "@types/pdfkit": "^0.17.2",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

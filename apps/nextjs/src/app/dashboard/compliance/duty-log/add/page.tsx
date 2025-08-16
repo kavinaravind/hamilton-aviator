@@ -72,7 +72,7 @@ export default function AddDutyEntryPage() {
         router.push("/dashboard/compliance/duty-log");
       },
       onError: (err: any) => {
-        console.error("ERROR", err);
+        console.error(err);
         toast.error(
           err.data?.code === "UNAUTHORIZED"
             ? "You must be logged in to add a duty entry"

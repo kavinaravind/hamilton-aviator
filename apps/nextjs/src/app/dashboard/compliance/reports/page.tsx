@@ -1,10 +1,10 @@
 "use client";
 
+import type { UseMutationResult } from "@tanstack/react-query";
 import React, { Suspense, useState } from "react";
-import Link from "next/link";
 import { useTRPC } from "@/lib/trpc/react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { FileText, Plus, Search } from "lucide-react";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { FileText, Search } from "lucide-react";
 
 import type { ReportType } from "@hamilton/validators/lib/compliance";
 import { LoadingSkeleton } from "@hamilton/ui/components/skeleton/skeleton";
@@ -33,13 +33,21 @@ import {
   TableRow,
 } from "@hamilton/ui/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
+import { toast } from "@hamilton/ui/components/ui/toast";
 import {
   getReportCategoryColor,
   getReportIcon,
 } from "@hamilton/validators/lib/compliance";
 
-function ReportTypeCard({ reportType }: { reportType: ReportType }) {
+function ReportTypeCard({
+  reportType,
+  generatePDF,
+}: {
+  reportType: ReportType;
+  generatePDF: UseMutationResult<Uint8Array, any, void, unknown>;
+}) {
   const Icon = getReportIcon(reportType.icon);
+
   return (
     <Card className="flex-1 transition-shadow hover:shadow-md">
       <CardHeader className="pb-3">
@@ -70,7 +78,9 @@ function ReportTypeCard({ reportType }: { reportType: ReportType }) {
           </div>
         </div>
         <div className="flex space-x-2 pt-2">
-          <Button className="flex-1">Generate Report</Button>
+          <Button className="flex-1" onClick={() => generatePDF.mutate()}>
+            Generate Report
+          </Button>
         </div>
       </CardContent>
     </Card>
@@ -79,6 +89,34 @@ function ReportTypeCard({ reportType }: { reportType: ReportType }) {
 
 export default function ReportsPage() {
   const trpc = useTRPC();
+
+  const generatePDF = useMutation(
+    trpc.report.generatePDF.mutationOptions({
+      onSuccess: (pdfBuffer: Uint8Array) => {
+        toast.success("Report generated successfully");
+
+        const blob = new Blob([pdfBuffer.slice().buffer], {
+          type: "application/pdf",
+        });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "your_filename.pdf";
+        a.click();
+
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+      },
+      onError: (err: any) => {
+        console.error(err);
+        toast.error(
+          err.data?.code === "UNAUTHORIZED"
+            ? "You must be logged in to generate a report"
+            : "Failed to generate report",
+        );
+      },
+    }),
+  );
 
   function ReportsData() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -185,7 +223,11 @@ export default function ReportsPage() {
         {viewMode === "cards" ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredReports.map((report: ReportType) => (
-              <ReportTypeCard key={report.id} reportType={report} />
+              <ReportTypeCard
+                key={report.id}
+                reportType={report}
+                generatePDF={generatePDF}
+              />
             ))}
           </div>
         ) : (
@@ -201,20 +243,18 @@ export default function ReportsPage() {
               </TableHeader>
               <TableBody>
                 {filteredReports.map((report: ReportType) => (
-                  <Link
+                  <TableRow
                     key={report.id}
-                    href={`/dashboard/compliance/reports/${report.id}`}
-                    className="contents"
+                    className="cursor-pointer transition-colors hover:bg-accent"
+                    onClick={() => generatePDF.mutate()}
                   >
-                    <TableRow className="cursor-pointer transition-colors hover:bg-accent">
-                      <TableCell className="font-medium">
-                        {report.title}
-                      </TableCell>
-                      <TableCell>{report.category}</TableCell>
-                      <TableCell>{report.description}</TableCell>
-                      <TableCell>{report.estimatedTime}</TableCell>
-                    </TableRow>
-                  </Link>
+                    <TableCell className="font-medium">
+                      {report.title}
+                    </TableCell>
+                    <TableCell>{report.category}</TableCell>
+                    <TableCell>{report.description}</TableCell>
+                    <TableCell>{report.estimatedTime}</TableCell>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>
