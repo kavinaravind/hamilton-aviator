@@ -2,10 +2,6 @@
 
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
-import {
-  getReportCategoryColor,
-  getReportIcon,
-} from "@/lib/compliance/reports";
 import { useTRPC } from "@/lib/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { FileText, Plus, Search } from "lucide-react";
@@ -30,6 +26,10 @@ import {
   TableRow,
 } from "@hamilton/ui/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
+import {
+  getReportCategoryColor,
+  getReportIcon,
+} from "@hamilton/validators/lib/compliance";
 
 function ReportTypeCard({ reportType }: { reportType: ReportType }) {
   const Icon = getReportIcon(reportType.icon);

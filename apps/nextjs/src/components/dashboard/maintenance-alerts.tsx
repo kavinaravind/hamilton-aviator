@@ -2,7 +2,6 @@
 
 import React, { Suspense } from "react";
 import Link from "next/link";
-import { getAlertVariant } from "@/lib/dashboard";
 import { useTRPC } from "@/lib/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { AlertTriangle, ChevronRight } from "lucide-react";
@@ -10,6 +9,7 @@ import { AlertTriangle, ChevronRight } from "lucide-react";
 import { LoadingSkeleton } from "@hamilton/ui/components/skeleton/skeleton";
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
+import { getAlertVariant } from "@hamilton/validators/lib/dashboard";
 
 export function MaintenanceAlerts() {
   const trpc = useTRPC();

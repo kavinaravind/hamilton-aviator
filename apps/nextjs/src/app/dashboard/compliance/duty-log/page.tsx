@@ -2,12 +2,6 @@
 
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
-import {
-  formatDate,
-  getDutyTypeColor,
-  getDutyTypeIcon,
-  getStatusVariant,
-} from "@/lib/compliance/duty-log";
 import { useTRPC } from "@/lib/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Plus, Search, Timer } from "lucide-react";
@@ -32,9 +26,15 @@ import {
   TableRow,
 } from "@hamilton/ui/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@hamilton/ui/components/ui/tabs";
+import {
+  getDutyTypeTWColor,
+  getDutyTypLucideIcon,
+  getStatusVariant,
+} from "@hamilton/validators/lib/compliance";
+import { formatDate } from "@hamilton/validators/shared/date";
 
 function DutyEntryCard({ entry }: { entry: DutyLog }) {
-  const Icon = getDutyTypeIcon(entry.type);
+  const Icon = getDutyTypLucideIcon(entry.type);
   return (
     <Link
       href={`/dashboard/compliance/duty-log/${entry.id}`}
@@ -45,7 +45,7 @@ function DutyEntryCard({ entry }: { entry: DutyLog }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div
-                className={`rounded-full p-2 ${getDutyTypeColor(entry.type)}`}
+                className={`rounded-full p-2 ${getDutyTypeTWColor(entry.type)}`}
               >
                 <Icon className="h-4 w-4" />
               </div>

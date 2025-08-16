@@ -9,7 +9,6 @@ import { AlertCircle } from "lucide-react";
 import { LoadingSkeleton } from "@hamilton/ui/components/skeleton/skeleton";
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
-import { Card } from "@hamilton/ui/components/ui/card";
 
 function DutyLogDetailContent({
   id,

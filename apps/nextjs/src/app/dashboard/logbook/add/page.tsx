@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useTRPC } from "@/lib/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Save, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import type { LogbookCreate } from "@hamilton/validators/lib/logbook";

@@ -1,11 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { calculateDuration } from "@/lib/compliance/duty-log";
 import { useTRPC } from "@/lib/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Save, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import type { DutyLogCreate } from "@hamilton/validators/lib/compliance";
@@ -28,7 +26,10 @@ import {
 } from "@hamilton/ui/components/ui/select";
 import { Textarea } from "@hamilton/ui/components/ui/textarea";
 import { toast } from "@hamilton/ui/components/ui/toast";
-import { DutyLogCreateSchema } from "@hamilton/validators/lib/compliance";
+import {
+  calculateDuration,
+  DutyLogCreateSchema,
+} from "@hamilton/validators/lib/compliance";
 
 export default function AddDutyEntryPage() {
   const trpc = useTRPC();

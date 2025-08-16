@@ -1,4 +1,47 @@
+import { Calendar, Clock, MapPin, Timer } from "lucide-react";
+
 import type { DutyLog } from "./types";
+
+export function getDutyTypLucideIcon(type: string) {
+  switch (type) {
+    case "flight-duty":
+      return Clock;
+    case "maintenance":
+      return MapPin;
+    case "training":
+      return Calendar;
+    default:
+      return Timer;
+  }
+}
+
+export function getDutyTypeTWColor(type: string): string {
+  switch (type) {
+    case "flight-duty":
+      return "bg-blue-100 text-blue-700";
+    case "maintenance":
+      return "bg-green-100 text-green-700";
+    case "training":
+      return "bg-yellow-100 text-yellow-700";
+    default:
+      return "bg-gray-100 text-gray-700";
+  }
+}
+
+export function getStatusVariant(
+  status: string,
+): "default" | "secondary" | "destructive" {
+  switch (status) {
+    case "active":
+      return "default";
+    case "completed":
+      return "secondary";
+    case "pending":
+      return "destructive";
+    default:
+      return "secondary";
+  }
+}
 
 export const getDutyStatusText = (status: DutyLog["status"]): string => {
   switch (status) {
@@ -86,3 +129,27 @@ export const calculateMonthlyDutyTime = (entries: DutyLog[]): string => {
   const minutes = Math.round(totalMinutes % 60);
   return `${hours}h ${minutes}m`;
 };
+
+export function calculateDuration(start: string, end: string): string {
+  if (!start || !end) return "0.0";
+
+  const [startHour, startMin] = start.split(":").map(Number);
+  const [endHour, endMin] = end.split(":").map(Number);
+
+  if (
+    startHour === undefined ||
+    startMin === undefined ||
+    endHour === undefined ||
+    endMin === undefined
+  ) {
+    return "0.0";
+  }
+
+  const startMinutes = startHour * 60 + startMin;
+  const endMinutes = endHour * 60 + endMin;
+
+  let duration = endMinutes - startMinutes;
+  if (duration < 0) duration += 24 * 60; // Handle overnight flights
+
+  return (duration / 60).toFixed(1);
+}
