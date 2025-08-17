@@ -43,6 +43,13 @@ async function seedTable<T>(table: PgTable, file: string, label: string) {
     throw new Error("JSON file must contain an array of objects");
   }
 
+  if (label === "DutyLog") {
+    data.forEach((row) => {
+      row.startTime = new Date(row.startTime);
+      row.endTime = row.endTime ? new Date(row.endTime) : null;
+    });
+  }
+
   console.log(`Inserting data into ${label} table...`);
   await db.insert(table).values(data);
   console.log(`Imported ${data.length} records into ${label} table.`);

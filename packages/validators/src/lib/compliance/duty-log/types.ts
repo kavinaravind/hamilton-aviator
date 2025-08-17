@@ -24,21 +24,10 @@ export type DutyLogTrainingType = z.infer<typeof DutyLogTrainingTypeEnum>;
 export const DutyLogSummarySchema = z.object({
   id: z.string(),
   type: DutyLogTypeEnum,
-  description: z.string(),
-  startTime: z
-    .string()
-    .regex(
-      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(\.\d+)?(Z|([+-]\d{2}:\d{2}))?$/,
-      { message: "startTime must be an ISO 8601 datetime string" },
-    ),
-  endTime: z
-    .string()
-    .regex(
-      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(\.\d+)?(Z|([+-]\d{2}:\d{2}))?$/,
-      { message: "endTime must be an ISO 8601 datetime string" },
-    )
-    .nullable(),
-  duration: z.string().nullable(),
+  description: z.string().nullable(),
+  startTime: z.date(),
+  endTime: z.date().nullable(),
+  duration: z.number().nullable(),
   status: DutyLogStatusEnum,
 });
 export type DutyLogSummary = z.infer<typeof DutyLogSummarySchema>;

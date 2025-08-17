@@ -131,6 +131,7 @@ export default function AddLogbookEntryPage() {
                       <FormControl>
                         <Input type="date" {...field} />
                       </FormControl>
+                      <FormDescription>Date of flight</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -141,12 +142,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Aircraft</FormLabel>
-                      <FormDescription>
-                        Type/model of aircraft (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Type/model of aircraft (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -157,12 +158,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Tail Number</FormLabel>
-                      <FormDescription>
-                        Aircraft registration (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Aircraft registration (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -173,12 +174,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Route</FormLabel>
-                      <FormDescription>
-                        Flight route or waypoints (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Flight route or waypoints (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -195,12 +196,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Departure Airport</FormLabel>
-                      <FormDescription>
-                        Origin airport (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Origin airport (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -211,12 +212,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Departure Time</FormLabel>
-                      <FormDescription>
-                        Time of departure (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input type="time" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Time of departure (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -227,12 +228,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Arrival Airport</FormLabel>
-                      <FormDescription>
-                        Destination airport (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Destination airport (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -243,12 +244,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Arrival Time</FormLabel>
-                      <FormDescription>
-                        Time of arrival (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input type="time" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Time of arrival (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -265,12 +266,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Total Time</FormLabel>
-                      <FormDescription>
-                        Total flight time (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Total flight time (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -281,12 +282,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>PIC</FormLabel>
-                      <FormDescription>
-                        Pilot in command time (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Pilot in command time (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -297,12 +298,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SIC</FormLabel>
-                      <FormDescription>
-                        Second in command time (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Second in command time (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -313,12 +314,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Solo</FormLabel>
-                      <FormDescription>
-                        Solo flight time (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Solo flight time (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -329,12 +330,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Dual</FormLabel>
-                      <FormDescription>
-                        Dual flight instruction time (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Dual flight instruction time (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -351,12 +352,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Day</FormLabel>
-                      <FormDescription>
-                        Day conditions (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Day conditions (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -367,12 +368,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Night</FormLabel>
-                      <FormDescription>
-                        Night conditions (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Night conditions (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -383,12 +384,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Actual Instrument</FormLabel>
-                      <FormDescription>
-                        Actual instrument conditions (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Actual instrument conditions (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -399,12 +400,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Simulated Instrument</FormLabel>
-                      <FormDescription>
-                        Simulated instrument conditions (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Simulated instrument conditions (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -415,12 +416,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Cross Country</FormLabel>
-                      <FormDescription>
-                        Cross country time (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Cross country time (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -439,12 +440,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Landings (Day)</FormLabel>
-                      <FormDescription>
-                        Number of day landings (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Number of day landings (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -455,12 +456,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Landings (Night)</FormLabel>
-                      <FormDescription>
-                        Number of night landings (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Number of night landings (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -471,12 +472,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Approaches</FormLabel>
-                      <FormDescription>
-                        Number of instrument approaches (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Number of instrument approaches (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -487,12 +488,12 @@ export default function AddLogbookEntryPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Holds</FormLabel>
-                      <FormDescription>
-                        Number of holds (optional)
-                      </FormDescription>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Number of holds (optional)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -508,12 +509,12 @@ export default function AddLogbookEntryPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Remarks</FormLabel>
-                    <FormDescription>
-                      Additional notes or comments (optional)
-                    </FormDescription>
                     <FormControl>
                       <Textarea rows={3} {...field} />
                     </FormControl>
+                    <FormDescription>
+                      Additional notes or comments (optional)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -524,12 +525,12 @@ export default function AddLogbookEntryPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Instructor</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
                     <FormDescription>
                       Name of instructor (optional)
                     </FormDescription>
-                    <FormControl>
-                      <Input placeholder="Instructor (optional)" {...field} />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

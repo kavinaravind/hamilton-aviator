@@ -77,16 +77,20 @@ export const dashboardRouter = {
     const now = new Date();
     const monthAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 30);
     const logs = await ctx.db.query.DutyLog.findMany({
-      where: gte(DutyLog.startTime, monthAgo.toISOString()),
+      where: (fields, { and }) => and(gte(fields.startTime, monthAgo)),
     });
     const activeDuty = logs.filter((l) => l.status === "active").length;
-    const monthlyHours = logs.reduce(
-      (acc, l) => acc + parseFloat(l.duration ?? "0"),
+    const totalMinutes = logs.reduce(
+      (acc, l) =>
+        acc +
+        (typeof l.duration === "number" ? Math.round(l.duration * 60) : 0),
       0,
     );
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
     return {
       activeDuty,
-      monthlyHours: monthlyHours.toFixed(1),
+      monthlyHours: `${hours}h ${minutes}m`,
       remainingDuty: "72.5", // TODO: idk, calculate based on rules
     };
   }),

@@ -16,3 +16,20 @@ export const formatTime = (dateStr: string): string => {
     hour12: false,
   });
 };
+
+// Convert a date to a local datetime string
+export const toLocalDatetimeString = (date?: Date) => {
+  if (!date) return "";
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  return (
+    date.getFullYear() +
+    "-" +
+    pad(date.getMonth() + 1) +
+    "-" +
+    pad(date.getDate()) +
+    "T" +
+    pad(date.getHours()) +
+    ":" +
+    pad(date.getMinutes())
+  );
+};

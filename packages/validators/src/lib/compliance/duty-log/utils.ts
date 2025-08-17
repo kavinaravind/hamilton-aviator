@@ -130,26 +130,17 @@ export const calculateMonthlyDutyTime = (entries: DutyLog[]): string => {
   return `${hours}h ${minutes}m`;
 };
 
-export function calculateDuration(start: string, end: string): string {
-  if (!start || !end) return "0.0";
-
-  const [startHour, startMin] = start.split(":").map(Number);
-  const [endHour, endMin] = end.split(":").map(Number);
-
-  if (
-    startHour === undefined ||
-    startMin === undefined ||
-    endHour === undefined ||
-    endMin === undefined
-  ) {
-    return "0.0";
-  }
-
-  const startMinutes = startHour * 60 + startMin;
-  const endMinutes = endHour * 60 + endMin;
-
-  let duration = endMinutes - startMinutes;
-  if (duration < 0) duration += 24 * 60; // Handle overnight flights
-
-  return (duration / 60).toFixed(1);
+export function calculateDuration(
+  start: Date | undefined,
+  end: Date | null | undefined,
+): string {
+  if (!start || !end) return "0h 0m";
+  const startTime = start.getTime();
+  const endTime = end.getTime();
+  const durationMs = endTime - startTime;
+  if (durationMs < 0) return "0h 0m";
+  const totalMinutes = Math.round(durationMs / (1000 * 60));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${hours}h ${minutes}m`;
 }

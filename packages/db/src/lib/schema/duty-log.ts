@@ -1,4 +1,11 @@
-import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import {
+  doublePrecision,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import {
   DutyLogStatusEnum,
@@ -22,10 +29,10 @@ export const dutyLogTrainingTypeEnum = pgEnum(
 export const DutyLog = pgTable("duty_log", {
   id: uuid("id").primaryKey().defaultRandom(),
   type: dutyLogTypeEnum("type").notNull(),
-  description: text("description").notNull(),
-  startTime: text("start_time").notNull(),
-  endTime: text("end_time"),
-  duration: text("duration"),
+  description: text("description"),
+  startTime: timestamp("start_time").notNull(),
+  endTime: timestamp("end_time"),
+  duration: doublePrecision("duration"),
   status: dutyLogStatusEnum("status").notNull(),
   location: text("location"),
   crew: text("crew"),

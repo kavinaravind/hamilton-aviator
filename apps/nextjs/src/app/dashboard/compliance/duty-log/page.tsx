@@ -62,7 +62,7 @@ function DutyEntryCard({ entry }: { entry: DutyLog }) {
                   {entry.type.replace("-duty", "")} Duty
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  {formatDate(entry.startTime)}
+                  {formatDate(entry.startTime.toISOString())}
                   {entry.location ? ` • ${entry.location}` : ""}
                 </p>
               </div>
@@ -76,18 +76,26 @@ function DutyEntryCard({ entry }: { entry: DutyLog }) {
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-muted-foreground">Start Time</p>
-              <p className="font-medium">{entry.startTime.slice(11, 16)}</p>
+              <p className="font-medium">
+                {entry.startTime.toISOString().slice(11, 16)}
+              </p>
             </div>
             <div>
               <p className="text-muted-foreground">End Time</p>
               <p className="font-medium">
-                {entry.endTime ? entry.endTime.slice(11, 16) : "—"}
+                {entry.endTime
+                  ? entry.endTime.toISOString().slice(11, 16)
+                  : "-"}
               </p>
             </div>
             <div>
               <p className="text-muted-foreground">Duration</p>
               <p className="font-medium">
-                {entry.duration ? `${entry.duration}h` : "—"}
+                {typeof entry.duration === "number"
+                  ? `${entry.duration}h`
+                  : entry.duration
+                    ? `${parseFloat(entry.duration)}h`
+                    : "—"}
               </p>
             </div>
             <div>
@@ -157,36 +165,31 @@ export default function DutyLogPage() {
     });
     const totals = {
       totalHours: monthlyEntries.reduce(
-        (acc: number, entry: DutyLog) =>
-          acc + (parseFloat(entry.duration ?? "0") || 0),
+        (acc: number, entry: DutyLog) => acc + (entry.duration ?? 0),
         0,
       ),
       flightHours: monthlyEntries
         .filter((e: DutyLog) => e.type === "flight-duty")
         .reduce(
-          (acc: number, entry: DutyLog) =>
-            acc + (parseFloat(entry.duration ?? "0") || 0),
+          (acc: number, entry: DutyLog) => acc + (entry.duration ?? 0),
           0,
         ),
       trainingHours: monthlyEntries
         .filter((e: DutyLog) => e.type === "training")
         .reduce(
-          (acc: number, entry: DutyLog) =>
-            acc + (parseFloat(entry.duration ?? "0") || 0),
+          (acc: number, entry: DutyLog) => acc + (entry.duration ?? 0),
           0,
         ),
       standbyHours: monthlyEntries
         .filter((e: DutyLog) => e.type === "standby")
         .reduce(
-          (acc: number, entry: DutyLog) =>
-            acc + (parseFloat(entry.duration ?? "0") || 0),
+          (acc: number, entry: DutyLog) => acc + (entry.duration ?? 0),
           0,
         ),
       maintenanceHours: monthlyEntries
         .filter((e: DutyLog) => e.type === "maintenance")
         .reduce(
-          (acc: number, entry: DutyLog) =>
-            acc + (parseFloat(entry.duration ?? "0") || 0),
+          (acc: number, entry: DutyLog) => acc + (entry.duration ?? 0),
           0,
         ),
     };
@@ -357,17 +360,27 @@ export default function DutyLogPage() {
                       className="contents"
                     >
                       <TableRow className="cursor-pointer transition-colors hover:bg-accent">
-                        <TableCell>{formatDate(entry.startTime)}</TableCell>
+                        <TableCell>
+                          {formatDate(entry.startTime.toISOString())}
+                        </TableCell>
                         <TableCell className="capitalize">
                           {entry.type.replace("-duty", "")}
                         </TableCell>
                         <TableCell>{entry.location || "—"}</TableCell>
-                        <TableCell>{entry.startTime.slice(11, 16)}</TableCell>
                         <TableCell>
-                          {entry.endTime ? entry.endTime.slice(11, 16) : "—"}
+                          {entry.startTime.toISOString().slice(11, 16)}
                         </TableCell>
                         <TableCell>
-                          {entry.duration ? `${entry.duration}h` : "—"}
+                          {entry.endTime
+                            ? entry.endTime.toISOString().slice(11, 16)
+                            : "-"}
+                        </TableCell>
+                        <TableCell>
+                          {typeof entry.duration === "number"
+                            ? `${entry.duration}h`
+                            : entry.duration
+                              ? `${parseFloat(entry.duration)}h`
+                              : "—"}
                         </TableCell>
                         <TableCell>
                           <Badge variant={getStatusVariant(entry.status)}>
@@ -416,7 +429,7 @@ export default function DutyLogPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Duty Log
+            My Duty Log
           </h1>
           <p className="text-sm text-muted-foreground sm:text-base">
             Track your duty time and compliance requirements

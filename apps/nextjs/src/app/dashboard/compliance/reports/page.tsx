@@ -280,7 +280,7 @@ export default function ReportsPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Reports
+            My Reports
           </h1>
           <p className="text-sm text-muted-foreground sm:text-base">
             Generate regulatory forms and compliance reports

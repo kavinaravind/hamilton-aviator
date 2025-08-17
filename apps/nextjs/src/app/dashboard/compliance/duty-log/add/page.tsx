@@ -18,6 +18,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,6 +39,7 @@ import {
   calculateDuration,
   DutyLogCreateSchema,
 } from "@hamilton/validators/lib/compliance";
+import { toLocalDatetimeString } from "@hamilton/validators/shared/date";
 
 export default function AddDutyEntryPage() {
   const trpc = useTRPC();
@@ -48,18 +50,18 @@ export default function AddDutyEntryPage() {
     schema: DutyLogCreateSchema,
     defaultValues: {
       type: undefined,
-      description: "",
-      startTime: "",
+      description: null,
+      startTime: new Date(),
       endTime: null,
       duration: null,
       status: undefined,
-      location: "",
-      crew: "",
-      aircraft: "",
-      flightNumber: "",
-      instructor: "",
-      trainingType: undefined,
-      notes: "",
+      location: null,
+      crew: null,
+      aircraft: null,
+      flightNumber: null,
+      instructor: null,
+      trainingType: null,
+      notes: null,
     },
   });
 
@@ -107,8 +109,9 @@ export default function AddDutyEntryPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Duty Type */}
-              <CardTitle className="text-lg">Duty Type</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Duty Type
+              </CardTitle>
               <FormField
                 control={form.control}
                 name="type"
@@ -142,8 +145,9 @@ export default function AddDutyEntryPage() {
               />
 
               {/* Basic Information */}
-              <CardTitle className="text-lg">Basic Information</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Basic Information
+              </CardTitle>
               <FormField
                 control={form.control}
                 name="description"
@@ -152,11 +156,19 @@ export default function AddDutyEntryPage() {
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Enter duty description"
                         rows={2}
                         {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
                       />
                     </FormControl>
+                    <FormDescription>
+                      Additional details (optional)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -188,8 +200,9 @@ export default function AddDutyEntryPage() {
               />
 
               {/* Time Information */}
-              <CardTitle className="text-lg">Time Information</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Time Information
+              </CardTitle>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -200,8 +213,10 @@ export default function AddDutyEntryPage() {
                       <FormControl>
                         <Input
                           type="datetime-local"
-                          {...field}
-                          value={field.value ?? ""}
+                          value={toLocalDatetimeString(field.value)}
+                          onChange={(e) =>
+                            field.onChange(new Date(e.target.value))
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -217,8 +232,16 @@ export default function AddDutyEntryPage() {
                       <FormControl>
                         <Input
                           type="datetime-local"
-                          {...field}
-                          value={field.value ?? ""}
+                          value={
+                            field.value
+                              ? toLocalDatetimeString(field.value)
+                              : ""
+                          }
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value ? new Date(e.target.value) : null,
+                            )
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -229,19 +252,18 @@ export default function AddDutyEntryPage() {
               {form.watch("startTime") && form.watch("endTime") && (
                 <div className="rounded-lg bg-muted p-3 dark:bg-gray-800">
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Duration:{" "}
-                    {calculateDuration(
+                    {`Duration: ${calculateDuration(
                       form.watch("startTime"),
-                      form.watch("endTime") || "",
-                    )}{" "}
-                    hours
+                      form.watch("endTime"),
+                    )}`}
                   </p>
                 </div>
               )}
 
               {/* Additional Information */}
-              <CardTitle className="text-lg">Additional Information</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Additional Information
+              </CardTitle>
               <FormField
                 control={form.control}
                 name="location"
@@ -250,11 +272,16 @@ export default function AddDutyEntryPage() {
                     <FormLabel>Location</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Location (optional)"
                         {...field}
                         value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
                       />
                     </FormControl>
+                    <FormDescription>Location (optional)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -267,11 +294,16 @@ export default function AddDutyEntryPage() {
                     <FormLabel>Crew</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Crew (optional)"
                         {...field}
                         value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
                       />
                     </FormControl>
+                    <FormDescription>Crew (optional)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -284,11 +316,16 @@ export default function AddDutyEntryPage() {
                     <FormLabel>Aircraft</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Aircraft (optional)"
                         {...field}
                         value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
                       />
                     </FormControl>
+                    <FormDescription>Aircraft (optional)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -301,11 +338,16 @@ export default function AddDutyEntryPage() {
                     <FormLabel>Flight Number</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Flight Number (optional)"
                         {...field}
                         value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
                       />
                     </FormControl>
+                    <FormDescription>Flight Number (optional)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -318,11 +360,16 @@ export default function AddDutyEntryPage() {
                     <FormLabel>Instructor</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Instructor (optional)"
                         {...field}
                         value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
                       />
                     </FormControl>
+                    <FormDescription>Instructor (optional)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -368,12 +415,19 @@ export default function AddDutyEntryPage() {
                     <FormLabel>Notes</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Additional notes or comments"
                         rows={3}
                         {...field}
                         value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
                       />
                     </FormControl>
+                    <FormDescription>
+                      Additional comments (optional)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
