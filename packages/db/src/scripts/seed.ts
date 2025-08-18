@@ -43,6 +43,14 @@ async function seedTable<T>(table: PgTable, file: string, label: string) {
     throw new Error("JSON file must contain an array of objects");
   }
 
+  if (label === "Logbook") {
+    data.forEach((row) => {
+      row.date = new Date(row.date);
+      row.arrivalTime = new Date(row.arrivalTime);
+      row.departureTime = new Date(row.departureTime);
+    });
+  }
+
   if (label === "DutyLog") {
     data.forEach((row) => {
       row.startTime = new Date(row.startTime);

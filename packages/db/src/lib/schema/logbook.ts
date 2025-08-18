@@ -1,4 +1,12 @@
-import { integer, pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import {
+  integer,
+  numeric,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { LogbookFlightTypeEnum } from "@hamilton/validators/lib/logbook";
 
@@ -9,32 +17,32 @@ export const logbookFlightTypeEnum = pgEnum(
 
 export const Logbook = pgTable("logbook", {
   id: uuid("id").primaryKey().defaultRandom(),
-  date: text("date").notNull(),
-  route: text("route").notNull(),
+  flightType: logbookFlightTypeEnum("flight_type").notNull(),
+  date: timestamp("date").notNull(),
   aircraft: text("aircraft").notNull(),
-  duration: text("duration").notNull(),
   tailNumber: text("tail_number").notNull(),
+  route: text("route").notNull(),
+  duration: numeric("duration").notNull(),
   departureAirport: text("departure_airport").notNull(),
-  departureTime: text("departure_time").notNull(),
+  departureTime: timestamp("departure_time").notNull(),
   arrivalAirport: text("arrival_airport").notNull(),
-  arrivalTime: text("arrival_time").notNull(),
-  flightTimeTotal: text("flight_time_total").notNull(),
-  flightTimePic: text("flight_time_pic").notNull(),
-  flightTimeSic: text("flight_time_sic").notNull(),
-  flightTimeSolo: text("flight_time_solo").notNull(),
-  flightTimeDual: text("flight_time_dual").notNull(),
-  conditionDay: text("condition_day").notNull(),
-  conditionNight: text("condition_night").notNull(),
-  conditionActualInstrument: text("condition_actual_instrument").notNull(),
-  conditionSimulatedInstrument: text(
+  arrivalTime: timestamp("arrival_time").notNull(),
+  flightTimeTotal: numeric("flight_time_total").notNull(),
+  flightTimePic: numeric("flight_time_pic").notNull(),
+  flightTimeSic: numeric("flight_time_sic").notNull(),
+  flightTimeSolo: numeric("flight_time_solo").notNull(),
+  flightTimeDual: numeric("flight_time_dual").notNull(),
+  conditionDay: numeric("condition_day").notNull(),
+  conditionNight: numeric("condition_night").notNull(),
+  conditionActualInstrument: numeric("condition_actual_instrument").notNull(),
+  conditionSimulatedInstrument: numeric(
     "condition_simulated_instrument",
   ).notNull(),
-  conditionCrossCountry: text("condition_cross_country").notNull(),
+  conditionCrossCountry: numeric("condition_cross_country").notNull(),
   landingsDay: integer("landings_day").notNull(),
   landingsNight: integer("landings_night").notNull(),
   approaches: integer("approaches").notNull(),
   holds: integer("holds").notNull(),
-  remarks: text("remarks").notNull(),
+  remarks: text("remarks"),
   instructor: text("instructor"),
-  flightType: logbookFlightTypeEnum("flight_type").notNull(),
 });

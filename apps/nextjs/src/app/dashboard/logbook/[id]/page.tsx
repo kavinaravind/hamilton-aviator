@@ -15,7 +15,6 @@ import {
   CardTitle,
 } from "@hamilton/ui/components/ui/card";
 import {
-  formatFlightDuration,
   getFlightTypeColor,
   getFlightTypeText,
 } from "@hamilton/validators/lib/logbook";
@@ -73,7 +72,7 @@ function LogbookEntryContent({
                 <span>{entry.tailNumber}</span>
                 <span className="mx-1">•</span>
                 <span className="text-xs">
-                  {new Date(entry.date).toLocaleDateString(undefined, {
+                  {entry.date.toLocaleDateString(undefined, {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -84,9 +83,22 @@ function LogbookEntryContent({
           </CardHeader>
           <CardContent>
             <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-3xl font-bold text-blue-600 dark:text-blue-300">
-                {formatFlightDuration(entry.flightTime.total)}
-              </span>
+              <div className="flex flex-col">
+                <span className="mb-1 text-xs font-medium text-muted-foreground">
+                  Duration
+                </span>
+                <span className="text-3xl font-bold text-blue-600 dark:text-blue-300">
+                  {entry.duration != null
+                    ? (() => {
+                        const hours = Math.floor(entry.duration);
+                        const minutes = Math.round(
+                          (entry.duration - hours) * 60,
+                        );
+                        return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+                      })()
+                    : "—"}
+                </span>
+              </div>
               <span
                 className="rounded-full bg-opacity-80 px-4 py-2 text-sm font-semibold shadow"
                 style={{
@@ -109,7 +121,7 @@ function LogbookEntryContent({
             <div className="grid grid-cols-2 gap-6">
               <div className="flex flex-col items-center justify-center rounded-lg bg-green-50 p-3 dark:bg-green-900/30">
                 <span className="mb-1 text-3xl font-extrabold text-green-700 dark:text-green-300">
-                  {formatFlightDuration(entry.flightTime.pic)}
+                  {entry.flightTime.pic ?? "—"}
                 </span>
                 <span className="text-xs font-semibold tracking-wide text-green-700 dark:text-green-300">
                   PIC
@@ -117,7 +129,7 @@ function LogbookEntryContent({
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-blue-50 p-3 dark:bg-blue-900/30">
                 <span className="mb-1 text-3xl font-extrabold text-blue-700 dark:text-blue-300">
-                  {formatFlightDuration(entry.flightTime.sic)}
+                  {entry.flightTime.sic ?? "—"}
                 </span>
                 <span className="text-xs font-semibold tracking-wide text-blue-700 dark:text-blue-300">
                   SIC
@@ -125,7 +137,7 @@ function LogbookEntryContent({
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-purple-50 p-3 dark:bg-purple-900/30">
                 <span className="mb-1 text-3xl font-extrabold text-purple-700 dark:text-purple-300">
-                  {formatFlightDuration(entry.flightTime.solo)}
+                  {entry.flightTime.solo ?? "—"}
                 </span>
                 <span className="text-xs font-semibold tracking-wide text-purple-700 dark:text-purple-300">
                   Solo
@@ -133,7 +145,7 @@ function LogbookEntryContent({
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-pink-50 p-3 dark:bg-pink-900/30">
                 <span className="mb-1 text-3xl font-extrabold text-pink-700 dark:text-pink-300">
-                  {formatFlightDuration(entry.flightTime.dual)}
+                  {entry.flightTime.dual ?? "—"}
                 </span>
                 <span className="text-xs font-semibold tracking-wide text-pink-700 dark:text-pink-300">
                   Dual
@@ -155,7 +167,7 @@ function LogbookEntryContent({
                   Day
                 </span>
                 <span className="text-base font-semibold">
-                  {formatFlightDuration(entry.conditions.day)}
+                  {entry.conditions.day ?? "—"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -163,7 +175,7 @@ function LogbookEntryContent({
                   Night
                 </span>
                 <span className="text-base font-semibold">
-                  {formatFlightDuration(entry.conditions.night)}
+                  {entry.conditions.night ?? "—"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -171,7 +183,7 @@ function LogbookEntryContent({
                   Actual Instrument
                 </span>
                 <span className="text-base font-semibold">
-                  {formatFlightDuration(entry.conditions.actualInstrument)}
+                  {entry.conditions.actualInstrument ?? "—"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -179,7 +191,7 @@ function LogbookEntryContent({
                   Simulated Instrument
                 </span>
                 <span className="text-base font-semibold">
-                  {formatFlightDuration(entry.conditions.simulatedInstrument)}
+                  {entry.conditions.simulatedInstrument ?? "—"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -187,7 +199,7 @@ function LogbookEntryContent({
                   Cross Country
                 </span>
                 <span className="text-base font-semibold">
-                  {formatFlightDuration(entry.conditions.crossCountry)}
+                  {entry.conditions.crossCountry ?? "—"}
                 </span>
               </div>
             </div>
@@ -253,7 +265,12 @@ function LogbookEntryContent({
                   Departure Time
                 </span>
                 <span className="text-base font-semibold">
-                  {entry.departure.time}
+                  {entry.departure.time
+                    ? entry.departure.time.toLocaleTimeString(undefined, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "—"}
                 </span>
               </div>
               <div className="flex flex-col gap-2">
@@ -267,7 +284,12 @@ function LogbookEntryContent({
                   Arrival Time
                 </span>
                 <span className="text-base font-semibold">
-                  {entry.arrival.time}
+                  {entry.arrival.time
+                    ? entry.arrival.time.toLocaleTimeString(undefined, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "—"}
                 </span>
               </div>
             </div>

@@ -47,27 +47,33 @@ export default function AddLogbookEntryPage() {
   const form = useForm<LogbookCreate, LogbookCreate>({
     schema: LogbookCreateSchema,
     defaultValues: {
-      date: new Date().toISOString().split("T")[0],
-      route: "",
-      aircraft: "",
-      duration: "",
-      tailNumber: "",
-      departure: { airport: "", time: "" },
-      arrival: { airport: "", time: "" },
-      flightTime: { total: "", pic: "", sic: "", solo: "", dual: "" },
-      conditions: {
-        day: "",
-        night: "",
-        actualInstrument: "",
-        simulatedInstrument: "",
-        crossCountry: "",
+      date: new Date(),
+      route: undefined,
+      aircraft: undefined,
+      duration: undefined,
+      tailNumber: undefined,
+      departure: { airport: undefined, time: undefined },
+      arrival: { airport: undefined, time: undefined },
+      flightTime: {
+        total: undefined,
+        pic: undefined,
+        sic: undefined,
+        solo: undefined,
+        dual: undefined,
       },
-      landings: { day: 0, night: 0 },
-      approaches: 0,
-      holds: 0,
-      remarks: "",
-      instructor: "",
-      flightType: LogbookFlightTypeEnum.enum.training,
+      conditions: {
+        day: undefined,
+        night: undefined,
+        actualInstrument: undefined,
+        simulatedInstrument: undefined,
+        crossCountry: undefined,
+      },
+      landings: { day: undefined, night: undefined },
+      approaches: undefined,
+      holds: undefined,
+      remarks: undefined,
+      instructor: undefined,
+      flightType: undefined,
     },
   });
 
@@ -104,7 +110,7 @@ export default function AddLogbookEntryPage() {
           <Card className="rounded-xl bg-white dark:bg-gray-900">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Add Flight Log Entry</CardTitle>
+                <CardTitle>Add Logbook Entry</CardTitle>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -115,13 +121,47 @@ export default function AddLogbookEntryPage() {
                   <X className="h-5 w-5" />
                 </Button>
               </div>
-              <CardDescription>Enter all flight details below.</CardDescription>
+              <CardDescription>Enter all flight details below</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Basic Info */}
-              <CardTitle className="text-lg">Flight Details</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Flight Information
+              </CardTitle>
               <div className="grid grid-cols-1 gap-4">
+                <FormField
+                  control={form.control}
+                  name="flightType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Flight Type</FormLabel>
+                      <FormDescription>
+                        Type of flight (training, solo, etc)
+                      </FormDescription>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Flight Type (optional)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {(
+                              LogbookFlightTypeEnum.options ??
+                              Object.values(LogbookFlightTypeEnum)
+                            ).map((type: string) => (
+                              <SelectItem key={type} value={type}>
+                                {type}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="date"
@@ -129,9 +169,59 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input
+                          type="date"
+                          value={field.value?.toISOString().split("T")[0] ?? ""}
+                          onChange={(e) =>
+                            field.onChange(new Date(e.target.value))
+                          }
+                        />
                       </FormControl>
                       <FormDescription>Date of flight</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="route"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Route</FormLabel>
+                      <FormControl>
+                        <Input
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === "" ? null : e.target.value,
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Flight route or waypoints
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="duration"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Duration</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription>Block time</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -143,10 +233,17 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Aircraft</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === "" ? null : e.target.value,
+                            )
+                          }
+                        />
                       </FormControl>
                       <FormDescription>
-                        Type/model of aircraft (optional)
+                        Type / model of aircraft
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -159,36 +256,24 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Tail Number</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === "" ? null : e.target.value,
+                            )
+                          }
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Aircraft registration (optional)
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="route"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Route</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Flight route or waypoints (optional)
-                      </FormDescription>
+                      <FormDescription>Aircraft registration</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
-              {/* Departure & Arrival */}
-              <CardTitle className="text-lg">Departure & Arrival</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Departure & Arrival
+              </CardTitle>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -197,11 +282,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Departure Airport</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === "" ? null : e.target.value,
+                            )
+                          }
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Origin airport (optional)
-                      </FormDescription>
+                      <FormDescription>Origin airport</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -213,11 +303,33 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Departure Time</FormLabel>
                       <FormControl>
-                        <Input type="time" {...field} />
+                        <Input
+                          type="time"
+                          value={
+                            field.value
+                              ? field.value.toTimeString().slice(0, 5)
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const timeStr = e.target.value;
+                            const date = form.getValues("date");
+                            if (date && timeStr) {
+                              const [hours, minutes] = timeStr.split(":");
+                              const result = new Date(date);
+                              result.setHours(
+                                Number(hours),
+                                Number(minutes),
+                                0,
+                                0,
+                              );
+                              field.onChange(result);
+                            } else {
+                              field.onChange("");
+                            }
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Time of departure (optional)
-                      </FormDescription>
+                      <FormDescription>Time of departure</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -229,11 +341,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Arrival Airport</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === "" ? null : e.target.value,
+                            )
+                          }
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Destination airport (optional)
-                      </FormDescription>
+                      <FormDescription>Destination airport</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -245,20 +362,41 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Arrival Time</FormLabel>
                       <FormControl>
-                        <Input type="time" {...field} />
+                        <Input
+                          type="time"
+                          value={
+                            field.value
+                              ? field.value.toTimeString().slice(0, 5)
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const timeStr = e.target.value;
+                            const date = form.getValues("date");
+                            if (date && timeStr) {
+                              const [hours, minutes] = timeStr.split(":");
+                              const result = new Date(date);
+                              result.setHours(
+                                Number(hours),
+                                Number(minutes),
+                                0,
+                                0,
+                              );
+                              field.onChange(result);
+                            } else {
+                              field.onChange("");
+                            }
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Time of arrival (optional)
-                      </FormDescription>
+                      <FormDescription>Time of arrival</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
-              {/* Flight Time */}
-              <CardTitle className="text-lg">Flight Time</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Flight Time
+              </CardTitle>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -267,11 +405,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Total Time</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Total flight time (optional)
-                      </FormDescription>
+                      <FormDescription>Total flight time</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -283,11 +426,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>PIC</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Pilot in command time (optional)
-                      </FormDescription>
+                      <FormDescription>Pilot in command time</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -299,11 +447,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>SIC</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Second in command time (optional)
-                      </FormDescription>
+                      <FormDescription>Second in command time</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -315,11 +468,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Solo</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Solo flight time (optional)
-                      </FormDescription>
+                      <FormDescription>Solo flight time</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -331,20 +489,26 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Dual</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
                       <FormDescription>
-                        Dual flight instruction time (optional)
+                        Dual flight instruction time
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
-              {/* Conditions */}
-              <CardTitle className="text-lg">Conditions</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Conditions
+              </CardTitle>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -353,11 +517,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Day</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Day conditions (optional)
-                      </FormDescription>
+                      <FormDescription>Day conditions</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -369,11 +538,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Night</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Night conditions (optional)
-                      </FormDescription>
+                      <FormDescription>Night conditions</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -385,10 +559,17 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Actual Instrument</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
                       <FormDescription>
-                        Actual instrument conditions (optional)
+                        Actual instrument conditions
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -401,10 +582,17 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Simulated Instrument</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
                       <FormDescription>
-                        Simulated instrument conditions (optional)
+                        Simulated instrument conditions
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -417,22 +605,24 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Cross Country</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Cross country time (optional)
-                      </FormDescription>
+                      <FormDescription>Cross country time</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
-              {/* Landings, Approaches, Holds */}
-              <CardTitle className="text-lg">
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
                 Landings, Approaches, Holds
               </CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -441,11 +631,16 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Landings (Day)</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Number of day landings (optional)
-                      </FormDescription>
+                      <FormDescription>Number of day landings</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -457,10 +652,17 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Landings (Night)</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
                       <FormDescription>
-                        Number of night landings (optional)
+                        Number of night landings
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -473,10 +675,17 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Approaches</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
                       <FormDescription>
-                        Number of instrument approaches (optional)
+                        Number of instrument approaches
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -489,20 +698,24 @@ export default function AddLogbookEntryPage() {
                     <FormItem>
                       <FormLabel>Holds</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input
+                          type="number"
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            field.onChange(val === "" ? 0 : Number(val));
+                          }}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        Number of holds (optional)
-                      </FormDescription>
+                      <FormDescription>Number of holds</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
-              {/* Remarks & Details */}
-              <CardTitle className="text-lg">Remarks & Details</CardTitle>
-              <hr className="border-2 border-gray-200 dark:border-gray-800" />
+              <CardTitle className="border-b-4 border-gray-200 pb-1 text-lg dark:border-gray-800">
+                Additional Information
+              </CardTitle>
               <FormField
                 control={form.control}
                 name="remarks"
@@ -510,10 +723,18 @@ export default function AddLogbookEntryPage() {
                   <FormItem>
                     <FormLabel>Remarks</FormLabel>
                     <FormControl>
-                      <Textarea rows={3} {...field} />
+                      <Textarea
+                        rows={3}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
+                      />
                     </FormControl>
                     <FormDescription>
-                      Additional notes or comments (optional)
+                      Additional comments (optional)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -526,45 +747,18 @@ export default function AddLogbookEntryPage() {
                   <FormItem>
                     <FormLabel>Instructor</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? null : e.target.value,
+                          )
+                        }
+                      />
                     </FormControl>
                     <FormDescription>
                       Name of instructor (optional)
                     </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="flightType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Flight Type</FormLabel>
-                    <FormDescription>
-                      Type of flight (training, solo, etc)
-                    </FormDescription>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Flight Type (optional)" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {(
-                            LogbookFlightTypeEnum.options ??
-                            Object.values(LogbookFlightTypeEnum)
-                          ).map((type: string) => (
-                            <SelectItem key={type} value={type}>
-                              {type}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
