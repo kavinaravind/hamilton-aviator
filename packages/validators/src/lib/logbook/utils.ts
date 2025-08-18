@@ -26,7 +26,7 @@ export const parseRoute = (
 
 export const calculateTotalFlightTime = (flights: Logbook[]): string => {
   const totalHours = flights.reduce((sum, flight) => {
-    return sum + parseFloat(flight.duration);
+    return sum + flight.duration;
   }, 0);
 
   return totalHours.toFixed(1);

@@ -116,7 +116,7 @@ export default function FlightDetailPage() {
             </View>
             <View className="items-end">
               <Text className="text-2xl font-bold text-blue-600">
-                {formatFlightDuration(flight.duration)}
+                {formatFlightDuration(String(flight.duration))}
               </Text>
               <View
                 className="mt-2 rounded-full px-3 py-1"
@@ -137,7 +137,9 @@ export default function FlightDetailPage() {
             <View className="items-center">
               <Text className="text-sm text-gray-500">Departure</Text>
               <Text className="text-lg font-semibold text-gray-900">
-                {flight.departure.time}
+                {typeof flight.departure.time === "string"
+                  ? flight.departure.time
+                  : (flight.departure.time?.toLocaleTimeString?.() ?? "")}
               </Text>
               <Text className="text-sm text-gray-600">
                 {flight.departure.airport}
@@ -146,13 +148,15 @@ export default function FlightDetailPage() {
             <View className="flex-1 items-center">
               <Ionicons name="airplane" size={24} color="#6366f1" />
               <Text className="mt-1 text-xs text-gray-500">
-                {formatDate(flight.date)}
+                {formatDate(String(flight.date))}
               </Text>
             </View>
             <View className="items-center">
               <Text className="text-sm text-gray-500">Arrival</Text>
               <Text className="text-lg font-semibold text-gray-900">
-                {flight.arrival.time}
+                {typeof flight.arrival.time === "string"
+                  ? flight.arrival.time
+                  : (flight.arrival.time?.toLocaleTimeString?.() ?? "")}
               </Text>
               <Text className="text-sm text-gray-600">
                 {flight.arrival.airport}
@@ -167,19 +171,19 @@ export default function FlightDetailPage() {
           <View className="flex-row justify-between">
             <View className="items-center">
               <Text className="text-2xl font-bold text-green-600">
-                {formatFlightDuration(flight.flightTime.pic)}
+                {formatFlightDuration(String(flight.flightTime.pic))}
               </Text>
               <Text className="text-sm text-gray-500">PIC</Text>
             </View>
             <View className="items-center">
               <Text className="text-2xl font-bold text-blue-600">
-                {formatFlightDuration(flight.flightTime.dual)}
+                {formatFlightDuration(String(flight.flightTime.dual))}
               </Text>
               <Text className="text-sm text-gray-500">Dual</Text>
             </View>
             <View className="items-center">
               <Text className="text-2xl font-bold text-purple-600">
-                {formatFlightDuration(flight.flightTime.solo)}
+                {formatFlightDuration(String(flight.flightTime.solo))}
               </Text>
               <Text className="text-sm text-gray-500">Solo</Text>
             </View>
@@ -193,13 +197,13 @@ export default function FlightDetailPage() {
             <View className="flex-row items-center justify-between">
               <Text className="text-sm font-medium text-gray-600">Day</Text>
               <Text className="text-base text-gray-900">
-                {formatFlightDuration(flight.conditions.day)}
+                {formatFlightDuration(String(flight.conditions.day))}
               </Text>
             </View>
             <View className="flex-row items-center justify-between">
               <Text className="text-sm font-medium text-gray-600">Night</Text>
               <Text className="text-base text-gray-900">
-                {formatFlightDuration(flight.conditions.night)}
+                {formatFlightDuration(String(flight.conditions.night))}
               </Text>
             </View>
             <View className="flex-row items-center justify-between">
@@ -207,7 +211,9 @@ export default function FlightDetailPage() {
                 Actual Instrument
               </Text>
               <Text className="text-base text-gray-900">
-                {formatFlightDuration(flight.conditions.actualInstrument)}
+                {formatFlightDuration(
+                  String(flight.conditions.actualInstrument),
+                )}
               </Text>
             </View>
             <View className="flex-row items-center justify-between">
@@ -215,7 +221,7 @@ export default function FlightDetailPage() {
                 Cross Country
               </Text>
               <Text className="text-base text-gray-900">
-                {formatFlightDuration(flight.conditions.crossCountry)}
+                {formatFlightDuration(String(flight.conditions.crossCountry))}
               </Text>
             </View>
           </View>

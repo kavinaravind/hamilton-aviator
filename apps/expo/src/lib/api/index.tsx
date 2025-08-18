@@ -40,6 +40,12 @@ export const trpc = createTRPCOptionsProxy<AppRouter>({
           }
           return Object.fromEntries(headers);
         },
+        async fetch(input, init) {
+          return fetch(input, {
+            ...init,
+            credentials: "omit",
+          });
+        },
       }),
     ],
   }),

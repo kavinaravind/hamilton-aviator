@@ -2,7 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { desc, gte, sql } from "@hamilton/db";
-import { Aircraft, DutyLog, Logbook } from "@hamilton/db/lib/schema";
+import { Aircraft, Logbook } from "@hamilton/db/lib/schema";
 
 import { protectedProcedure } from "../trpc";
 
@@ -21,12 +21,12 @@ export const dashboardRouter = {
       if (input.period === "year") periodDays = 365;
       const periodStart = new Date(
         now.getTime() - 1000 * 60 * 60 * 24 * periodDays,
-      ).toISOString();
+      );
 
       // Aggregate totalTime and pic for all time
       const [totals] = await ctx.db
         .select({
-          totalTime: sql`SUM(CAST(${Logbook.duration} AS float))`.as(
+          totalTime: sql`SUM(CAST(${Logbook.flightTimeTotal} AS float))`.as(
             "totalTime",
           ),
           pic: sql`SUM(CAST(${Logbook.flightTimePic} AS float))`.as("pic"),
@@ -36,7 +36,7 @@ export const dashboardRouter = {
       // Aggregate periodTime and periodFlights for the selected period
       const [periodAgg] = await ctx.db
         .select({
-          periodTime: sql`SUM(CAST(${Logbook.duration} AS float))`.as(
+          periodTime: sql`SUM(CAST(${Logbook.flightTimeTotal} AS float))`.as(
             "periodTime",
           ),
           periodFlights: sql`COUNT(${Logbook.id})`.as("periodFlights"),

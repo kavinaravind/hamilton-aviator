@@ -12,14 +12,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  formatDate,
-  formatTime,
   getDutyStatusColor,
   getDutyStatusText,
   getDutyTypeColor,
   getDutyTypeIcon,
   getDutyTypeText,
 } from "@hamilton/validators/lib/compliance";
+import { formatDate, formatTime } from "@hamilton/validators/shared/date";
 
 export default function DutyDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -161,7 +160,15 @@ export default function DutyDetailPage() {
             </View>
             <View className="items-end">
               <Text className="text-2xl font-bold text-blue-600">
-                {dutyEntry.duration}
+                {typeof dutyEntry.duration === "number"
+                  ? (() => {
+                      const hours = Math.floor(dutyEntry.duration);
+                      const minutes = Math.round(
+                        (dutyEntry.duration - hours) * 60,
+                      );
+                      return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+                    })()
+                  : (dutyEntry.duration ?? "—")}
               </Text>
               <View
                 className="mt-2 rounded-full px-3 py-1"
@@ -182,10 +189,22 @@ export default function DutyDetailPage() {
             <View className="items-center">
               <Text className="text-sm text-gray-500">Start Time</Text>
               <Text className="text-lg font-semibold text-gray-900">
-                {formatTime(dutyEntry.startTime)}
+                {dutyEntry.startTime
+                  ? formatTime(
+                      typeof dutyEntry.startTime === "string"
+                        ? dutyEntry.startTime
+                        : dutyEntry.startTime.toISOString(),
+                    )
+                  : "—"}
               </Text>
               <Text className="text-sm text-gray-600">
-                {formatDate(dutyEntry.startTime)}
+                {dutyEntry.startTime
+                  ? formatDate(
+                      typeof dutyEntry.startTime === "string"
+                        ? dutyEntry.startTime
+                        : dutyEntry.startTime.toISOString(),
+                    )
+                  : "—"}
               </Text>
             </View>
             <View className="flex-1 items-center">
@@ -204,12 +223,20 @@ export default function DutyDetailPage() {
               <Text className="text-sm text-gray-500">End Time</Text>
               <Text className="text-lg font-semibold text-gray-900">
                 {dutyEntry.endTime
-                  ? formatTime(dutyEntry.endTime)
+                  ? formatTime(
+                      typeof dutyEntry.endTime === "string"
+                        ? dutyEntry.endTime
+                        : dutyEntry.endTime.toISOString(),
+                    )
                   : "In Progress"}
               </Text>
               {dutyEntry.endTime && (
                 <Text className="text-sm text-gray-600">
-                  {formatDate(dutyEntry.endTime)}
+                  {formatDate(
+                    typeof dutyEntry.endTime === "string"
+                      ? dutyEntry.endTime
+                      : dutyEntry.endTime.toISOString(),
+                  )}
                 </Text>
               )}
             </View>
@@ -237,7 +264,15 @@ export default function DutyDetailPage() {
                 Duration
               </Text>
               <Text className="text-base text-gray-900">
-                {dutyEntry.duration}
+                {typeof dutyEntry.duration === "number"
+                  ? (() => {
+                      const hours = Math.floor(dutyEntry.duration);
+                      const minutes = Math.round(
+                        (dutyEntry.duration - hours) * 60,
+                      );
+                      return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+                    })()
+                  : (dutyEntry.duration ?? "—")}
               </Text>
             </View>
             <View className="flex-row items-center justify-between">
@@ -245,7 +280,9 @@ export default function DutyDetailPage() {
                 Start Date
               </Text>
               <Text className="text-base text-gray-900">
-                {formatDate(dutyEntry.startTime)}
+                {dutyEntry.startTime
+                  ? formatDate(dutyEntry.startTime.toISOString())
+                  : "—"}
               </Text>
             </View>
             {dutyEntry.endTime && (
@@ -254,7 +291,7 @@ export default function DutyDetailPage() {
                   End Date
                 </Text>
                 <Text className="text-base text-gray-900">
-                  {formatDate(dutyEntry.endTime)}
+                  {formatDate(dutyEntry.endTime.toISOString())}
                 </Text>
               </View>
             )}

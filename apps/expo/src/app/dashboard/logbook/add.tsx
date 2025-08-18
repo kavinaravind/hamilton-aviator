@@ -45,42 +45,42 @@ export default function AddFlightPage() {
     formState: { errors },
   } = useForm<LogbookCreate>({
     defaultValues: {
-      date: "",
-      route: "",
-      aircraft: "",
-      duration: "",
-      tailNumber: "",
+      date: undefined,
+      route: undefined,
+      aircraft: undefined,
+      duration: undefined,
+      tailNumber: undefined,
       departure: {
-        airport: "",
-        time: "",
+        airport: undefined,
+        time: undefined,
       },
       arrival: {
-        airport: "",
-        time: "",
+        airport: undefined,
+        time: undefined,
       },
       flightTime: {
-        total: "",
-        pic: "",
-        sic: "",
-        solo: "",
-        dual: "",
+        total: undefined,
+        pic: undefined,
+        sic: undefined,
+        solo: undefined,
+        dual: undefined,
       },
       conditions: {
-        day: "",
-        night: "",
-        actualInstrument: "",
-        simulatedInstrument: "",
-        crossCountry: "",
+        day: undefined,
+        night: undefined,
+        actualInstrument: undefined,
+        simulatedInstrument: undefined,
+        crossCountry: undefined,
       },
       landings: {
-        day: 0,
-        night: 0,
+        day: undefined,
+        night: undefined,
       },
-      approaches: 0,
-      holds: 0,
-      remarks: "",
-      instructor: "",
-      flightType: "local",
+      approaches: undefined,
+      holds: undefined,
+      remarks: undefined,
+      instructor: undefined,
+      flightType: undefined,
     },
   });
 
@@ -114,9 +114,20 @@ export default function AddFlightPage() {
             className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
             placeholder={placeholder}
             placeholderTextColor="#9CA3AF"
-            value={value === 0 ? "" : (value?.toString() ?? "")}
+            value={
+              value === undefined || value === null ? "" : value.toString()
+            }
             onBlur={onBlur}
-            onChangeText={onChange}
+            onChangeText={(text) => {
+              if (
+                keyboardType === "numeric" ||
+                keyboardType === "decimal-pad"
+              ) {
+                onChange(text === "" ? undefined : Number(text));
+              } else {
+                onChange(text === "" ? undefined : text);
+              }
+            }}
             keyboardType={keyboardType}
           />
         )}

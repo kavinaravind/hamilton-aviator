@@ -70,8 +70,8 @@ importers:
   apps/expo:
     dependencies:
       '@better-auth/expo':
-        specifier: v1.3.6-beta.2
-        version: 1.3.6-beta.2(better-auth@1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17))
+        specifier: v1.3.7
+        version: 1.3.7(better-auth@1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17))
       '@expo/metro-config':
         specifier: ^0.20.14
         version: 0.20.14
@@ -100,8 +100,8 @@ importers:
         specifier: 'catalog:'
         version: 11.4.4(@tanstack/react-query@5.80.7(react@19.0.0))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.4.4(typescript@5.8.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.8.3)
       better-auth:
-        specifier: v1.3.6-beta.2
-        version: 1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17)
+        specifier: v1.3.7
+        version: 1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17)
       expo:
         specifier: ^53.0.20
         version: 53.0.20(@babel/core@7.27.4)(@expo/metro-runtime@5.0.4(react-native@0.79.5(@babel/core@7.27.4)(@types/react@19.1.6)(bufferutil@4.0.8)(react@19.0.0)))(bufferutil@4.0.8)(graphql@15.8.0)(react-native-webview@13.13.5(react-native@0.79.5(@babel/core@7.27.4)(@types/react@19.1.6)(bufferutil@4.0.8)(react@19.0.0))(react@19.0.0))(react-native@0.79.5(@babel/core@7.27.4)(@types/react@19.1.6)(bufferutil@4.0.8)(react@19.0.0))(react@19.0.0)
@@ -355,8 +355,8 @@ importers:
   packages/auth:
     dependencies:
       '@better-auth/expo':
-        specifier: v1.3.6-beta.2
-        version: 1.3.6-beta.2(better-auth@1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49))
+        specifier: v1.3.7
+        version: 1.3.7(better-auth@1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49))
       '@hamilton/db':
         specifier: workspace:*
         version: link:../db
@@ -364,8 +364,8 @@ importers:
         specifier: ^0.13.6
         version: 0.13.6(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0-beta.15(typescript@5.8.3))(zod@3.25.49)
       better-auth:
-        specifier: v1.3.6-beta.2
-        version: 1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)
+        specifier: v1.3.7
+        version: 1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)
       next:
         specifier: ^15.3.3
         version: 15.3.3(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -380,8 +380,8 @@ importers:
         version: 3.25.49
     devDependencies:
       '@better-auth/cli':
-        specifier: v1.3.6-beta.2
-        version: 1.3.6-beta.2(@neondatabase/serverless@0.10.0)(@opentelemetry/api@1.9.0)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(@types/react@19.1.6)(@vercel/postgres@0.10.0(utf-8-validate@6.0.4))(kysely@0.28.5)(mysql2@3.11.3)(pg@8.16.3)(postgres@3.4.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)
+        specifier: v1.3.7
+        version: 1.3.7(@neondatabase/serverless@0.10.0)(@opentelemetry/api@1.9.0)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(@types/react@19.1.6)(@vercel/postgres@0.10.0(utf-8-validate@6.0.4))(kysely@0.28.5)(mysql2@3.11.3)(pg@8.16.3)(postgres@3.4.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)
       '@hamilton/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
@@ -1420,16 +1420,16 @@ packages:
     resolution: {integrity: sha512-Y1GkI4ktrtvmawoSq+4FCVHNryea6uR+qUQy0AGxLSsjCX0nVmkYQMBLHDkXZuo5hGx7eYdnIaslsdBFm7zbUw==}
     engines: {node: '>=6.9.0'}
 
-  '@better-auth/cli@1.3.6-beta.2':
-    resolution: {integrity: sha512-GGttXlDODzuMFShKet3ksrQQqEsG8/CC4FXj6SAgzXgw33+ph9ojfY/zMYC/AOwR89CAS3ZdhfOOGhMITI78BA==}
+  '@better-auth/cli@1.3.7':
+    resolution: {integrity: sha512-T2UqizojAb7xML9j0smm7UofZo2T/tdxGpKzJl0XWvXPgTJXoW2xmcmtZjDUIwbz2z9O2suphBaNF0qigEovZQ==}
     hasBin: true
     peerDependencies:
       zod: 3.25.0 || ^4.0.0
 
-  '@better-auth/expo@1.3.6-beta.2':
-    resolution: {integrity: sha512-ThzBS2niA9ZtiRm2YIBSMYvpCEN1nQ2BuIgHC9ibuLMYCP21+ZeUQfdmB9HYoTT+NkCSbclv0hQ3Bs7S01kIaQ==}
+  '@better-auth/expo@1.3.7':
+    resolution: {integrity: sha512-S3EYFFzhxe7yZ8Cb6E44lpWXMY0oJ/RppYZ7GXvGdg8etgz5PwZPjIt8v4cf3Xa9wM4XGx5vluf2ZC2713uYAQ==}
     peerDependencies:
-      better-auth: 1.3.6-beta.2
+      better-auth: 1.3.7
 
   '@better-auth/utils@0.2.6':
     resolution: {integrity: sha512-3y/vaL5Ox33dBwgJ6ub3OPkVqr6B5xL2kgxNHG8eHZuryLyG/4JSPGqjbdRSgjuy9kALUZYDFl+ORIAxlWMSuA==}
@@ -3685,8 +3685,8 @@ packages:
     resolution: {integrity: sha512-4Bcg1P8xhUuqcii/S0Z9wiHIrQVPMermM1any+MX5GeGD7faD3/msQUDGLol9wOcz4/jbg/WJnGqoJF6LiBdtg==}
     engines: {node: '>=10.0.0'}
 
-  better-auth@1.3.6-beta.2:
-    resolution: {integrity: sha512-2DQINpudvf7mirPqtlD0CuQlY8yFjsWCATvO+zkKU6HrWbBGPTAQnGvgpsRxEL42af69s26jPdbDO3t403aAUw==}
+  better-auth@1.3.7:
+    resolution: {integrity: sha512-/1fEyx2SGgJQM5ujozDCh9eJksnVkNU/J7Fk/tG5Y390l8nKbrPvqiFlCjlMM+scR+UABJbQzA6An7HT50LHyQ==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -8738,7 +8738,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@better-auth/cli@1.3.6-beta.2(@neondatabase/serverless@0.10.0)(@opentelemetry/api@1.9.0)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(@types/react@19.1.6)(@vercel/postgres@0.10.0(utf-8-validate@6.0.4))(kysely@0.28.5)(mysql2@3.11.3)(pg@8.16.3)(postgres@3.4.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)':
+  '@better-auth/cli@1.3.7(@neondatabase/serverless@0.10.0)(@opentelemetry/api@1.9.0)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(@types/react@19.1.6)(@vercel/postgres@0.10.0(utf-8-validate@6.0.4))(kysely@0.28.5)(mysql2@3.11.3)(pg@8.16.3)(postgres@3.4.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)':
     dependencies:
       '@babel/core': 7.27.4
       '@babel/preset-react': 7.27.1(@babel/core@7.27.4)
@@ -8748,7 +8748,7 @@ snapshots:
       '@prisma/client': 5.22.0(prisma@5.22.0)
       '@types/better-sqlite3': 7.6.13
       '@types/prompts': 2.4.9
-      better-auth: 1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)
+      better-auth: 1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)
       better-sqlite3: 11.10.0
       c12: 2.0.4
       chalk: 5.4.1
@@ -8793,17 +8793,17 @@ snapshots:
       - sqlite3
       - supports-color
 
-  '@better-auth/expo@1.3.6-beta.2(better-auth@1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49))':
+  '@better-auth/expo@1.3.7(better-auth@1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49))':
     dependencies:
       '@better-fetch/fetch': 1.1.18
-      better-auth: 1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)
+      better-auth: 1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49)
       better-call: 1.0.13
       zod: 4.0.17
 
-  '@better-auth/expo@1.3.6-beta.2(better-auth@1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17))':
+  '@better-auth/expo@1.3.7(better-auth@1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17))':
     dependencies:
       '@better-fetch/fetch': 1.1.18
-      better-auth: 1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17)
+      better-auth: 1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17)
       better-call: 1.0.13
       zod: 4.0.17
 
@@ -11447,7 +11447,7 @@ snapshots:
 
   basic-ftp@5.0.5: {}
 
-  better-auth@1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49):
+  better-auth@1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.25.49):
     dependencies:
       '@better-auth/utils': 0.2.6
       '@better-fetch/fetch': 1.1.18
@@ -11465,7 +11465,7 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  better-auth@1.3.6-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17):
+  better-auth@1.3.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@4.0.17):
     dependencies:
       '@better-auth/utils': 0.2.6
       '@better-fetch/fetch': 1.1.18

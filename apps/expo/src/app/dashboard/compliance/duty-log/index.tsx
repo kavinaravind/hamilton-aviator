@@ -54,11 +54,18 @@ const renderDutyLogEntry = ({ item }: { item: DutyLog }) => (
           <View className="flex-row items-center justify-between">
             <View>
               <Text className="text-sm font-medium text-gray-700">
-                {formatDate(item.startTime)}
+                {item.startTime
+                  ? formatDate(item.startTime.toISOString())
+                  : "—"}
               </Text>
               <Text className="text-sm text-gray-500">
-                {formatTime(item.startTime)} -{" "}
-                {item.endTime ? formatTime(item.endTime) : "In Progress"}
+                {item.startTime
+                  ? formatTime(item.startTime.toISOString())
+                  : "—"}
+                {" - "}
+                {item.endTime
+                  ? formatTime(item.endTime.toISOString())
+                  : "In Progress"}
               </Text>
             </View>
             <View className="items-end">
@@ -101,7 +108,9 @@ export default function DutyLogPage() {
     } else {
       const filtered = dutyEntries.filter(
         (entry: DutyLog) =>
-          entry.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          entry.description
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
           entry.type.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredDutyEntries(filtered);

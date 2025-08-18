@@ -37,14 +37,23 @@ function LogEntryCard({ entry }: { entry: Logbook }) {
             <CardTitle className="text-lg">{entry.route}</CardTitle>
           </div>
           <p className="text-sm text-muted-foreground">
-            {formatDate(entry.date)} • {entry.aircraft} ({entry.tailNumber})
+            {formatDate(entry.date.toISOString())} • {entry.aircraft} (
+            {entry.tailNumber})
           </p>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-muted-foreground">Duration</p>
-              <p className="font-medium capitalize">{entry.duration}h</p>
+              <p className="font-medium capitalize">
+                {typeof entry.duration === "number"
+                  ? (() => {
+                      const hours = Math.floor(entry.duration);
+                      const minutes = Math.round((entry.duration - hours) * 60);
+                      return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+                    })()
+                  : (entry.duration ?? "—")}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -75,7 +84,11 @@ export default function LogbookPage() {
     // Calculate totals (only duration for new type)
     const totals = filteredEntries.reduce(
       (acc, entry) => ({
-        duration: acc.duration + parseFloat(entry.duration),
+        duration:
+          acc.duration +
+          (typeof entry.duration === "number"
+            ? entry.duration
+            : parseFloat(entry.duration)),
       }),
       { duration: 0 },
     );
@@ -91,7 +104,11 @@ export default function LogbookPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {totals.duration.toFixed(1)}h
+                {(() => {
+                  const hours = Math.floor(totals.duration);
+                  const minutes = Math.round((totals.duration - hours) * 60);
+                  return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+                })()}
               </div>
             </CardContent>
           </Card>
@@ -145,11 +162,29 @@ export default function LogbookPage() {
                     }
                     className="cursor-pointer transition-colors hover:bg-accent"
                   >
-                    <TableCell>{formatDate(entry.date)}</TableCell>
+                    <TableCell>
+                      {entry.date
+                        ? formatDate(
+                            typeof entry.date === "string"
+                              ? entry.date
+                              : entry.date.toISOString(),
+                          )
+                        : "—"}
+                    </TableCell>
                     <TableCell>{entry.aircraft}</TableCell>
                     <TableCell>{entry.tailNumber}</TableCell>
                     <TableCell>{entry.route}</TableCell>
-                    <TableCell>{entry.duration}h</TableCell>
+                    <TableCell>
+                      {typeof entry.duration === "number"
+                        ? (() => {
+                            const hours = Math.floor(entry.duration);
+                            const minutes = Math.round(
+                              (entry.duration - hours) * 60,
+                            );
+                            return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+                          })()
+                        : (entry.duration ?? "—")}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

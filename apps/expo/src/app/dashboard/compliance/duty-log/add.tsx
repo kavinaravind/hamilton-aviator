@@ -57,12 +57,12 @@ export default function AddDutyPage() {
     formState: { errors },
   } = useForm<DutyLogCreate>({
     defaultValues: {
-      type: "flight-duty",
-      description: "",
-      startTime: "",
+      type: undefined,
+      description: null,
+      startTime: new Date(),
       endTime: null,
       duration: null,
-      status: "completed",
+      status: undefined,
       location: null,
       crew: null,
       aircraft: null,
@@ -79,6 +79,7 @@ export default function AddDutyPage() {
     "training",
     "maintenance",
   ];
+  const statusOptions = ["active", "completed", "cancelled"];
 
   const handleSave = (data: DutyLogCreate) => {
     mutate(data);
@@ -167,13 +168,15 @@ export default function AddDutyPage() {
                 control={control}
                 name="description"
                 rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({ field }) => (
                   <TextInput
                     className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
                     placeholder="Enter duty description"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
+                    value={field.value ?? ""}
+                    onChangeText={(text: string) =>
+                      field.onChange(text === "" ? null : text)
+                    }
+                    onBlur={field.onBlur}
                     multiline
                     numberOfLines={2}
                   />
@@ -197,20 +200,27 @@ export default function AddDutyPage() {
               <Controller
                 control={control}
                 name="startTime"
-                rules={{
-                  required: true,
-                  pattern: {
-                    value: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/,
-                    message: "Must be ISO 8601",
-                  },
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{ required: true }}
+                render={({ field }) => (
                   <TextInput
                     className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
                     placeholder="YYYY-MM-DDTHH:MM"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
+                    value={
+                      field.value
+                        ? typeof field.value === "string"
+                          ? field.value
+                          : field.value.toISOString().slice(0, 16)
+                        : ""
+                    }
+                    onChangeText={(text: string) => {
+                      if (text) {
+                        const date = new Date(text);
+                        field.onChange(isNaN(date.getTime()) ? text : date);
+                      } else {
+                        field.onChange(null);
+                      }
+                    }}
+                    onBlur={field.onBlur}
                   />
                 )}
               />
@@ -227,13 +237,26 @@ export default function AddDutyPage() {
               <Controller
                 control={control}
                 name="endTime"
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({ field }) => (
                   <TextInput
                     className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
                     placeholder="YYYY-MM-DDTHH:MM (leave empty if ongoing)"
-                    value={value ?? ""}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
+                    value={
+                      field.value
+                        ? typeof field.value === "string"
+                          ? field.value
+                          : field.value.toISOString().slice(0, 16)
+                        : ""
+                    }
+                    onChangeText={(text: string) => {
+                      if (text) {
+                        const date = new Date(text);
+                        field.onChange(isNaN(date.getTime()) ? text : date);
+                      } else {
+                        field.onChange(null);
+                      }
+                    }}
+                    onBlur={field.onBlur}
                   />
                 )}
               />
@@ -281,36 +304,39 @@ export default function AddDutyPage() {
             </View>
             <View className="mb-4">
               <Text className="mb-2 text-sm font-medium text-gray-700">
-                Aircraft
+                Status
               </Text>
               <Controller
                 control={control}
-                name="aircraft"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
-                    placeholder="Aircraft (optional)"
-                    value={value ?? ""}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
+                name="status"
+                render={({ field: { onChange, value } }) => (
+                  <View className="flex-row flex-wrap gap-2">
+                    {statusOptions.map((status) => (
+                      <TouchableOpacity
+                        key={status}
+                        className={`rounded-full px-4 py-2 ${value === status ? "bg-blue-600" : "bg-gray-200"}`}
+                        onPress={() => onChange(status)}
+                      >
+                        <Text
+                          className={`text-sm font-medium ${value === status ? "text-white" : "text-gray-700"}`}
+                        >
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
                 )}
               />
-            </View>
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-medium text-gray-700">
-                Flight Number
-              </Text>
               <Controller
                 control={control}
                 name="flightNumber"
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({ field }) => (
                   <TextInput
                     className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900"
                     placeholder="Flight Number (optional)"
-                    value={value ?? ""}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
+                    value={field.value ?? ""}
+                    onChangeText={field.onChange}
+                    onBlur={field.onBlur}
                   />
                 )}
               />

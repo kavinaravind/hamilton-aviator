@@ -4,6 +4,8 @@ import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 
+import { formatDate } from "@hamilton/validators/shared/date";
+
 export function RecentFlights() {
   const {
     data: recentFlights,
@@ -51,7 +53,9 @@ export function RecentFlights() {
                   <Text className="text-xs text-gray-600">
                     {flight.aircraft} • {flight.type}
                   </Text>
-                  <Text className="text-xs text-gray-500">{flight.date}</Text>
+                  <Text className="text-xs text-gray-500">
+                    {formatDate(String(flight.date))}
+                  </Text>
                 </View>
                 <View className="items-end">
                   <Text className="text-sm font-bold text-blue-600">

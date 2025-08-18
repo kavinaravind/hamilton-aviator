@@ -31,12 +31,12 @@ const FlightItem = ({ item }: { item: Logbook }) => (
             {item.aircraft} • {item.tailNumber}
           </Text>
           <Text className="mt-1 text-sm text-gray-500">
-            {formatDate(item.date)}
+            {formatDate(item.date.toISOString())}
           </Text>
         </View>
         <View className="items-end">
           <Text className="text-lg font-bold text-primary">
-            {formatFlightDuration(item.duration)}
+            {formatFlightDuration(String(item.duration))}
           </Text>
           <Ionicons name="chevron-forward" size={16} color="#9CA3AF" />
         </View>
