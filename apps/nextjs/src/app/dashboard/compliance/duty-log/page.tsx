@@ -2,6 +2,7 @@
 
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTRPC } from "@/lib/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Plus, Search, Timer } from "lucide-react";
@@ -117,6 +118,7 @@ function DutyEntryCard({ entry }: { entry: DutyLog }) {
 
 export default function DutyLogPage() {
   const trpc = useTRPC();
+  const router = useRouter();
 
   function DutyLogData() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -354,41 +356,43 @@ export default function DutyLogPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredEntries.map((entry: DutyLog) => (
-                    <Link
+                    <TableRow
                       key={entry.id}
-                      href={`/dashboard/compliance/duty-log/${entry.id}`}
-                      className="contents"
+                      onClick={() =>
+                        router.push(
+                          `/dashboard/compliance/duty-log/${entry.id}`,
+                        )
+                      }
+                      className="cursor-pointer transition-colors hover:bg-accent"
                     >
-                      <TableRow className="cursor-pointer transition-colors hover:bg-accent">
-                        <TableCell>
-                          {formatDate(entry.startTime.toISOString())}
-                        </TableCell>
-                        <TableCell className="capitalize">
-                          {entry.type.replace("-duty", "")}
-                        </TableCell>
-                        <TableCell>{entry.location || "—"}</TableCell>
-                        <TableCell>
-                          {entry.startTime.toISOString().slice(11, 16)}
-                        </TableCell>
-                        <TableCell>
-                          {entry.endTime
-                            ? entry.endTime.toISOString().slice(11, 16)
-                            : "-"}
-                        </TableCell>
-                        <TableCell>
-                          {typeof entry.duration === "number"
-                            ? `${entry.duration}h`
-                            : entry.duration
-                              ? `${parseFloat(entry.duration)}h`
-                              : "—"}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={getStatusVariant(entry.status)}>
-                            {entry.status}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    </Link>
+                      <TableCell>
+                        {formatDate(entry.startTime.toISOString())}
+                      </TableCell>
+                      <TableCell className="capitalize">
+                        {entry.type.replace("-duty", "")}
+                      </TableCell>
+                      <TableCell>{entry.location || "—"}</TableCell>
+                      <TableCell>
+                        {entry.startTime.toISOString().slice(11, 16)}
+                      </TableCell>
+                      <TableCell>
+                        {entry.endTime
+                          ? entry.endTime.toISOString().slice(11, 16)
+                          : "-"}
+                      </TableCell>
+                      <TableCell>
+                        {typeof entry.duration === "number"
+                          ? `${entry.duration}h`
+                          : entry.duration
+                            ? `${parseFloat(entry.duration)}h`
+                            : "—"}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={getStatusVariant(entry.status)}>
+                          {entry.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
                   ))}
                 </TableBody>
               </Table>

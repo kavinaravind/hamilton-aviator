@@ -2,6 +2,7 @@
 
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTRPC } from "@/lib/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Plane, Plus, Search } from "lucide-react";
@@ -53,6 +54,8 @@ function LogEntryCard({ entry }: { entry: Logbook }) {
 }
 
 export default function LogbookPage() {
+  const router = useRouter();
+
   const trpc = useTRPC();
 
   function LogbookData() {
@@ -135,19 +138,19 @@ export default function LogbookPage() {
               </TableHeader>
               <TableBody>
                 {filteredEntries.map((entry) => (
-                  <Link
-                    href={`/dashboard/logbook/${entry.id}`}
+                  <TableRow
                     key={entry.id}
-                    className="contents"
+                    onClick={() =>
+                      router.push(`/dashboard/logbook/${entry.id}`)
+                    }
+                    className="cursor-pointer transition-colors hover:bg-accent"
                   >
-                    <TableRow className="cursor-pointer transition-colors hover:bg-accent">
-                      <TableCell>{formatDate(entry.date)}</TableCell>
-                      <TableCell>{entry.aircraft}</TableCell>
-                      <TableCell>{entry.tailNumber}</TableCell>
-                      <TableCell>{entry.route}</TableCell>
-                      <TableCell>{entry.duration}h</TableCell>
-                    </TableRow>
-                  </Link>
+                    <TableCell>{formatDate(entry.date)}</TableCell>
+                    <TableCell>{entry.aircraft}</TableCell>
+                    <TableCell>{entry.tailNumber}</TableCell>
+                    <TableCell>{entry.route}</TableCell>
+                    <TableCell>{entry.duration}h</TableCell>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>

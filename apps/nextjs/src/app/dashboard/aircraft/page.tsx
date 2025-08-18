@@ -2,6 +2,7 @@
 
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTRPC } from "@/lib/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Plane, Search } from "lucide-react";
@@ -112,6 +113,7 @@ function AircraftCard({ aircraft }: { aircraft: Aircraft }) {
 
 export default function AircraftPage() {
   const trpc = useTRPC();
+  const router = useRouter();
 
   function AircraftData() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -240,39 +242,39 @@ export default function AircraftPage() {
                   {filteredAircraft.map((aircraft) => {
                     const StatusIcon = getStatusIcon(aircraft.status);
                     return (
-                      <Link
-                        href={`/dashboard/aircraft/${aircraft.id}`}
+                      <TableRow
                         key={aircraft.id}
-                        className="contents"
+                        onClick={() =>
+                          router.push(`/dashboard/aircraft/${aircraft.id}`)
+                        }
+                        className="cursor-pointer transition-colors hover:bg-accent"
                       >
-                        <TableRow className="cursor-pointer transition-colors hover:bg-accent">
-                          <TableCell>{aircraft.tailNumber}</TableCell>
-                          <TableCell>{aircraft.make}</TableCell>
-                          <TableCell>{aircraft.model}</TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={
-                                aircraft.status === "airworthy"
-                                  ? "default"
-                                  : "destructive"
-                              }
-                              className={getStatusColor(aircraft.status)}
-                            >
-                              <StatusIcon className="mr-1 h-3 w-3" />
-                              {aircraft.status.replace("-", " ")}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="capitalize">
-                            {aircraft.ownership}
-                          </TableCell>
-                          <TableCell>{aircraft.year}</TableCell>
-                          <TableCell>
-                            {aircraft.engine?.make} {aircraft.engine?.model}
-                          </TableCell>
-                          <TableCell>{aircraft.annualDue}</TableCell>
-                          <TableCell>{aircraft.insurance?.company}</TableCell>
-                        </TableRow>
-                      </Link>
+                        <TableCell>{aircraft.tailNumber}</TableCell>
+                        <TableCell>{aircraft.make}</TableCell>
+                        <TableCell>{aircraft.model}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              aircraft.status === "airworthy"
+                                ? "default"
+                                : "destructive"
+                            }
+                            className={getStatusColor(aircraft.status)}
+                          >
+                            <StatusIcon className="mr-1 h-3 w-3" />
+                            {aircraft.status.replace("-", " ")}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="capitalize">
+                          {aircraft.ownership}
+                        </TableCell>
+                        <TableCell>{aircraft.year}</TableCell>
+                        <TableCell>
+                          {aircraft.engine?.make} {aircraft.engine?.model}
+                        </TableCell>
+                        <TableCell>{aircraft.annualDue}</TableCell>
+                        <TableCell>{aircraft.insurance?.company}</TableCell>
+                      </TableRow>
                     );
                   })}
                 </TableBody>

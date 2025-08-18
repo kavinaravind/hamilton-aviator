@@ -4,6 +4,7 @@ import { AircraftCompliance } from "@/components/dashboard/aircraft-compliance";
 import { FlightStats } from "@/components/dashboard/flight-statistics";
 import { MaintenanceAlerts } from "@/components/dashboard/maintenance-alerts";
 import { RecentFlights } from "@/components/dashboard/recent-flights";
+import { Plus } from "lucide-react";
 
 import { Button } from "@hamilton/ui/components/ui/button";
 
@@ -18,7 +19,10 @@ export default function DashboardPage() {
           </p>
         </div>
         <Link href="/dashboard/compliance/duty-log/add">
-          <Button>Quick Log</Button>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Log
+          </Button>
         </Link>
       </div>
       <FlightStats />

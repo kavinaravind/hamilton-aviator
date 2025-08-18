@@ -39,7 +39,7 @@ function DutyLogDetailContent({
 
   return (
     <div className="p-4 pt-4 sm:p-8 sm:pt-6">
-      <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+      <div className="mb-8 rounded-2xl border p-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-4xl font-extrabold capitalize tracking-tight text-gray-900 drop-shadow-sm dark:text-white">
@@ -62,8 +62,13 @@ function DutyLogDetailContent({
           </div>
           <div className="flex flex-col items-end gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">
-                {entry.duration || "—"}
+              <span
+                className="text-2xl font-bold text-blue-600 dark:text-blue-300"
+                title={`Raw: ${entry.duration ?? "—"}`}
+              >
+                {typeof entry.duration === "number"
+                  ? `${Math.floor(entry.duration)}h ${Math.round((entry.duration % 1) * 60)}m`
+                  : "—"}
               </span>
               <Badge
                 variant={entry.status === "completed" ? "default" : "secondary"}
@@ -79,7 +84,7 @@ function DutyLogDetailContent({
           </div>
         </div>
         <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900">
+          <div className="rounded-xl border p-6">
             <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-blue-900 dark:text-blue-200">
               <span className="inline-block h-2 w-2 rounded-full bg-blue-400" />{" "}
               Duty Info
@@ -143,7 +148,7 @@ function DutyLogDetailContent({
               )}
             </div>
           </div>
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900">
+          <div className="rounded-xl border p-6">
             <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-yellow-900 dark:text-yellow-200">
               <span className="inline-block h-2 w-2 rounded-full bg-yellow-400" />{" "}
               Details

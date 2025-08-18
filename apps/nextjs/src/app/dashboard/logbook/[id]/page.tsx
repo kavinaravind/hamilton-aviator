@@ -9,6 +9,12 @@ import { AlertCircle } from "lucide-react";
 import { LoadingSkeleton } from "@hamilton/ui/components/skeleton/skeleton";
 import { Button } from "@hamilton/ui/components/ui/button";
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@hamilton/ui/components/ui/card";
+import {
   formatFlightDuration,
   getFlightTypeColor,
   getFlightTypeText,
@@ -42,31 +48,47 @@ function LogbookEntryContent({
   }
 
   return (
-    <div className="p-4 pt-4 sm:p-8 sm:pt-6">
-      <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-900">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 drop-shadow-sm dark:text-white">
-              {entry.route}
-            </h1>
-            <p className="mt-1 text-lg font-medium text-gray-500 dark:text-gray-300">
-              {entry.aircraft} • {entry.tailNumber}
-            </p>
-            <p className="mt-1 text-base text-gray-400 dark:text-gray-400">
-              {new Date(entry.date).toLocaleDateString(undefined, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">
+    <div className="flex-1 space-y-6 p-4 pt-4 sm:p-8 sm:pt-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Flight Details
+          </h1>
+          <p className="text-sm text-muted-foreground sm:text-base">
+            View flight log entry details
+          </p>
+        </div>
+        {/* Optionally add an edit button here */}
+      </div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex flex-col gap-2">
+              <CardTitle className="mb-1 text-3xl font-extrabold text-blue-900 dark:text-blue-200">
+                {entry.route}
+              </CardTitle>
+              <div className="flex flex-row items-center gap-4 text-sm text-muted-foreground">
+                <span>{entry.aircraft}</span>
+                <span className="mx-1">•</span>
+                <span>{entry.tailNumber}</span>
+                <span className="mx-1">•</span>
+                <span className="text-xs">
+                  {new Date(entry.date).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <span className="text-3xl font-bold text-blue-600 dark:text-blue-300">
                 {formatFlightDuration(entry.flightTime.total)}
               </span>
               <span
-                className="rounded-full px-3 py-1 text-xs font-semibold shadow"
+                className="rounded-full bg-opacity-80 px-4 py-2 text-sm font-semibold shadow"
                 style={{
                   backgroundColor: `${getFlightTypeColor(entry.flightType)}20`,
                   color: getFlightTypeColor(entry.flightType),
@@ -75,196 +97,210 @@ function LogbookEntryContent({
                 {getFlightTypeText(entry.flightType)}
               </span>
             </div>
-          </div>
-        </div>
-        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-blue-900 dark:text-blue-200">
-              <span className="inline-block h-2 w-2 rounded-full bg-blue-400" />{" "}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
               Flight Time
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-extrabold text-green-700 drop-shadow dark:text-green-300">
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="flex flex-col items-center justify-center rounded-lg bg-green-50 p-3 dark:bg-green-900/30">
+                <span className="mb-1 text-3xl font-extrabold text-green-700 dark:text-green-300">
                   {formatFlightDuration(entry.flightTime.pic)}
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                </span>
+                <span className="text-xs font-semibold tracking-wide text-green-700 dark:text-green-300">
                   PIC
-                </div>
+                </span>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-extrabold text-blue-700 drop-shadow dark:text-blue-300">
+              <div className="flex flex-col items-center justify-center rounded-lg bg-blue-50 p-3 dark:bg-blue-900/30">
+                <span className="mb-1 text-3xl font-extrabold text-blue-700 dark:text-blue-300">
                   {formatFlightDuration(entry.flightTime.sic)}
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                </span>
+                <span className="text-xs font-semibold tracking-wide text-blue-700 dark:text-blue-300">
                   SIC
-                </div>
+                </span>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-extrabold text-purple-700 drop-shadow dark:text-purple-300">
+              <div className="flex flex-col items-center justify-center rounded-lg bg-purple-50 p-3 dark:bg-purple-900/30">
+                <span className="mb-1 text-3xl font-extrabold text-purple-700 dark:text-purple-300">
                   {formatFlightDuration(entry.flightTime.solo)}
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                </span>
+                <span className="text-xs font-semibold tracking-wide text-purple-700 dark:text-purple-300">
                   Solo
-                </div>
+                </span>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-extrabold text-pink-700 drop-shadow dark:text-pink-300">
+              <div className="flex flex-col items-center justify-center rounded-lg bg-pink-50 p-3 dark:bg-pink-900/30">
+                <span className="mb-1 text-3xl font-extrabold text-pink-700 dark:text-pink-300">
                   {formatFlightDuration(entry.flightTime.dual)}
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                </span>
+                <span className="text-xs font-semibold tracking-wide text-pink-700 dark:text-pink-300">
                   Dual
-                </div>
+                </span>
               </div>
             </div>
-          </div>
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-gray-900 dark:text-gray-200">
-              <span className="inline-block h-2 w-2 rounded-full bg-yellow-400" />{" "}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
               Conditions
-            </h2>
-            <div className="space-y-3">
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Day
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {formatFlightDuration(entry.conditions.day)}
                 </span>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Night
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {formatFlightDuration(entry.conditions.night)}
                 </span>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Actual Instrument
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {formatFlightDuration(entry.conditions.actualInstrument)}
                 </span>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Simulated Instrument
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {formatFlightDuration(entry.conditions.simulatedInstrument)}
                 </span>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Cross Country
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {formatFlightDuration(entry.conditions.crossCountry)}
                 </span>
               </div>
             </div>
-          </div>
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900 md:col-span-2">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-purple-900 dark:text-purple-200">
-              <span className="inline-block h-2 w-2 rounded-full bg-purple-400" />{" "}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
               Landings & Approaches
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Day Landings
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.landings.day}
                 </span>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Night Landings
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.landings.night}
                 </span>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Approaches
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.approaches}
                 </span>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Holds
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
-                  {entry.holds}
-                </span>
+                <span className="text-base font-semibold">{entry.holds}</span>
               </div>
             </div>
-          </div>
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900 md:col-span-2">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-cyan-900 dark:text-cyan-200">
-              <span className="inline-block h-2 w-2 rounded-full bg-cyan-400" />{" "}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
               Departure & Arrival
-            </h2>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <span className="text-xs font-medium text-muted-foreground">
                   Departure Airport
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.departure.airport}
                 </span>
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <span className="text-xs font-medium text-muted-foreground">
                   Departure Time
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.departure.time}
                 </span>
               </div>
               <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <span className="text-xs font-medium text-muted-foreground">
                   Arrival Airport
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.arrival.airport}
                 </span>
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <span className="text-xs font-medium text-muted-foreground">
                   Arrival Time
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.arrival.time}
                 </span>
               </div>
             </div>
-          </div>
-          {entry.instructor && (
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900">
-              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-emerald-900 dark:text-emerald-200">
-                <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />{" "}
+          </CardContent>
+        </Card>
+        {entry.instructor && (
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
                 Instructor
-              </h2>
-              <span className="text-base text-gray-900 dark:text-gray-100">
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <span className="text-base font-semibold">
                 {entry.instructor}
               </span>
-            </div>
-          )}
-          {entry.remarks && (
-            <div className="mb-6 rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-900 md:col-span-2">
-              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-gray-900 dark:text-gray-200">
-                <span className="inline-block h-2 w-2 rounded-full bg-gray-400" />{" "}
+            </CardContent>
+          </Card>
+        )}
+        {entry.remarks && (
+          <Card className="md:col-span-1">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
                 Remarks
-              </h2>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <span className="leading-6 text-gray-700 dark:text-gray-100">
                 {entry.remarks}
               </span>
-            </div>
-          )}
-        </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
