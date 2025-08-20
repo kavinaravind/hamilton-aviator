@@ -26,6 +26,14 @@ export const dutyLogRouter = {
   create: protectedProcedure
     .input(DutyLogCreateSchema)
     .mutation(({ ctx, input }) => {
+      if (input.endTime) {
+        const start = input.startTime.getTime();
+        const end = input.endTime.getTime();
+        if (!isNaN(start) && !isNaN(end) && end > start) {
+          const rawDuration = (end - start) / (1000 * 60 * 60);
+          input.duration = Math.round(rawDuration * 100) / 100;
+        }
+      }
       return ctx.db.insert(DutyLog).values(input);
     }),
 

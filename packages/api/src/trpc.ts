@@ -34,7 +34,6 @@ export const createTRPCContext = async (opts: {
   const session = await authApi.getSession({
     headers: opts.headers,
   });
-  console.log("SESSION: ", session, opts.headers);
 
   return {
     authApi,

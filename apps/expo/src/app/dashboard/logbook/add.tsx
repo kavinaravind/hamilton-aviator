@@ -227,7 +227,7 @@ export default function AddFlightPage() {
                     className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                     placeholder="Block time"
                     placeholderTextColor="#9CA3AF"
-                    value={value?.toString() ?? ""}
+                    value={value}
                     onChangeText={(text) =>
                       onChange(text === "" ? undefined : Number(text))
                     }
@@ -458,7 +458,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="2.3"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -486,7 +486,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="2.3"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -516,7 +516,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -544,7 +544,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -574,7 +574,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -610,7 +610,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="2.3"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -638,7 +638,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -668,7 +668,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -696,7 +696,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -726,7 +726,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="2.3"
                       placeholderTextColor="#9CA3AF"
-                      value={value?.toString() ?? ""}
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -762,11 +762,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="1"
                       placeholderTextColor="#9CA3AF"
-                      value={
-                        value === undefined || value === null
-                          ? ""
-                          : value.toString()
-                      }
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -794,11 +790,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0"
                       placeholderTextColor="#9CA3AF"
-                      value={
-                        value === undefined || value === null
-                          ? ""
-                          : value.toString()
-                      }
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -828,11 +820,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="1"
                       placeholderTextColor="#9CA3AF"
-                      value={
-                        value === undefined || value === null
-                          ? ""
-                          : value.toString()
-                      }
+                      value={value}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -941,7 +929,7 @@ export default function AddFlightPage() {
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 rounded-lg bg-primary py-3 shadow-sm active:bg-primary"
-                onPress={handleSubmit((data) => console.log(data))} //mutate(data))}
+                onPress={handleSubmit((data) => mutate(data))}
                 disabled={isPending}
               >
                 <View className="flex-row items-center justify-center">

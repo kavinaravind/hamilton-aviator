@@ -44,7 +44,6 @@ export function NavUser({
   const { isMobile } = useSidebar();
 
   const handleLogout = () => {
-    console.log("Logout clicked in DOM component");
     onLogout?.();
   };
 
