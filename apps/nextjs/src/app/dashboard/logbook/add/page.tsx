@@ -144,7 +144,7 @@ export default function AddLogbookEntryPage() {
                           defaultValue={field.value}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Flight Type (optional)" />
+                            <SelectValue placeholder="Flight Type" />
                           </SelectTrigger>
                           <SelectContent>
                             {(

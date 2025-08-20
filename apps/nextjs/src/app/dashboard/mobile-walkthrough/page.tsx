@@ -9,12 +9,14 @@ export default function HomePage() {
           <h1 className="mb-2 text-4xl font-extrabold text-primary drop-shadow-sm">
             Hamilton Aviator
           </h1>
-          <p className="text-lg text-gray-600">
-            Experience the mobile app built with React Native &amp; Expo
-          </p>
+          <div className="mx-auto max-w-lg">
+            <p className="mt-2 text-base text-muted-foreground">
+              A walkthrough of the mobile app built with React Native &amp; Expo
+            </p>
+          </div>
         </div>
         <div className="flex justify-center">
-          <div className="flex h-[680px] w-[330px] items-center justify-center overflow-hidden rounded-2xl bg-black shadow-xl">
+          <div className="flex h-[680px] w-[330px] items-center justify-center overflow-hidden rounded-[55px] bg-black shadow-xl">
             <video
               controls
               src="/api/video"

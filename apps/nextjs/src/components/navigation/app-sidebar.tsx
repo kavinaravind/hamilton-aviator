@@ -10,6 +10,7 @@ import {
   Plane,
   PlaneTakeoff,
   ShieldCheck,
+  Smartphone,
 } from "lucide-react";
 
 import {
@@ -64,6 +65,13 @@ const data = {
       ],
     },
   ],
+  navSupplemental: [
+    {
+      title: "Mobile Walkthrough",
+      url: "/dashboard/mobile-walkthrough",
+      icon: Smartphone,
+    },
+  ],
 };
 
 export function AppSidebar({
@@ -91,7 +99,7 @@ export function AppSidebar({
         <NavHeader header={data.header} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} supplemental={data.navSupplemental} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={userData} />

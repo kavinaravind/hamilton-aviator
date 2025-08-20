@@ -33,12 +33,12 @@ export default function SignIn() {
         <div className="relative z-20 mt-auto">
           <div className="rounded-xl bg-zinc-800/80 p-6 shadow-lg ring-1 ring-zinc-700/40">
             <div className="mb-3 flex items-center gap-2">
-              <span className="relative flex items-center gap-2 rounded-lg border-2 border-blue-500/60 px-3 py-2 text-xl font-extrabold tracking-widest text-blue-200 ring-1 ring-blue-400/30">
-                Hamilton Aviator
-              </span>
+              <h1 className="text-2xl font-light tracking-wide text-slate-300">
+                <span className="font-semibold">Hamilton</span> Aviator
+              </h1>
             </div>
             <blockquote className="space-y-2">
-              <p className="text-lg font-medium text-white/90">
+              <p className="text-lg font-light text-white/90">
                 &ldquo;With Hamilton Aviator, I can log flights, track duty
                 hours, manage maintenance records, and generate FAA-ready
                 reports all in one place. No more juggling spreadsheets, notes,
