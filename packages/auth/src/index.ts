@@ -57,6 +57,7 @@ export function initAuth(options: InitAuthOptions) {
       },
     },
     trustedOrigins: options.trustedOrigins,
+    telemetry: { enabled: false },
   };
 
   return betterAuth(config);
