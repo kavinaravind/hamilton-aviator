@@ -227,7 +227,7 @@ export default function AddFlightPage() {
                     className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                     placeholder="Block time"
                     placeholderTextColor="#9CA3AF"
-                    value={value}
+                    value={value?.toString() ?? ""}
                     onChangeText={(text) =>
                       onChange(text === "" ? undefined : Number(text))
                     }
@@ -344,7 +344,19 @@ export default function AddFlightPage() {
                             })
                           : (value ?? "")
                       }
-                      onChangeText={onChange}
+                      onChangeText={(text) => {
+                        const formDate = control._formValues?.date;
+                        if (formDate && /^\d{1,2}:\d{2}$/.test(text)) {
+                          const [hour, minute] = text.split(":");
+                          const newDate = new Date(formDate);
+                          newDate.setHours(Number(hour), Number(minute), 0, 0);
+                          onChange(newDate);
+                        } else if (text === "") {
+                          onChange(undefined);
+                        } else {
+                          onChange(text);
+                        }
+                      }}
                       onBlur={onBlur}
                     />
                   )}
@@ -403,7 +415,19 @@ export default function AddFlightPage() {
                             })
                           : (value ?? "")
                       }
-                      onChangeText={onChange}
+                      onChangeText={(text) => {
+                        const formDate = control._formValues?.date;
+                        if (formDate && /^\d{1,2}:\d{2}$/.test(text)) {
+                          const [hour, minute] = text.split(":");
+                          const newDate = new Date(formDate);
+                          newDate.setHours(Number(hour), Number(minute), 0, 0);
+                          onChange(newDate);
+                        } else if (text === "") {
+                          onChange(undefined);
+                        } else {
+                          onChange(text);
+                        }
+                      }}
                       onBlur={onBlur}
                     />
                   )}
@@ -434,7 +458,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="2.3"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -462,7 +486,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="2.3"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -492,7 +516,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -520,7 +544,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -550,7 +574,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -586,7 +610,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="2.3"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -614,7 +638,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -644,7 +668,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -672,7 +696,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="0.0"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -702,7 +726,7 @@ export default function AddFlightPage() {
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
                       placeholder="2.3"
                       placeholderTextColor="#9CA3AF"
-                      value={value}
+                      value={value?.toString() ?? ""}
                       onChangeText={(text) =>
                         onChange(text === "" ? undefined : Number(text))
                       }
@@ -736,7 +760,7 @@ export default function AddFlightPage() {
                   render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                       className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900"
-                      placeholder="2"
+                      placeholder="1"
                       placeholderTextColor="#9CA3AF"
                       value={
                         value === undefined || value === null
@@ -917,7 +941,7 @@ export default function AddFlightPage() {
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 rounded-lg bg-primary py-3 shadow-sm active:bg-primary"
-                onPress={handleSubmit((data) => mutate(data))}
+                onPress={handleSubmit((data) => console.log(data))} //mutate(data))}
                 disabled={isPending}
               >
                 <View className="flex-row items-center justify-center">

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -97,7 +98,17 @@ export function FlightStatistics() {
         />
       </View>
       {isFlightStatsPending && (
-        <Text className="mb-2 text-xs text-gray-500">Loading...</Text>
+        <View className="mb-3 gap-3">
+          <Skeleton className="mb-2 h-6 w-32" />
+          <View className="flex-row gap-3">
+            <Skeleton className="h-20 flex-1" />
+            <Skeleton className="h-20 flex-1" />
+          </View>
+          <View className="flex-row gap-3">
+            <Skeleton className="h-20 flex-1" />
+            <Skeleton className="h-20 flex-1" />
+          </View>
+        </View>
       )}
       {isFlightStatsError && (
         <Text className="mb-2 text-xs text-red-500">
