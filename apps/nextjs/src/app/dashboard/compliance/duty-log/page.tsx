@@ -280,23 +280,16 @@ export default function DutyLogPage() {
                 onValueChange={setSelectedFilter}
                 defaultValue={selectedFilter}
               >
-                <SelectTrigger className="w-full whitespace-normal">
-                  <SelectValue
-                    placeholder="Select duty type"
-                    className="whitespace-normal"
-                  />
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duty type" />
                 </SelectTrigger>
                 <SelectContent>
                   {filterOptions.map((filter) => (
                     <SelectItem key={filter.id} value={filter.id}>
-                      <span className="flex w-full items-center justify-between">
-                        <span className="whitespace-normal">
-                          {filter.label}
-                        </span>
-                        <Badge variant="secondary" className="ml-2">
-                          {filter.count}
-                        </Badge>
-                      </span>
+                      <span>{filter.label}</span>
+                      <Badge variant="secondary" className="ml-2">
+                        {filter.count}
+                      </Badge>
                     </SelectItem>
                   ))}
                 </SelectContent>

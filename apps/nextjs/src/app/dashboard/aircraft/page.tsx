@@ -160,21 +160,16 @@ export default function AircraftPage() {
                 onValueChange={setSelectedFilter}
                 defaultValue={selectedFilter}
               >
-                <SelectTrigger className="w-full whitespace-normal">
-                  <SelectValue
-                    placeholder="Select aircraft status"
-                    className="whitespace-normal"
-                  />
+                <SelectTrigger>
+                  <SelectValue placeholder="Select aircraft status" />
                 </SelectTrigger>
                 <SelectContent>
                   {filterOptions.map((filter) => (
                     <SelectItem key={filter.id} value={filter.id}>
-                      <span className="flex w-full items-center justify-between">
-                        <span>{filter.label}</span>
-                        <Badge variant="secondary" className="ml-2">
-                          {filter.count}
-                        </Badge>
-                      </span>
+                      <span>{filter.label}</span>
+                      <Badge variant="secondary" className="ml-2">
+                        {filter.count}
+                      </Badge>
                     </SelectItem>
                   ))}
                 </SelectContent>

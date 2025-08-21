@@ -145,7 +145,6 @@ export default function LogbookPage() {
         ) : (
           <Card className="flex">
             <ScrollArea className="w-1 flex-1">
-              {" "}
               <Table>
                 <TableHeader>
                   <TableRow>

@@ -9,6 +9,12 @@ import { AlertCircle } from "lucide-react";
 import { LoadingSkeleton } from "@hamilton/ui/components/skeleton/skeleton";
 import { Badge } from "@hamilton/ui/components/ui/badge";
 import { Button } from "@hamilton/ui/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@hamilton/ui/components/ui/card";
 
 function DutyLogDetailContent({
   id,
@@ -38,78 +44,67 @@ function DutyLogDetailContent({
   }
 
   return (
-    <div className="p-4 pt-4 sm:p-8 sm:pt-6">
-      <div className="mb-8 rounded-2xl border p-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-4xl font-extrabold capitalize tracking-tight text-gray-900 drop-shadow-sm dark:text-white">
-              {entry.type.replace("-duty", "")} Duty
-            </h1>
-            <p className="mt-1 text-lg font-medium text-gray-500 dark:text-gray-300">
-              {entry.description}
-            </p>
-            <p className="mt-1 text-base text-gray-400 dark:text-gray-400">
-              {entry.startTime
-                ? new Date(entry.startTime).toLocaleString(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                : ""}
-            </p>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2">
-              <span
-                className="text-2xl font-bold text-blue-600 dark:text-blue-300"
-                title={`Raw: ${entry.duration ?? "—"}`}
-              >
-                {typeof entry.duration === "number"
-                  ? `${Math.floor(entry.duration)}h ${Math.round((entry.duration % 1) * 60)}m`
-                  : "—"}
-              </span>
-              <Badge
-                variant={entry.status === "completed" ? "default" : "secondary"}
-              >
-                {entry.status}
-              </Badge>
-            </div>
-            {entry.location && (
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Location: {entry.location}
-              </span>
-            )}
-          </div>
+    <div className="flex-1 space-y-6 p-4 pt-4 sm:p-8 sm:pt-6">
+      <div className="flex flex-row flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col">
+          <h1 className="text-2xl font-bold capitalize tracking-tight sm:text-3xl">
+            Duty Log
+          </h1>
+          <p className="text-sm font-extralight text-muted-foreground sm:text-base">
+            {entry.description}
+          </p>
         </div>
-        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="rounded-xl border p-6">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-blue-900 dark:text-blue-200">
-              <span className="inline-block h-2 w-2 rounded-full bg-blue-400" />{" "}
+        <div className="flex flex-row items-center gap-4">
+          <span
+            className="text-2xl font-bold text-blue-600 dark:text-blue-300"
+            title={`Raw: ${entry.duration ?? "—"}`}
+          >
+            {typeof entry.duration === "number"
+              ? `${Math.floor(entry.duration)}h${Math.round((entry.duration % 1) * 60) > 0 ? ` ${Math.round((entry.duration % 1) * 60)}m` : ""}`
+              : "—"}
+          </span>
+          <Badge
+            variant={entry.status === "completed" ? "default" : "secondary"}
+          >
+            {entry.status}
+          </Badge>
+        </div>
+      </div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="mb-1 text-3xl font-extrabold text-primary dark:text-blue-200">
               Duty Info
-            </h2>
-            <div className="space-y-3">
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   Start Time
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.startTime
                     ? new Date(entry.startTime).toLocaleString(undefined, {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
                         hour: "2-digit",
                         minute: "2-digit",
                       })
                     : "—"}
                 </span>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   End Time
                 </span>
-                <span className="text-base text-gray-900 dark:text-gray-100">
+                <span className="text-base font-semibold">
                   {entry.endTime
                     ? new Date(entry.endTime).toLocaleString(undefined, {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
                         hour: "2-digit",
                         minute: "2-digit",
                       })
@@ -117,76 +112,89 @@ function DutyLogDetailContent({
                 </span>
               </div>
               {entry.flightNumber && (
-                <div className="flex flex-row items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground">
                     Flight Number
                   </span>
-                  <span className="text-base text-gray-900 dark:text-gray-100">
+                  <span className="text-base font-semibold">
                     {entry.flightNumber}
                   </span>
                 </div>
               )}
               {entry.aircraft && (
-                <div className="flex flex-row items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground">
                     Aircraft
                   </span>
-                  <span className="text-base text-gray-900 dark:text-gray-100">
+                  <span className="text-base font-semibold">
                     {entry.aircraft}
                   </span>
                 </div>
               )}
               {entry.crew && (
-                <div className="flex flex-row items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground">
                     Crew
                   </span>
-                  <span className="text-base text-gray-900 dark:text-gray-100">
-                    {entry.crew}
-                  </span>
+                  <span className="text-base font-semibold">{entry.crew}</span>
                 </div>
               )}
             </div>
-          </div>
-          <div className="rounded-xl border p-6">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide text-yellow-900 dark:text-yellow-200">
-              <span className="inline-block h-2 w-2 rounded-full bg-yellow-400" />{" "}
+          </CardContent>
+        </Card>
+        {entry.location && (
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl font-semibold text-primary dark:text-blue-100">
+                Location
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <span className="text-base font-semibold">{entry.location}</span>
+            </CardContent>
+          </Card>
+        )}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl font-semibold text-primary dark:text-blue-100">
               Details
-            </h2>
-            <div className="space-y-3">
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-2">
               {entry.trainingType && (
-                <div className="flex flex-row items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground">
                     Training Type
                   </span>
-                  <span className="text-base text-gray-900 dark:text-gray-100">
+                  <span className="text-base font-semibold">
                     {entry.trainingType}
                   </span>
                 </div>
               )}
               {entry.instructor && (
-                <div className="flex flex-row items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground">
                     Instructor
                   </span>
-                  <span className="text-base text-gray-900 dark:text-gray-100">
+                  <span className="text-base font-semibold">
                     {entry.instructor}
                   </span>
                 </div>
               )}
               {entry.notes && (
-                <div className="flex flex-row items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground">
                     Notes
                   </span>
-                  <span className="whitespace-pre-line text-base text-gray-900 dark:text-gray-100">
+                  <span className="whitespace-pre-line text-base font-semibold">
                     {entry.notes}
                   </span>
                 </div>
               )}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

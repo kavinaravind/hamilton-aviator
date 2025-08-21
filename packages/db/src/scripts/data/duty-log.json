@@ -48,7 +48,7 @@
     "startTime": "2025-08-02T14:00:00Z",
     "endTime": "2025-08-02T20:15:00Z",
     "type": "flight-duty",
-    "description": "International route - in progress",
+    "description": "International route",
     "duration": 6.25,
     "status": "completed",
     "location": "LHR",

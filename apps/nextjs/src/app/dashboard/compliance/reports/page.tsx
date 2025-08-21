@@ -168,21 +168,16 @@ export default function ReportsPage() {
                 onValueChange={setSelectedCategory}
                 defaultValue={selectedCategory}
               >
-                <SelectTrigger className="w-full whitespace-normal">
-                  <SelectValue
-                    placeholder="Select report type"
-                    className="whitespace-normal"
-                  />
+                <SelectTrigger>
+                  <SelectValue placeholder="Select report type" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
-                      <span className="flex w-full items-center justify-between">
-                        <span>{cat.label}</span>
-                        <Badge variant="secondary" className="ml-2">
-                          {cat.count}
-                        </Badge>
-                      </span>
+                      <span>{cat.label}</span>
+                      <Badge variant="secondary" className="ml-2">
+                        {cat.count}
+                      </Badge>
                     </SelectItem>
                   ))}
                 </SelectContent>

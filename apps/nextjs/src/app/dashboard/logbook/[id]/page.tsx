@@ -62,7 +62,7 @@ function LogbookEntryContent({
         <Card>
           <CardHeader className="pb-3">
             <div className="flex flex-col gap-2">
-              <CardTitle className="mb-1 text-3xl font-extrabold text-blue-900 dark:text-blue-200">
+              <CardTitle className="mb-1 text-3xl font-extrabold text-primary dark:text-blue-200">
                 {entry.route}
               </CardTitle>
               <div className="flex flex-row items-center gap-4 text-sm text-muted-foreground">
@@ -112,7 +112,7 @@ function LogbookEntryContent({
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+            <CardTitle className="text-xl font-semibold text-primary dark:text-blue-100">
               Flight Time
             </CardTitle>
           </CardHeader>
@@ -155,7 +155,7 @@ function LogbookEntryContent({
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+            <CardTitle className="text-xl font-semibold text-primary dark:text-blue-100">
               Conditions
             </CardTitle>
           </CardHeader>
@@ -206,7 +206,7 @@ function LogbookEntryContent({
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+            <CardTitle className="text-xl font-semibold text-primary dark:text-blue-100">
               Landings & Approaches
             </CardTitle>
           </CardHeader>
@@ -247,7 +247,7 @@ function LogbookEntryContent({
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+            <CardTitle className="text-xl font-semibold text-primary dark:text-blue-100">
               Departure & Arrival
             </CardTitle>
           </CardHeader>
@@ -297,7 +297,7 @@ function LogbookEntryContent({
         {entry.instructor && (
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+              <CardTitle className="text-xl font-semibold text-primary dark:text-blue-100">
                 Instructor
               </CardTitle>
             </CardHeader>
@@ -311,7 +311,7 @@ function LogbookEntryContent({
         {entry.remarks && (
           <Card className="md:col-span-1">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+              <CardTitle className="text-xl font-semibold text-primary dark:text-blue-100">
                 Remarks
               </CardTitle>
             </CardHeader>
