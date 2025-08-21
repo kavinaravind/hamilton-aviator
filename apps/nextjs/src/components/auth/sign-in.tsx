@@ -28,7 +28,7 @@ export default function SignIn() {
         <div className="absolute inset-0 bg-gradient-to-b from-black to-blue-950" />
         <div className="relative z-20 flex items-center text-lg font-medium">
           <AppIcon size={32} />
-          <span className="ml-3">Hamilton AI</span>
+          <span className="ml-3">Hamilton Aviator</span>
         </div>
         <div className="relative z-20 mt-auto">
           <div className="rounded-xl bg-zinc-800/80 p-6 shadow-lg ring-1 ring-zinc-700/40">
@@ -59,6 +59,18 @@ export default function SignIn() {
       </div>
       <div className="flex h-full items-center justify-center p-4 lg:p-8">
         <div className="flex w-full max-w-md flex-col items-center justify-center space-y-6">
+          <div className="mb-4 mt-2 flex flex-col items-center gap-y-1 lg:hidden">
+            <AppIcon size={48} />
+            <h1 className="text-2xl font-light tracking-wide text-primary">
+              <span className="font-semibold">Hamilton</span> Aviator
+            </h1>
+            <span className="mt-1 max-w-xs px-4 text-center text-sm font-bold tracking-wide text-[#44a5fe]">
+              Your Digital Cockpit
+            </span>
+            <span className="max-w-xs px-4 text-center text-xs text-muted-foreground">
+              Unified flight logging, duty tracking, and compliance for pilots
+            </span>
+          </div>
           <form className="flex w-full flex-col gap-4">
             <Button
               size="lg"
