@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
+import { ScrollArea, ScrollBar } from "@hamilton/ui/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -167,8 +168,11 @@ export default function ReportsPage() {
                 onValueChange={setSelectedCategory}
                 defaultValue={selectedCategory}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select duty type" />
+                <SelectTrigger className="w-full whitespace-normal">
+                  <SelectValue
+                    placeholder="Select report type"
+                    className="whitespace-normal"
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((cat) => (
@@ -231,33 +235,36 @@ export default function ReportsPage() {
             ))}
           </div>
         ) : (
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Estimated Time</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredReports.map((report: ReportType) => (
-                  <TableRow
-                    key={report.id}
-                    className="cursor-pointer transition-colors hover:bg-accent"
-                    onClick={() => generatePDF.mutate()}
-                  >
-                    <TableCell className="font-medium">
-                      {report.title}
-                    </TableCell>
-                    <TableCell>{report.category}</TableCell>
-                    <TableCell>{report.description}</TableCell>
-                    <TableCell>{report.estimatedTime}</TableCell>
+          <Card className="flex">
+            <ScrollArea className="w-1 flex-1">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Estimated Time</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredReports.map((report: ReportType) => (
+                    <TableRow
+                      key={report.id}
+                      className="cursor-pointer transition-colors hover:bg-accent"
+                      onClick={() => generatePDF.mutate()}
+                    >
+                      <TableCell className="font-medium">
+                        {report.title}
+                      </TableCell>
+                      <TableCell>{report.category}</TableCell>
+                      <TableCell>{report.description}</TableCell>
+                      <TableCell>{report.estimatedTime}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" className="w-full" />
+            </ScrollArea>
           </Card>
         )}
         {filteredReports.length === 0 && (
@@ -280,9 +287,9 @@ export default function ReportsPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            My Reports
+            Regulatory Documents
           </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+          <p className="text-sm font-extralight text-muted-foreground sm:text-base">
             Generate regulatory forms and compliance reports
           </p>
         </div>

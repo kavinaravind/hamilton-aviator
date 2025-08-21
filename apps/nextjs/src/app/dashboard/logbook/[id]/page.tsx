@@ -51,13 +51,12 @@ function LogbookEntryContent({
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Flight Details
+            Flight Log
           </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+          <p className="text-sm font-extralight text-muted-foreground sm:text-base">
             View flight log entry details
           </p>
         </div>
-        {/* Optionally add an edit button here */}
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>

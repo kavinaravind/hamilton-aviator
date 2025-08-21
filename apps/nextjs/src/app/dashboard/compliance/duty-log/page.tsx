@@ -198,7 +198,7 @@ export default function DutyLogPage() {
 
     return (
       <>
-        <div className="grid gap-4 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -280,14 +280,19 @@ export default function DutyLogPage() {
                 onValueChange={setSelectedFilter}
                 defaultValue={selectedFilter}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select duty type" />
+                <SelectTrigger className="w-full whitespace-normal">
+                  <SelectValue
+                    placeholder="Select duty type"
+                    className="whitespace-normal"
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {filterOptions.map((filter) => (
                     <SelectItem key={filter.id} value={filter.id}>
                       <span className="flex w-full items-center justify-between">
-                        <span>{filter.label}</span>
+                        <span className="whitespace-normal">
+                          {filter.label}
+                        </span>
                         <Badge variant="secondary" className="ml-2">
                           {filter.count}
                         </Badge>
@@ -433,9 +438,9 @@ export default function DutyLogPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            My Duty Log
+            Duty Tracker
           </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+          <p className="text-sm font-extralight text-muted-foreground sm:text-base">
             Track your duty time and compliance requirements
           </p>
         </div>

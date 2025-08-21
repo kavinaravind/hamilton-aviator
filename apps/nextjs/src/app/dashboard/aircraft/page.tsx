@@ -160,8 +160,11 @@ export default function AircraftPage() {
                 onValueChange={setSelectedFilter}
                 defaultValue={selectedFilter}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select duty type" />
+                <SelectTrigger className="w-full whitespace-normal">
+                  <SelectValue
+                    placeholder="Select aircraft status"
+                    className="whitespace-normal"
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {filterOptions.map((filter) => (
@@ -303,9 +306,9 @@ export default function AircraftPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            My Aircrafts
+            Aircraft Fleet
           </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+          <p className="text-sm font-extralight text-muted-foreground sm:text-base">
             View your aircraft fleet and maintenance schedules
           </p>
         </div>

@@ -29,7 +29,7 @@ export function FlightStats() {
       trpc.dashboard.flightStatistics.queryOptions({ period: selectedPeriod }),
     );
     return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard
           title="Total Time"
           value={flightStats.totalTime}
@@ -78,7 +78,15 @@ export function FlightStats() {
       </div>
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Flight Statistics</h2>
-        <Suspense fallback={<LoadingSkeleton />}>
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              {Array.from({ length: 4 }, (_, idx) => (
+                <LoadingSkeleton key={idx} />
+              ))}
+            </div>
+          }
+        >
           <StatsContent />
         </Suspense>
       </div>

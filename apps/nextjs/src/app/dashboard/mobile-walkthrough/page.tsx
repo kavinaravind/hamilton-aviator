@@ -10,7 +10,7 @@ export default function HomePage() {
             Hamilton Aviator
           </h1>
           <div className="mx-auto max-w-lg">
-            <p className="mt-2 text-base text-muted-foreground">
+            <p className="mt-2 text-base font-extralight text-muted-foreground">
               A walkthrough of the mobile app built with React Native &amp; Expo
             </p>
           </div>

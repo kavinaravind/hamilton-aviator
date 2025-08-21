@@ -20,7 +20,11 @@ export function RecentFlights() {
     return (
       <div className="space-y-2">
         {recentFlights.map((flight) => (
-          <Link key={flight.id} href={`/dashboard/logbook/${flight.id}`}>
+          <Link
+            key={flight.id}
+            href={`/dashboard/logbook/${flight.id}`}
+            className="block"
+          >
             <div className="flex items-center space-x-4 rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-accent">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
                 <Plane className="h-4 w-4 text-blue-600" />
@@ -31,7 +35,7 @@ export function RecentFlights() {
                   {flight.aircraft} • {flight.type}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {formatDate(flight.date)}
+                  {formatDate(flight.date.toISOString())}
                 </p>
                 <p className="text-sm font-bold text-blue-600">
                   {flight.duration}h
@@ -57,7 +61,15 @@ export function RecentFlights() {
           </Button>
         </Link>
       </div>
-      <Suspense fallback={<LoadingSkeleton />}>
+      <Suspense
+        fallback={
+          <div className="space-y-2">
+            {Array.from({ length: 3 }, (_, idx) => (
+              <LoadingSkeleton key={idx} />
+            ))}
+          </div>
+        }
+      >
         <FlightList />
       </Suspense>
     </div>

@@ -164,7 +164,6 @@ export default function SignIn() {
             >
               Privacy Policy
             </Link>
-            .
           </p>
         </div>
       </div>

@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@hamilton/ui/components/ui/card";
 import { Input } from "@hamilton/ui/components/ui/input";
+import { ScrollArea, ScrollBar } from "@hamilton/ui/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -95,7 +96,7 @@ export default function LogbookPage() {
 
     return (
       <>
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -142,53 +143,57 @@ export default function LogbookPage() {
             ))}
           </div>
         ) : (
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Aircraft</TableHead>
-                  <TableHead>Tail #</TableHead>
-                  <TableHead>Route</TableHead>
-                  <TableHead>Duration</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredEntries.map((entry) => (
-                  <TableRow
-                    key={entry.id}
-                    onClick={() =>
-                      router.push(`/dashboard/logbook/${entry.id}`)
-                    }
-                    className="cursor-pointer transition-colors hover:bg-accent"
-                  >
-                    <TableCell>
-                      {entry.date
-                        ? formatDate(
-                            typeof entry.date === "string"
-                              ? entry.date
-                              : entry.date.toISOString(),
-                          )
-                        : "—"}
-                    </TableCell>
-                    <TableCell>{entry.aircraft}</TableCell>
-                    <TableCell>{entry.tailNumber}</TableCell>
-                    <TableCell>{entry.route}</TableCell>
-                    <TableCell>
-                      {typeof entry.duration === "number"
-                        ? (() => {
-                            const hours = Math.floor(entry.duration);
-                            const minutes = Math.round(
-                              (entry.duration - hours) * 60,
-                            );
-                            return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
-                          })()
-                        : (entry.duration ?? "—")}
-                    </TableCell>
+          <Card className="flex">
+            <ScrollArea className="w-1 flex-1">
+              {" "}
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Aircraft</TableHead>
+                    <TableHead>Tail #</TableHead>
+                    <TableHead>Route</TableHead>
+                    <TableHead>Duration</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredEntries.map((entry) => (
+                    <TableRow
+                      key={entry.id}
+                      onClick={() =>
+                        router.push(`/dashboard/logbook/${entry.id}`)
+                      }
+                      className="cursor-pointer transition-colors hover:bg-accent"
+                    >
+                      <TableCell>
+                        {entry.date
+                          ? formatDate(
+                              typeof entry.date === "string"
+                                ? entry.date
+                                : entry.date.toISOString(),
+                            )
+                          : "—"}
+                      </TableCell>
+                      <TableCell>{entry.aircraft}</TableCell>
+                      <TableCell>{entry.tailNumber}</TableCell>
+                      <TableCell>{entry.route}</TableCell>
+                      <TableCell>
+                        {typeof entry.duration === "number"
+                          ? (() => {
+                              const hours = Math.floor(entry.duration);
+                              const minutes = Math.round(
+                                (entry.duration - hours) * 60,
+                              );
+                              return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+                            })()
+                          : (entry.duration ?? "—")}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" className="w-full" />
+            </ScrollArea>
           </Card>
         )}
         {filteredEntries.length === 0 && (
@@ -219,9 +224,9 @@ export default function LogbookPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            My Logbook
+            Flight Logbook
           </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+          <p className="text-sm font-extralight text-muted-foreground sm:text-base">
             Track your flight hours and experience
           </p>
         </div>

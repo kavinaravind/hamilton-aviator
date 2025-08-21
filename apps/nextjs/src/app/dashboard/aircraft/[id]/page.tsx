@@ -50,9 +50,9 @@ function AircraftDetailsContent() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Aircraft Details
+            Aircraft Log
           </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+          <p className="text-sm font-extralight text-muted-foreground sm:text-base">
             View aircraft information, status, and history
           </p>
         </div>

@@ -57,7 +57,15 @@ export function MaintenanceAlerts() {
           </Button>
         </Link>
       </div>
-      <Suspense fallback={<LoadingSkeleton />}>
+      <Suspense
+        fallback={
+          <div className="space-y-2">
+            {Array.from({ length: 3 }, (_, idx) => (
+              <LoadingSkeleton key={idx} />
+            ))}
+          </div>
+        }
+      >
         <AlertList />
       </Suspense>
     </div>

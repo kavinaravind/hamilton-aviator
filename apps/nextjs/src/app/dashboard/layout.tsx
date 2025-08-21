@@ -52,6 +52,14 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
         <ClientAuthProvider>
           <HydrateClient>{children}</HydrateClient>
         </ClientAuthProvider>
+        <footer className="w-full py-4">
+          <div className="mx-auto max-w-7xl px-4">
+            <p className="text-center text-xs text-muted-foreground">
+              &copy; {new Date().getFullYear()} Hamilton Aviator. All rights
+              reserved.
+            </p>
+          </div>
+        </footer>
       </SidebarInset>
     </SidebarProvider>
   );
