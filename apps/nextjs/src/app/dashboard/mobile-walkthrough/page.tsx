@@ -26,10 +26,7 @@ export default function HomePage() {
               className="h-full w-full object-cover"
               style={{ objectPosition: "center" }}
             >
-              <source
-                src="/videos/hamilton-aviator-mobile-walkthrough.mp4"
-                type="video/mp4"
-              />
+              <source src="/api/video" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
